@@ -8,17 +8,12 @@
 A high-performance, spatial web environment serving as my central digital hub and engineering portfolio. Designed with a cinematic, glassmorphism UI over a GSAP-powered parallax environment.
 
 ### 🎯 Project Focus
-This architecture was engineered to showcase advanced frontend capabilities and interactive mathematical simulations, acting as the primary portfolio for M.S. Artificial Intelligence & Cyber Security applications (Targeting Maastricht University).
+This architecture was engineered to showcase advanced frontend capabilities and interactive mathematical simulations, acting as a hub for personal use.
 
 ---
 
 ## ⚙️ Core Architecture & Features
 
-### 🧠 The Zurada Backpropagation Engine
-At the center of the hub is a live, custom-built HTML5 Canvas simulation. It visualizes the mathematical foundations of the backpropagation algorithm based on Jacek M. Zurada's neural network theories.
-- **Dynamic Node Flow:** Organic Bezier curves visualize weights and data flow.
-- **Pulse Interaction:** Triggers a forward-pass animation, updating edge weights and demonstrating gradient descent stabilization.
-- **Live Loss Tracking:** Calculates and visually outputs a decreasing Total Error curve over simulated epochs.
 
 ### 🌌 Cinematic Spatial UI
 - **GSAP Parallax:** The background environment features a buttery-smooth, scroll-scrubbed parallax effect, creating physical depth between the user and the digital horizon.
