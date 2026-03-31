@@ -5,7 +5,7 @@ import { Github, Instagram, Mail } from "lucide-react";
 const LINKS = [
   { icon: Github, href: "https://github.com/Ege-Deniz", label: "GitHub" },
   { icon: Instagram, href: "https://www.instagram.com/eqe.deniz/", label: "Instagram" },
-  { icon: Mail, href: "mailto:deadlyrod11@gmail.com", label: "Contact" },
+  { icon: Mail, href: "mailto:ege@rowy.engineer", label: "Contact" },
 ];
 
 export default function Footer() {

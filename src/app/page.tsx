@@ -344,7 +344,7 @@ export default function HomePage() {
                       },
                       {
                         label: "Contact",
-                        href: "mailto:deadlyrod11@gmail.com",
+                        href: "mailto:ege@rowy.engineer",
                         icon: (
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                             <rect width={20} height={16} x={2} y={4} rx={2} />
