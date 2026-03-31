@@ -1,57 +1,42 @@
 # 🌐 System.Init() // Personal Hub
+**Live Build:** [rowy.engineer](https://rowy.engineer)
 
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![GSAP](https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Canvas API](https://img.shields.io/badge/HTML5_Canvas-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-A high-performance, spatial web environment serving as my central digital hub and engineering portfolio. Designed with a cinematic, glassmorphism UI over a GSAP-powered parallax environment.
-
-### 🎯 Project Focus
-This architecture was engineered to showcase advanced frontend capabilities and interactive mathematical simulations, acting as a hub for personal use.
+A high-performance, spatial web environment serving as my central digital hub and engineering portfolio. Designed with a cinematic Shinkai-inspired aesthetic and a GSAP-powered parallax environment.
 
 ---
 
-## ⚙️ Core Architecture & Features
-
+## ⚙️ Current Architecture
 
 ### 🌌 Cinematic Spatial UI
-- **GSAP Parallax:** The background environment features a buttery-smooth, scroll-scrubbed parallax effect, creating physical depth between the user and the digital horizon.
-- **Glassmorphism Design System:** Frosted, dynamically lit bento-box cards that blur the underlying environment while maintaining high-contrast readability for technical logs.
-- **Custom Cursor & Tracking:** A magnetic difference-blend cursor that scales and snaps to interactive elements.
+- **GSAP Parallax Engine:** The environment features a buttery-smooth, scroll-scrubbed parallax effect, creating physical depth between the user and the digital horizon.
+- **Glassmorphism Design:** High-contrast, frosted bento-box components optimized for technical readability and modern UI standards.
+- **Dynamic Response:** Fully responsive Next.js architecture deployed via Vercel's global edge network.
 
-### 🔌 Live Integrations
-- **Voyage Terminal:** Simulated terminal output logging system states and spatial coordinates.
-- **Digital Presence:** Custom-styled integration cards for Spotify, Twitch streaming status, and Steam.
-
----
-
-## 🛠️ Tech Stack & Deployment
-
-* **Framework:** Next.js / React
-* **Animation Engine:** GSAP (ScrollTrigger)
-* **Graphics:** Native HTML5 Canvas API (Neural Network rendering)
-* **Styling:** Custom CSS / Glassmorphism
-* **Hosting:** Vercel 
+### 🔌 System Integrations
+- **Professional Identity:** Integrated domain-specific contact protocols (`ege@rowy.engineer`).
+- **Digital Presence:** Styled tracking for social and gaming integrations (Spotify, Steam).
 
 ---
 
-## 🚀 Running Locally
+## 🛠️ Tech Stack
 
-To boot up the system locally:
+* **Framework:** Next.js (React)
+* **Animation:** GSAP (ScrollTrigger)
+* **Domain & Hosting:** Name.com / Vercel
+* **Language:** TypeScript
+
+---
+
+## ⌨️ Local Development
+*For engineering contributors or local testing:*
 
 ```bash
-# Clone the repository
-git clone https://github.com/Ege-Deniz/personal-hub.git
-
-# Navigate into the directory
+git clone [https://github.com/Ege-Deniz/personal-hub.git](https://github.com/Ege-Deniz/personal-hub.git)
 cd personal-hub
-
-# Install dependencies
 npm install
-
-# Start the development server
 npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to view the hub locally.
