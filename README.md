@@ -22,7 +22,7 @@ This architecture was engineered to showcase advanced frontend capabilities and 
 
 ### 🔌 Live Integrations
 - **Voyage Terminal:** Simulated terminal output logging system states and spatial coordinates.
-- **Digital Presence:** Custom-styled integration cards for Spotify (currently tracking Luffy LFP), Twitch streaming status, and Steam.
+- **Digital Presence:** Custom-styled integration cards for Spotify, Twitch streaming status, and Steam.
 
 ---
 
@@ -32,7 +32,7 @@ This architecture was engineered to showcase advanced frontend capabilities and 
 * **Animation Engine:** GSAP (ScrollTrigger)
 * **Graphics:** Native HTML5 Canvas API (Neural Network rendering)
 * **Styling:** Custom CSS / Glassmorphism
-* **Hosting:** Netlify (Continuous Deployment)
+* **Hosting:** Vercel 
 
 ---
 
