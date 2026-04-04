@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { Github, Instagram } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "Origin", href: "#hero" },
-  { label: "Architecture", href: "#system" },
-  { label: "Uplink", href: "#network" },
+  { label: "Intro", href: "#hero" },
+  { label: "Personal Hub", href: "#hub" },
+  { label: "Studio Stack", href: "#system" },
+  { label: "Contact", href: "#network" },
 ];
 
 const SOCIAL_LINKS = [
@@ -45,7 +46,7 @@ export default function Navbar() {
     >
       {/* Brand */}
       <a
-        href="#"
+        href="#hero"
         className="flex items-center gap-2 font-display font-bold text-[0.75rem] tracking-[0.16em] uppercase text-white text-shadow-hero"
       >
         <svg

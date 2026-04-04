@@ -6,7 +6,10 @@ import InferenceText from "../hud/InferenceText";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col items-start justify-center px-[5%] max-w-[1400px] mx-auto z-10">
+    <section
+      id="hero"
+      className="relative z-10 mx-auto flex min-h-screen scroll-mt-24 max-w-[1400px] flex-col items-start justify-center px-[5%]"
+    >
       <div className="relative z-10 w-full flex flex-col items-start">
         {/* Top rule */}
         <motion.div
@@ -27,26 +30,17 @@ export default function Hero() {
 
         {/* Name */}
         <motion.h1
-          className="font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold tracking-[-4px] leading-[0.92] mb-9 uppercase flex flex-col"
+          className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold uppercase leading-[0.92] tracking-[-4px]"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="text-white text-shadow-hero">EGE</span>
           <span
-            className="text-transparent ml-[clamp(2rem,8vw,10rem)] relative group"
+            className="ml-[clamp(2rem,8vw,10rem)] text-transparent"
             style={{ WebkitTextStroke: "2px rgba(0,229,255,0.18)" }}
           >
             DENIZ
-            <span
-              className="absolute left-0 top-0 text-cyan opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-              style={{
-                WebkitTextStroke: "2px #00e5ff",
-                textShadow: "0 0 60px rgba(0,229,255,0.4)",
-              }}
-            >
-              DENIZ
-            </span>
           </span>
         </motion.h1>
 
@@ -82,8 +76,9 @@ export default function Hero() {
           transition={{ delay: 1.2, duration: 0.6 }}
         >
           <a
-            href="#system"
+            href="#hub"
             className="w-[42px] h-[42px] rounded-full flex items-center justify-center border border-cyan/15 bg-cyan/[0.02] hover:border-cyan hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] transition-all animate-bounce"
+            aria-label="Scroll to personal hub"
           >
             <ChevronDown className="w-4 h-4 text-cyan" />
           </a>

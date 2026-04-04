@@ -1,14 +1,15 @@
 "use client";
 
 import { useClock } from "@/hooks/useClock";
+import { useScrollProgress } from "@/hooks/useScrollProgress";
 
 interface HUDOverlayProps {
-  scrollProgress: number;
   status: string;
 }
 
-export default function HUDOverlay({ scrollProgress, status }: HUDOverlayProps) {
+export default function HUDOverlay({ status }: HUDOverlayProps) {
   const time = useClock();
+  const scrollProgress = useScrollProgress();
   const depth = Math.round(scrollProgress * 10994);
 
   return (

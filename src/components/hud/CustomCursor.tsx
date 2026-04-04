@@ -25,7 +25,7 @@ export default function CustomCursor() {
 
     const onOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest("a, button, .card, .act-btn")) {
+      if (target.closest("a, button, .glass, .act-btn")) {
         isHovering.current = true;
         if (dotRef.current) {
           dotRef.current.style.width = "14px";
@@ -44,7 +44,7 @@ export default function CustomCursor() {
 
     const onOut = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest("a, button, .card, .act-btn")) {
+      if (target.closest("a, button, .glass, .act-btn")) {
         isHovering.current = false;
         if (dotRef.current) {
           dotRef.current.style.width = "6px";
@@ -77,7 +77,7 @@ export default function CustomCursor() {
     <>
       <motion.div
         ref={dotRef}
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-cyan rounded-full pointer-events-none z-[99999] mix-blend-difference hidden md:block"
+        className="fixed top-0 left-0 z-[99999] hidden h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_10px_rgba(0,229,255,0.4)] pointer-events-none md:block"
         style={{
           x: dotX,
           y: dotY,
@@ -88,7 +88,7 @@ export default function CustomCursor() {
       />
       <motion.div
         ref={ringRef}
-        className="fixed top-0 left-0 w-9 h-9 border border-cyan/50 rounded-full pointer-events-none z-[99999] mix-blend-difference opacity-35 hidden md:block"
+        className="fixed top-0 left-0 z-[99999] hidden h-9 w-9 rounded-full border border-cyan/50 opacity-35 pointer-events-none md:block"
         style={{
           x: ringX,
           y: ringY,

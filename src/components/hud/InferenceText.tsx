@@ -31,10 +31,11 @@ export default function InferenceText({
   useEffect(() => {
     if (!isInView || started.current) return;
     started.current = true;
+    let interval: ReturnType<typeof setInterval> | undefined;
 
     const timeout = setTimeout(() => {
       let currentResolved = 0;
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         if (currentResolved >= text.length) {
           clearInterval(interval);
           setDisplay(text);
@@ -59,11 +60,12 @@ export default function InferenceText({
           setResolved(currentResolved);
         }
       }, speed);
-
-      return () => clearInterval(interval);
     }, delay);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      if (interval) clearInterval(interval);
+    };
   }, [isInView, text, delay, speed]);
 
   return (

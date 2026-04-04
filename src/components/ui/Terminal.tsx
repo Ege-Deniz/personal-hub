@@ -30,9 +30,10 @@ export default function Terminal() {
   useEffect(() => {
     if (!isInView || started.current) return;
     started.current = true;
+    let interval: ReturnType<typeof setInterval> | undefined;
 
     const timer = setTimeout(() => {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         setCurrentChar((prev) => {
           const line = TERMINAL_LINES[currentLineRef.current];
           if (!line) {
@@ -43,11 +44,12 @@ export default function Terminal() {
           return prev;
         });
       }, 12);
-
-      return () => clearInterval(interval);
     }, 400);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (interval) clearInterval(interval);
+    };
   }, [isInView, currentLine]);
 
   useEffect(() => {

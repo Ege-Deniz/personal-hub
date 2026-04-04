@@ -10,7 +10,7 @@ const LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="relative z-10 px-4 lg:px-16 py-7 border-t border-cyan/[0.03] mt-12 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <footer className="relative z-10 mt-4 flex flex-col items-center justify-between gap-3 border-t border-cyan/[0.03] px-4 py-4 sm:flex-row lg:px-16">
       <p className="text-white/25 text-[0.7rem]">
         &copy; 2026 Ege Deniz. All rights reserved.
       </p>

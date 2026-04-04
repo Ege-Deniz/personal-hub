@@ -1,5 +1,7 @@
 node_modules
 .next
+.next*
+.playwright-cli
 .DS_Store
 .env*
 !.env.example

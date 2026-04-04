@@ -8,7 +8,10 @@ export default function ChapterGate() {
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
-    <section className="relative z-10 pt-24 pb-8 text-center px-4" id="system">
+    <section
+      id="architecture"
+      className="relative z-10 scroll-mt-24 px-4 pt-24 pb-8 text-center"
+    >
       <motion.div
         ref={ref}
         className="max-w-[52rem] mx-auto py-9 px-8 rounded-xl glass relative overflow-hidden"
@@ -36,13 +39,14 @@ export default function ChapterGate() {
           {"// System Access Granted"}
         </div>
         <div className="font-display text-[clamp(1.2rem,2.5vw,1.9rem)] font-semibold tracking-tight text-white/70 leading-[1.35]">
-          The cinematic fades.
+          The shell disperses.
           <br />
-          The <span className="font-serif italic text-white">system</span>{" "}
-          begins.
+          The <span className="font-serif italic text-white">systems graph</span>{" "}
+          comes online.
         </div>
         <div className="mt-3 text-[0.75rem] text-white/25 max-w-[22rem] mx-auto">
-          Engaging visual, tactical, and architectural subroutines.
+          Visual storytelling hands off to the infrastructure, inference, and
+          execution stack underneath.
         </div>
       </motion.div>
     </section>
