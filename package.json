@@ -2,6 +2,7 @@
   "name": "ege-portfolio",
   "version": "1.0.0",
   "private": true,
+  "description": "Dala-inspired spatial portfolio for AI engineering, full-stack development, and visual systems.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

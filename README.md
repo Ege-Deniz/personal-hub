@@ -1,42 +1,49 @@
-# 🌐 System.Init() // Personal Hub
+# Ege Deniz // Personal Hub
+
 **Live Build:** [rowy.engineer](https://rowy.engineer)
 
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![GSAP](https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-R3F-000000?style=for-the-badge&logo=threedotjs&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![GSAP](https://img.shields.io/badge/GSAP-Motion-88CE02?style=for-the-badge&logo=greensock&logoColor=white)
 
-A high-performance, spatial web environment serving as my central digital hub and engineering portfolio. Designed with a cinematic Shinkai-inspired aesthetic and a GSAP-powered parallax environment.
+A spatial portfolio and personal hub for AI engineering, full-stack development, and visual/web design, built around a Dala-inspired particle morph engine, glass UI, and a dark cinematic interface system.
 
----
+## Experience
 
-## ⚙️ Current Architecture
+- **Intro** — Hero section with the main particle form and portfolio positioning.
+- **Personal Hub** — Bento-grid cards for projects, links, and identity context.
+- **Studio Stack** — A compact engineering/design capabilities section while the particle system morphs into the final rose form.
+- **Contact** — Social and contact uplinks.
 
-### 🌌 Cinematic Spatial UI
-- **GSAP Parallax Engine:** The environment features a buttery-smooth, scroll-scrubbed parallax effect, creating physical depth between the user and the digital horizon.
-- **Glassmorphism Design:** High-contrast, frosted bento-box components optimized for technical readability and modern UI standards.
-- **Dynamic Response:** Fully responsive Next.js architecture deployed via Vercel's global edge network.
+## Architecture
 
-### 🔌 System Integrations
-- **Professional Identity:** Integrated domain-specific contact protocols (`ege@rowy.engineer`).
-- **Digital Presence:** Styled tracking for social and gaming integrations (Spotify, Steam).
+- **Framework**: Next.js App Router + React + TypeScript
+- **Styling**: Tailwind CSS, custom HUD and glass interface components
+- **3D Engine**: React Three Fiber, Three.js, `three-stdlib`
+- **Motion**: GSAP, Framer Motion, custom scroll/pointer shader uniforms
+- **Particles**: Instanced tetrahedron swarm with 3-stage morph states and ambient background shards
 
----
+## Project Map
 
-## 🛠️ Tech Stack
+- `src/components/three/DalaEngine.tsx` — particle background, shader, and scroll morph logic
+- `src/components/ui/Hero.tsx` — landing section
+- `src/components/ui/BentoGrid.tsx` — Personal Hub section
+- `src/components/ui/SystemArchitecture.tsx` — Studio Stack section
+- `src/components/ui/Navbar.tsx` — top navigation anchors
 
-* **Framework:** Next.js (React)
-* **Animation:** GSAP (ScrollTrigger)
-* **Domain & Hosting:** Name.com / Vercel
-* **Language:** TypeScript
-
----
-
-## ⌨️ Local Development
-*For engineering contributors or local testing:*
+## Local Development
 
 ```bash
-git clone [https://github.com/Ege-Deniz/personal-hub.git](https://github.com/Ege-Deniz/personal-hub.git)
+git clone https://github.com/Ege-Deniz/personal-hub.git
 cd personal-hub
 npm install
 npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Notes
+
+- If you run `npm run build` while `npm run dev` is still active, restart the dev server afterwards so `.next` chunks do not go stale.
+- The current visual direction is intentionally experimental and still being iterated, especially the act-3 particle form and mobile composition.
