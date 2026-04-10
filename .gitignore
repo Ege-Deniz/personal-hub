@@ -1,6 +1,8 @@
 node_modules
 .next
 .next*
+.tsbuildinfo
+tsconfig.tsbuildinfo
 .playwright-cli
 .DS_Store
 .env*

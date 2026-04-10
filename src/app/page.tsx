@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import Navbar from "@/components/ui/Navbar";
 import Hero from "@/components/ui/Hero";
 import ChapterGate from "@/components/ui/ChapterGate";
@@ -22,11 +22,8 @@ const SpatialBackground = dynamic(
 
 export default function HomePage() {
   const [loaded, setLoaded] = useState(false);
-  const [introComplete, setIntroComplete] = useState(true);
-  const [status] = useState("Status: Navigating");
-
+  const status = "Status: Navigating";
   const handleLoaderDone = useCallback(() => setLoaded(true), []);
-  const handleIntroDone = useCallback(() => setIntroComplete(true), []);
 
   return (
     <>
@@ -55,31 +52,30 @@ export default function HomePage() {
 
           <HUDOverlay status={status} />
 
-          {introComplete && (
-            <div className="relative z-10">
-              <Navbar />
-              <Hero />
-              <ChapterGate />
+          <div className="relative z-10">
+            <Navbar />
+            <Hero />
+            <ChapterGate />
 
-              <BentoGrid>
-                {/* ═══ ROW 1-2: Hero (2col tall) + Avatar + Setup (tall) ═══ */}
-                <GlassCard className="card-hero" delay={0}>
-                  <div className="p-6 sm:p-8 h-full flex flex-col justify-center gap-3">
-                    <div className="font-mono text-[0.5rem] tracking-[3px] uppercase text-gold/50 flex items-center gap-2">
-                      <span className="inline-block w-5 h-px bg-gold/40" />
-                      The Meta
-                    </div>
-                    <h2 className="font-display text-[2.5rem] sm:text-[3.5rem] font-extrabold leading-[0.95] tracking-tight">
-                      <InferenceText text="SYSTEM INIT" delay={200} />
-                    </h2>
-                    <p className="font-display text-[1rem] sm:text-[1.15rem] font-semibold text-gold/80 tracking-wide">
-                      All-Around Developer &amp; Systems Architect
-                    </p>
-                    <p className="text-[0.78rem] text-white/30 leading-[1.7] max-w-md mt-1">
-                      Engineering intelligent systems, full-stack environments, and graphic design. Whether architecting AI algorithms or building web design environments, the underlying approach remains the same: absolute focus and precision.
-                    </p>
+            <BentoGrid>
+              {/* ═══ ROW 1-2: Hero (2col tall) + Avatar + Setup (tall) ═══ */}
+              <GlassCard className="card-hero" delay={0}>
+                <div className="p-6 sm:p-8 h-full flex flex-col justify-center gap-3">
+                  <div className="font-mono text-[0.5rem] tracking-[3px] uppercase text-gold/50 flex items-center gap-2">
+                    <span className="inline-block w-5 h-px bg-gold/40" />
+                    The Meta
                   </div>
-                </GlassCard>
+                  <h2 className="font-display text-[2.5rem] sm:text-[3.5rem] font-extrabold leading-[0.95] tracking-tight">
+                    <InferenceText text="SYSTEM INIT" delay={200} />
+                  </h2>
+                  <p className="font-display text-[1rem] sm:text-[1.15rem] font-semibold text-gold/80 tracking-wide">
+                    All-Around Developer &amp; Systems Architect
+                  </p>
+                  <p className="text-[0.78rem] text-white/30 leading-[1.7] max-w-md mt-1">
+                    Engineering intelligent systems, full-stack environments, and graphic design. Whether architecting AI algorithms or building web design environments, the underlying approach remains the same: absolute focus and precision.
+                  </p>
+                </div>
+              </GlassCard>
 
                 <GlassCard
                   className="card-avatar flex items-center justify-center"
@@ -402,8 +398,7 @@ export default function HomePage() {
                 </GlassCard>
               </div>
               <Footer />
-            </div>
-          )}
+          </div>
         </>
       )}
     </>
