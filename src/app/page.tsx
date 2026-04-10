@@ -16,7 +16,7 @@ import Loader from "@/components/hud/Loader";
 import InferenceText from "@/components/hud/InferenceText";
 
 const SpatialBackground = dynamic(
-  () => import("@/components/three/DalaEngine"),
+  () => import("@/components/three/SpatialBackground"),
   { ssr: false }
 );
 
