@@ -716,6 +716,404 @@ const Atmosphere = () => {
   );
 };
 
+const NeuralEdges = () => {
+  const scrollRef = useRef(0);
+  const systemStageRef = useRef(0);
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+
+  useEffect(() => {
+    const systemSection = { current: null as HTMLElement | null };
+    const onScroll = () => {
+      const max = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        1
+      );
+      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
+      if (!systemSection.current) {
+        systemSection.current = document.getElementById("system");
+      }
+      if (systemSection.current) {
+        const rect = systemSection.current.getBoundingClientRect();
+        const span = window.innerHeight + rect.height;
+        systemStageRef.current = THREE.MathUtils.clamp(
+          (window.innerHeight - rect.top) / span,
+          0,
+          1
+        );
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const positions = useMemo(() => {
+    const BRAIN_RADIUS = 13.8;
+    const BRAIN_CX = 17.2;
+    const BRAIN_CZ = -5.5;
+    const surfacePts: [number, number, number][] = [];
+
+    for (let i = 0; i < CORE_PARTICLE_COUNT; i++) {
+      const coreIdx = i + 0.5;
+      const interiorRoll = hash3(coreIdx * 0.173, coreIdx * 0.219, 7.3);
+      if (interiorRoll < 0.28) continue;
+      const fibY = 1 - (2 * coreIdx) / CORE_PARTICLE_COUNT;
+      const fibR = Math.sqrt(Math.max(0, 1 - fibY * fibY));
+      const fibTheta = GOLDEN_ANGLE * coreIdx;
+      const dirX = Math.cos(fibTheta) * fibR;
+      const dirZ = Math.sin(fibTheta) * fibR;
+      const dirY = fibY;
+      const foldNoise = fbm(dirX * 1.9, dirY * 1.9, dirZ * 1.9);
+      const detailNoise = fbm(dirX * 4.3, dirY * 4.3, dirZ * 4.3);
+      const r = BRAIN_RADIUS * (1 + foldNoise * 0.11 + detailNoise * 0.035);
+      surfacePts.push([
+        BRAIN_CX + dirX * r,
+        dirY * r,
+        BRAIN_CZ + dirZ * r,
+      ]);
+    }
+
+    // Approximate KNN via Fibonacci lattice offsets. Fibonacci-number
+    // jumps (8, 13, 21) yield near-neighbor candidates on a golden-angle
+    // spiral; filter by Euclidean distance to prune long jumps.
+    const K_OFFSETS = [8, 13, 21, 34];
+    const MAX_EDGE_DIST_SQ = 4.2;
+    const N = surfacePts.length;
+    const edgeFloats: number[] = [];
+    const seen = new Set<string>();
+
+    for (let i = 0; i < N; i++) {
+      const a = surfacePts[i];
+      for (const off of K_OFFSETS) {
+        const j = (i + off) % N;
+        if (j === i) continue;
+        const key = i < j ? `${i}-${j}` : `${j}-${i}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const b = surfacePts[j];
+        const dx = a[0] - b[0];
+        const dy = a[1] - b[1];
+        const dz = a[2] - b[2];
+        const d2 = dx * dx + dy * dy + dz * dz;
+        if (d2 > MAX_EDGE_DIST_SQ) continue;
+        edgeFloats.push(a[0], a[1], a[2], b[0], b[1], b[2]);
+      }
+    }
+
+    return new Float32Array(edgeFloats);
+  }, []);
+
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uProgress: { value: 0 },
+      uSystemStage: { value: 0 },
+      uMobileMix: { value: 0 },
+    }),
+    []
+  );
+
+  useFrame((state, delta) => {
+    if (!matRef.current) return;
+    const m = matRef.current;
+    m.uniforms.uTime.value = state.clock.elapsedTime;
+    const smoothFactor = 1 - Math.exp(-delta * 8);
+    m.uniforms.uProgress.value = THREE.MathUtils.lerp(
+      m.uniforms.uProgress.value,
+      scrollRef.current,
+      smoothFactor
+    );
+    m.uniforms.uSystemStage.value = THREE.MathUtils.lerp(
+      m.uniforms.uSystemStage.value,
+      systemStageRef.current,
+      1 - Math.exp(-delta * 7)
+    );
+    m.uniforms.uMobileMix.value = THREE.MathUtils.clamp(
+      (22 - state.viewport.width) / 10,
+      0,
+      1
+    );
+  });
+
+  const vertexShader = `
+    uniform float uTime;
+    uniform float uMobileMix;
+    void main() {
+      const vec2 BRAIN_CENTER_XZ = vec2(17.2, -5.5);
+      const vec3 BRAIN_ANCHOR_MOBILE = vec3(3.0, -5.8, -5.5);
+      vec3 p = position;
+
+      // Match particle brain rotation.
+      float spin = uTime * 0.14;
+      p.xz -= BRAIN_CENTER_XZ;
+      p.xz = mat2(cos(spin), -sin(spin), sin(spin), cos(spin)) * p.xz;
+      p.xz += BRAIN_CENTER_XZ;
+
+      // Mobile anchor match.
+      p = mix(
+        p,
+        (p - vec3(BRAIN_CENTER_XZ.x, 0.0, BRAIN_CENTER_XZ.y)) * 0.58 +
+          BRAIN_ANCHOR_MOBILE,
+        uMobileMix
+      );
+
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+    }
+  `;
+
+  const fragmentShader = `
+    uniform float uProgress;
+    uniform float uSystemStage;
+    uniform float uTime;
+    void main() {
+      float fieldFade = smoothstep(0.0, 0.22, uProgress);
+      float rosFade = smoothstep(0.0, 0.18, uSystemStage);
+      float vis = (1.0 - fieldFade) * (1.0 - rosFade);
+      float pulse = 0.78 + 0.32 * sin(uTime * 0.55);
+      vec3 col = vec3(0.02, 0.82, 1.0) * 0.65 * pulse;
+      gl_FragColor = vec4(col, 0.19 * vis);
+    }
+  `;
+
+  return (
+    <lineSegments frustumCulled={false} renderOrder={1}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          args={[positions, 3]}
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <shaderMaterial
+        ref={matRef}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        uniforms={uniforms}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+      />
+    </lineSegments>
+  );
+};
+
+const ORBITAL_PROBE_COUNT = 240;
+
+const OrbitalProbes = () => {
+  const scrollRef = useRef(0);
+  const systemStageRef = useRef(0);
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+
+  useEffect(() => {
+    const systemSection = { current: null as HTMLElement | null };
+    const onScroll = () => {
+      const max = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        1
+      );
+      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
+      if (!systemSection.current) {
+        systemSection.current = document.getElementById("system");
+      }
+      if (systemSection.current) {
+        const rect = systemSection.current.getBoundingClientRect();
+        const span = window.innerHeight + rect.height;
+        systemStageRef.current = THREE.MathUtils.clamp(
+          (window.innerHeight - rect.top) / span,
+          0,
+          1
+        );
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const { positions, ringData } = useMemo(() => {
+    const pos = new Float32Array(ORBITAL_PROBE_COUNT * 3);
+    // (ringIndex, phase, radiusScale, speedScale) per particle
+    const meta = new Float32Array(ORBITAL_PROBE_COUNT * 4);
+    for (let i = 0; i < ORBITAL_PROBE_COUNT; i++) {
+      // 3 rings at different tilts + one scattered population.
+      const ringIdx = i % 4;
+      const seed = hash3(i * 0.137, i * 0.241, i * 0.339);
+      meta[i * 4 + 0] = ringIdx;
+      meta[i * 4 + 1] = seed * Math.PI * 2;
+      meta[i * 4 + 2] = 1 + (seed - 0.5) * 0.18;
+      meta[i * 4 + 3] = 1 + (seed - 0.5) * 0.6;
+
+      // Placeholder position; shader rebuilds per-frame.
+      pos[i * 3 + 0] = 0;
+      pos[i * 3 + 1] = 0;
+      pos[i * 3 + 2] = 0;
+    }
+    return { positions: pos, ringData: meta };
+  }, []);
+
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uProgress: { value: 0 },
+      uSystemStage: { value: 0 },
+      uMobileMix: { value: 0 },
+    }),
+    []
+  );
+
+  useFrame((state, delta) => {
+    if (!matRef.current) return;
+    const m = matRef.current;
+    m.uniforms.uTime.value = state.clock.elapsedTime;
+    m.uniforms.uProgress.value = THREE.MathUtils.lerp(
+      m.uniforms.uProgress.value,
+      scrollRef.current,
+      1 - Math.exp(-delta * 8)
+    );
+    m.uniforms.uSystemStage.value = THREE.MathUtils.lerp(
+      m.uniforms.uSystemStage.value,
+      systemStageRef.current,
+      1 - Math.exp(-delta * 7)
+    );
+    m.uniforms.uMobileMix.value = THREE.MathUtils.clamp(
+      (22 - state.viewport.width) / 10,
+      0,
+      1
+    );
+  });
+
+  const vertexShader = `
+    uniform float uTime;
+    uniform float uMobileMix;
+    attribute vec4 aRing;
+
+    varying float vAlpha;
+    varying float vSpark;
+
+    const vec3 BRAIN_CENTER = vec3(17.2, 0.0, -5.5);
+    const vec3 BRAIN_ANCHOR_MOBILE = vec3(3.0, -5.8, -5.5);
+
+    void main() {
+      float ringIdx = aRing.x;
+      float phase = aRing.y;
+      float radiusScale = aRing.z;
+      float speedScale = aRing.w;
+
+      // Ring params.
+      float baseRadius = 16.8;
+      float tiltX, tiltZ, spinSpeed;
+      if (ringIdx < 0.5) {
+        tiltX = 0.12;  tiltZ = 0.28;  spinSpeed = 0.18;
+      } else if (ringIdx < 1.5) {
+        tiltX = -0.35; tiltZ = 0.08;  spinSpeed = -0.12;
+      } else if (ringIdx < 2.5) {
+        tiltX = 0.55;  tiltZ = -0.20; spinSpeed = 0.09;
+      } else {
+        tiltX = -0.15; tiltZ = -0.45; spinSpeed = 0.22;
+      }
+
+      float angle = phase + uTime * spinSpeed * speedScale;
+      float r = baseRadius * radiusScale;
+      vec3 local = vec3(cos(angle) * r, 0.0, sin(angle) * r);
+
+      // Tilt the ring plane.
+      mat3 tilt = mat3(
+        cos(tiltZ), -sin(tiltZ) * cos(tiltX),  sin(tiltZ) * sin(tiltX),
+        sin(tiltZ),  cos(tiltZ) * cos(tiltX), -cos(tiltZ) * sin(tiltX),
+        0.0,         sin(tiltX),               cos(tiltX)
+      );
+      local = tilt * local;
+
+      // Gentle breathing of orbit radius.
+      float orbitBreath = 1.0 + sin(uTime * 0.38 + phase * 2.1) * 0.04;
+      local *= orbitBreath;
+
+      vec3 world = BRAIN_CENTER + local;
+
+      // Mobile anchor match.
+      world = mix(
+        world,
+        (world - BRAIN_CENTER) * 0.58 + BRAIN_ANCHOR_MOBILE,
+        uMobileMix
+      );
+
+      vec4 mv = modelViewMatrix * vec4(world, 1.0);
+      gl_Position = projectionMatrix * mv;
+
+      // Perspective-correct point size.
+      float dist = -mv.z;
+      gl_PointSize = clamp(1.6 + 140.0 / dist, 1.2, 5.2) * (0.8 + radiusScale * 0.4);
+
+      // Sparkle factor: occasional bright pulses.
+      vSpark = smoothstep(0.92, 1.0, sin(uTime * (1.0 + speedScale) + phase * 4.2) * 0.5 + 0.5);
+      vAlpha = 1.0;
+    }
+  `;
+
+  const fragmentShader = `
+    uniform float uProgress;
+    uniform float uSystemStage;
+    varying float vAlpha;
+    varying float vSpark;
+    void main() {
+      // Round point falloff.
+      vec2 uv = gl_PointCoord - 0.5;
+      float d = dot(uv, uv);
+      float soft = smoothstep(0.25, 0.0, d);
+
+      float fieldFade = smoothstep(0.0, 0.25, uProgress);
+      float rosFade = smoothstep(0.0, 0.18, uSystemStage);
+      float vis = (1.0 - fieldFade) * (1.0 - rosFade);
+
+      vec3 coolCyan = vec3(0.05, 0.9, 1.0);
+      vec3 warmGold = vec3(1.0, 0.72, 0.18);
+      vec3 col = mix(coolCyan, warmGold, vSpark) * (1.2 + vSpark * 2.5);
+
+      gl_FragColor = vec4(col, soft * vis * 0.9);
+    }
+  `;
+
+  return (
+    <points frustumCulled={false} renderOrder={2}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          args={[positions, 3]}
+          count={ORBITAL_PROBE_COUNT}
+          array={positions}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="attributes-aRing"
+          args={[ringData, 4]}
+          count={ORBITAL_PROBE_COUNT}
+          array={ringData}
+          itemSize={4}
+        />
+      </bufferGeometry>
+      <shaderMaterial
+        ref={matRef}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        uniforms={uniforms}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+      />
+    </points>
+  );
+};
+
 type CameraKeyframe = {
   t: number;
   pos: [number, number, number];
@@ -760,7 +1158,7 @@ const CameraRig = () => {
     };
   }, []);
 
-  useFrame(({ camera, clock }, delta) => {
+  useFrame(({ camera, clock, viewport }, delta) => {
     const t = scrollRef.current;
 
     // Keyframe lookup.
@@ -776,14 +1174,25 @@ const CameraRig = () => {
     const local = (t - k1.t) / Math.max(k2.t - k1.t, 0.0001);
     const eased = smoothstep(THREE.MathUtils.clamp(local, 0, 1));
 
+    // Mobile damping: shrink keyframe deltas so lookAt stays near origin
+    // (which is where the mobile brain/rose anchor lands).
+    const mobileMix = THREE.MathUtils.clamp(
+      (22 - viewport.width) / 10,
+      0,
+      1
+    );
+    const posDamp = THREE.MathUtils.lerp(1.0, 0.35, mobileMix);
+    const lookDamp = THREE.MathUtils.lerp(1.0, 0.2, mobileMix);
+
     tmpPos.set(
-      THREE.MathUtils.lerp(k1.pos[0], k2.pos[0], eased),
-      THREE.MathUtils.lerp(k1.pos[1], k2.pos[1], eased),
-      THREE.MathUtils.lerp(k1.pos[2], k2.pos[2], eased)
+      THREE.MathUtils.lerp(k1.pos[0], k2.pos[0], eased) * posDamp,
+      THREE.MathUtils.lerp(k1.pos[1], k2.pos[1], eased) * posDamp,
+      THREE.MathUtils.lerp(k1.pos[2], k2.pos[2], eased) *
+        THREE.MathUtils.lerp(1.0, 1.12, mobileMix)
     );
     tmpLook.set(
-      THREE.MathUtils.lerp(k1.look[0], k2.look[0], eased),
-      THREE.MathUtils.lerp(k1.look[1], k2.look[1], eased),
+      THREE.MathUtils.lerp(k1.look[0], k2.look[0], eased) * lookDamp,
+      THREE.MathUtils.lerp(k1.look[1], k2.look[1], eased) * lookDamp,
       THREE.MathUtils.lerp(k1.look[2], k2.look[2], eased)
     );
     const targetFov = THREE.MathUtils.lerp(k1.fov, k2.fov, eased);
@@ -845,12 +1254,14 @@ export default function SpatialBackground() {
         <ambientLight intensity={0.35} />
         <CameraRig />
         <Atmosphere />
+        <NeuralEdges />
+        <OrbitalProbes />
         <Particles />
         {POSTFX_ENABLED && (
           <EffectComposer
             multisampling={0}
             frameBufferType={THREE.HalfFloatType}
-            disableNormalPass
+            enableNormalPass={false}
           >
             <Bloom
               intensity={1.35}
