@@ -903,6 +903,273 @@ const NeuralEdges = () => {
   );
 };
 
+const DISCHARGE_COUNT = 10;
+const DISCHARGE_SEGMENTS = 18;
+
+const NeuralDischarges = () => {
+  const scrollRef = useRef(0);
+  const systemStageRef = useRef(0);
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+
+  useEffect(() => {
+    const systemSection = { current: null as HTMLElement | null };
+    const onScroll = () => {
+      const max = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        1
+      );
+      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
+      if (!systemSection.current) {
+        systemSection.current = document.getElementById("system");
+      }
+      if (systemSection.current) {
+        const rect = systemSection.current.getBoundingClientRect();
+        const span = window.innerHeight + rect.height;
+        systemStageRef.current = THREE.MathUtils.clamp(
+          (window.innerHeight - rect.top) / span,
+          0,
+          1
+        );
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const { positions, arcAttribs } = useMemo(() => {
+    const BRAIN_RADIUS = 13.8;
+    const BRAIN_CX = 17.2;
+    const BRAIN_CZ = -5.5;
+
+    // Deterministic PRNG so arcs are stable across renders.
+    let seedState = 24601;
+    const rng = () => {
+      seedState = (seedState * 16807) % 2147483647;
+      return seedState / 2147483647;
+    };
+
+    const surfacePts: [number, number, number][] = [];
+    for (let i = 0; i < CORE_PARTICLE_COUNT; i++) {
+      const coreIdx = i + 0.5;
+      const interiorRoll = hash3(coreIdx * 0.173, coreIdx * 0.219, 7.3);
+      if (interiorRoll < 0.28) continue;
+      const fibY = 1 - (2 * coreIdx) / CORE_PARTICLE_COUNT;
+      const fibR = Math.sqrt(Math.max(0, 1 - fibY * fibY));
+      const fibTheta = GOLDEN_ANGLE * coreIdx;
+      const dirX = Math.cos(fibTheta) * fibR;
+      const dirZ = Math.sin(fibTheta) * fibR;
+      const dirY = fibY;
+      const foldNoise = fbm(dirX * 1.9, dirY * 1.9, dirZ * 1.9);
+      const detailNoise = fbm(dirX * 4.3, dirY * 4.3, dirZ * 4.3);
+      const r = BRAIN_RADIUS * (1 + foldNoise * 0.11 + detailNoise * 0.035);
+      surfacePts.push([BRAIN_CX + dirX * r, dirY * r, BRAIN_CZ + dirZ * r]);
+    }
+
+    const VERTS_PER_ARC = DISCHARGE_SEGMENTS * 2;
+    const pos = new Float32Array(DISCHARGE_COUNT * VERTS_PER_ARC * 3);
+    // (arcIdx, tAlongArc) per vertex
+    const attrs = new Float32Array(DISCHARGE_COUNT * VERTS_PER_ARC * 2);
+
+    for (let a = 0; a < DISCHARGE_COUNT; a++) {
+      const p1Idx = Math.floor(rng() * surfacePts.length);
+      const spread =
+        Math.floor(surfacePts.length * 0.22) +
+        Math.floor(rng() * surfacePts.length * 0.5);
+      const p2Idx = (p1Idx + spread) % surfacePts.length;
+      const p1 = surfacePts[p1Idx];
+      const p2 = surfacePts[p2Idx];
+
+      const midX = (p1[0] + p2[0]) * 0.5;
+      const midY = (p1[1] + p2[1]) * 0.5;
+      const midZ = (p1[2] + p2[2]) * 0.5;
+
+      // Push midpoint outward from brain center for an arcing bolt.
+      const dcx = midX - BRAIN_CX;
+      const dcy = midY;
+      const dcz = midZ - BRAIN_CZ;
+      const dLen = Math.max(
+        0.0001,
+        Math.sqrt(dcx * dcx + dcy * dcy + dcz * dcz)
+      );
+      const outX = dcx / dLen;
+      const outY = dcy / dLen;
+      const outZ = dcz / dLen;
+      const bowOut = 2.2 + rng() * 1.4;
+      const arcMidX = midX + outX * bowOut;
+      const arcMidY = midY + outY * bowOut;
+      const arcMidZ = midZ + outZ * bowOut;
+
+      // Sample quadratic Bezier with jitter for lightning feel.
+      const points: [number, number, number][] = [];
+      for (let s = 0; s <= DISCHARGE_SEGMENTS; s++) {
+        const t = s / DISCHARGE_SEGMENTS;
+        const omt = 1 - t;
+        const bx = omt * omt * p1[0] + 2 * omt * t * arcMidX + t * t * p2[0];
+        const by = omt * omt * p1[1] + 2 * omt * t * arcMidY + t * t * p2[1];
+        const bz = omt * omt * p1[2] + 2 * omt * t * arcMidZ + t * t * p2[2];
+        const edgeWeight = Math.sin(t * Math.PI);
+        const jitter = 0.55 * edgeWeight;
+        points.push([
+          bx + (rng() - 0.5) * jitter,
+          by + (rng() - 0.5) * jitter,
+          bz + (rng() - 0.5) * jitter,
+        ]);
+      }
+
+      for (let s = 0; s < DISCHARGE_SEGMENTS; s++) {
+        const base = (a * VERTS_PER_ARC + s * 2) * 3;
+        const att = (a * VERTS_PER_ARC + s * 2) * 2;
+        const v1 = points[s];
+        const v2 = points[s + 1];
+        pos[base + 0] = v1[0];
+        pos[base + 1] = v1[1];
+        pos[base + 2] = v1[2];
+        pos[base + 3] = v2[0];
+        pos[base + 4] = v2[1];
+        pos[base + 5] = v2[2];
+        attrs[att + 0] = a;
+        attrs[att + 1] = s / DISCHARGE_SEGMENTS;
+        attrs[att + 2] = a;
+        attrs[att + 3] = (s + 1) / DISCHARGE_SEGMENTS;
+      }
+    }
+
+    return { positions: pos, arcAttribs: attrs };
+  }, []);
+
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uProgress: { value: 0 },
+      uSystemStage: { value: 0 },
+      uMobileMix: { value: 0 },
+    }),
+    []
+  );
+
+  useFrame((state, delta) => {
+    if (!matRef.current) return;
+    const m = matRef.current;
+    m.uniforms.uTime.value = state.clock.elapsedTime;
+    m.uniforms.uProgress.value = THREE.MathUtils.lerp(
+      m.uniforms.uProgress.value,
+      scrollRef.current,
+      1 - Math.exp(-delta * 8)
+    );
+    m.uniforms.uSystemStage.value = THREE.MathUtils.lerp(
+      m.uniforms.uSystemStage.value,
+      systemStageRef.current,
+      1 - Math.exp(-delta * 7)
+    );
+    m.uniforms.uMobileMix.value = THREE.MathUtils.clamp(
+      (22 - state.viewport.width) / 10,
+      0,
+      1
+    );
+  });
+
+  const vertexShader = `
+    uniform float uTime;
+    uniform float uMobileMix;
+    attribute vec2 aArc;
+    varying float vArcIdx;
+    varying float vT;
+
+    void main() {
+      const vec2 BRAIN_CENTER_XZ = vec2(17.2, -5.5);
+      const vec3 BRAIN_ANCHOR_MOBILE = vec3(3.0, -5.8, -5.5);
+      vec3 p = position;
+
+      float spin = uTime * 0.14;
+      p.xz -= BRAIN_CENTER_XZ;
+      p.xz = mat2(cos(spin), -sin(spin), sin(spin), cos(spin)) * p.xz;
+      p.xz += BRAIN_CENTER_XZ;
+
+      p = mix(
+        p,
+        (p - vec3(BRAIN_CENTER_XZ.x, 0.0, BRAIN_CENTER_XZ.y)) * 0.58 +
+          BRAIN_ANCHOR_MOBILE,
+        uMobileMix
+      );
+
+      vArcIdx = aArc.x;
+      vT = aArc.y;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+    }
+  `;
+
+  const fragmentShader = `
+    uniform float uTime;
+    uniform float uProgress;
+    uniform float uSystemStage;
+    varying float vArcIdx;
+    varying float vT;
+
+    void main() {
+      // Staggered activation — each arc fires once per 8s cycle with its own offset.
+      float cycle = 8.0;
+      float offset = fract(sin(vArcIdx * 12.9898) * 43758.5453) * cycle;
+      float phase = mod(uTime + offset, cycle);
+      float activeDuration = 0.55;
+
+      float vis = smoothstep(0.0, 0.04, phase) *
+                  (1.0 - smoothstep(0.35, activeDuration, phase));
+
+      // Traveling pulse sweeping from arc start to end during active window.
+      float pulseCenter = (phase / activeDuration) * 1.15 - 0.075;
+      float pulseDist = abs(vT - pulseCenter);
+      float pulse = 1.0 - smoothstep(0.0, 0.14, pulseDist);
+
+      // Tapered alpha along arc — bright middle, dim endpoints.
+      float arcShape = sin(vT * 3.14159);
+
+      float brainFade =
+        (1.0 - smoothstep(0.0, 0.22, uProgress)) *
+        (1.0 - smoothstep(0.0, 0.18, uSystemStage));
+
+      float alpha = vis * (0.18 + pulse * 0.82) * arcShape * brainFade;
+      vec3 col = mix(vec3(0.08, 0.72, 1.0), vec3(0.95, 0.98, 1.0), pulse) *
+                 (1.4 + pulse * 4.8);
+      gl_FragColor = vec4(col, alpha);
+    }
+  `;
+
+  return (
+    <lineSegments frustumCulled={false} renderOrder={2}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          args={[positions, 3]}
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="attributes-aArc"
+          args={[arcAttribs, 2]}
+          count={arcAttribs.length / 2}
+          array={arcAttribs}
+          itemSize={2}
+        />
+      </bufferGeometry>
+      <shaderMaterial
+        ref={matRef}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        uniforms={uniforms}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+      />
+    </lineSegments>
+  );
+};
+
 const ORBITAL_PROBE_COUNT = 240;
 
 const OrbitalProbes = () => {
@@ -1255,6 +1522,7 @@ export default function SpatialBackground() {
         <CameraRig />
         <Atmosphere />
         <NeuralEdges />
+        <NeuralDischarges />
         <OrbitalProbes />
         <Particles />
         {POSTFX_ENABLED && (
