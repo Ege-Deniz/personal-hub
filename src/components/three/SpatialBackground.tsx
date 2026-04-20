@@ -179,7 +179,7 @@ const Particles = () => {
         continue;
       }
 
-      // Fibonacci-lattice sphere surface with organic cortex folds.
+      // Fibonacci-lattice direction on unit sphere.
       const coreIdx = i + 0.5;
       const fibY = 1 - (2 * coreIdx) / CORE_PARTICLE_COUNT;
       const fibR = Math.sqrt(Math.max(0, 1 - fibY * fibY));
@@ -188,9 +188,21 @@ const Particles = () => {
       const dirZ = Math.sin(fibTheta) * fibR;
       const dirY = fibY;
 
-      const foldNoise = fbm(dirX * 1.9, dirY * 1.9, dirZ * 1.9);
-      const detailNoise = fbm(dirX * 4.3, dirY * 4.3, dirZ * 4.3);
-      const brainRadius = BRAIN_RADIUS * (1 + foldNoise * 0.11 + detailNoise * 0.035);
+      // ~28% volumetric interior, ~72% surface shell with organic cortex folds.
+      const interiorRoll = hash3(coreIdx * 0.173, coreIdx * 0.219, 7.3);
+      const isInterior = interiorRoll < 0.28;
+
+      let radialScale: number;
+      if (isInterior) {
+        // Weighted toward outer interior (sqrt for volume-balanced distribution).
+        const rNorm = hash3(coreIdx * 0.331, 1.13, coreIdx * 0.197);
+        radialScale = 0.22 + Math.sqrt(rNorm) * 0.68;
+      } else {
+        const foldNoise = fbm(dirX * 1.9, dirY * 1.9, dirZ * 1.9);
+        const detailNoise = fbm(dirX * 4.3, dirY * 4.3, dirZ * 4.3);
+        radialScale = 1 + foldNoise * 0.11 + detailNoise * 0.035;
+      }
+      const brainRadius = BRAIN_RADIUS * radialScale;
 
       pA[baseIndex] = BRAIN_CX + dirX * brainRadius;
       pA[baseIndex + 1] = dirY * brainRadius;
