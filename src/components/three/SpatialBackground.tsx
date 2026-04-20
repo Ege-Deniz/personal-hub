@@ -2,8 +2,35 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  EffectComposer,
+  Bloom,
+  ChromaticAberration,
+  Vignette,
+  SMAA,
+  ToneMapping,
+} from "@react-three/postprocessing";
+import { BlendFunction, ToneMappingMode } from "postprocessing";
 import * as THREE from "three";
-import { MeshSurfaceSampler } from "three-stdlib";
+
+const POSTFX_ENABLED = process.env.NEXT_PUBLIC_POSTFX !== "0";
+
+const hash3 = (x: number, y: number, z: number) => {
+  const h = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719) * 43758.5453;
+  return h - Math.floor(h);
+};
+const noise3 = (x: number, y: number, z: number) => hash3(x, y, z) * 2 - 1;
+const fbm = (x: number, y: number, z: number) => {
+  let sum = 0;
+  let amp = 1;
+  let freq = 1;
+  for (let i = 0; i < 4; i++) {
+    sum += noise3(x * freq, y * freq, z * freq) * amp;
+    amp *= 0.5;
+    freq *= 2.07;
+  }
+  return sum;
+};
 
 const CORE_PARTICLE_COUNT = 5000;
 const AMBIENT_PARTICLE_COUNT = 360;
@@ -102,12 +129,6 @@ const Particles = () => {
   );
 
   const { posA, posB, posC, seeds, colors, ambientFlags } = useMemo(() => {
-    const sourceGeometry = new THREE.IcosahedronGeometry(12.2, 5);
-    const sampledGeometry = sourceGeometry.toNonIndexed() ?? sourceGeometry;
-    const samplerA = new MeshSurfaceSampler(
-      new THREE.Mesh(sampledGeometry)
-    ).build();
-
     const pA = new Float32Array(PARTICLE_COUNT * 3);
     const pB = new Float32Array(PARTICLE_COUNT * 3);
     const pC = new Float32Array(PARTICLE_COUNT * 3);
@@ -115,7 +136,9 @@ const Particles = () => {
     const cols = new Float32Array(PARTICLE_COUNT * 3);
     const ambient = new Float32Array(PARTICLE_COUNT);
 
-    const samplePoint = new THREE.Vector3();
+    const BRAIN_RADIUS = 13.8;
+    const BRAIN_CX = 17.2;
+    const BRAIN_CZ = -5.5;
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const baseIndex = i * 3;
@@ -156,19 +179,22 @@ const Particles = () => {
         continue;
       }
 
-      samplerA.sample(samplePoint);
-      const shellWarp =
-        1 +
-        Math.sin(samplePoint.y * 0.26 + seed * 18) * 0.16 +
-        Math.cos(samplePoint.x * 0.2 + seed * 11) * 0.08;
-      samplePoint.multiplyScalar(shellWarp);
-      samplePoint.x += 17.2 + Math.sin(samplePoint.y * 0.24) * 0.8;
-      samplePoint.y += Math.cos(samplePoint.z * 0.18) * 0.45;
-      samplePoint.z = samplePoint.z * 0.8 - 5.5;
+      // Fibonacci-lattice sphere surface with organic cortex folds.
+      const coreIdx = i + 0.5;
+      const fibY = 1 - (2 * coreIdx) / CORE_PARTICLE_COUNT;
+      const fibR = Math.sqrt(Math.max(0, 1 - fibY * fibY));
+      const fibTheta = GOLDEN_ANGLE * coreIdx;
+      const dirX = Math.cos(fibTheta) * fibR;
+      const dirZ = Math.sin(fibTheta) * fibR;
+      const dirY = fibY;
 
-      pA[baseIndex] = samplePoint.x;
-      pA[baseIndex + 1] = samplePoint.y;
-      pA[baseIndex + 2] = samplePoint.z;
+      const foldNoise = fbm(dirX * 1.9, dirY * 1.9, dirZ * 1.9);
+      const detailNoise = fbm(dirX * 4.3, dirY * 4.3, dirZ * 4.3);
+      const brainRadius = BRAIN_RADIUS * (1 + foldNoise * 0.11 + detailNoise * 0.035);
+
+      pA[baseIndex] = BRAIN_CX + dirX * brainRadius;
+      pA[baseIndex + 1] = dirY * brainRadius;
+      pA[baseIndex + 2] = BRAIN_CZ + dirZ * brainRadius;
 
       const fieldAngle = i * GOLDEN_ANGLE;
       const fieldRadius = 12 + Math.pow(seed, 0.45) * 42;
@@ -269,9 +295,6 @@ const Particles = () => {
       cols[baseIndex + 2] = color.b;
     }
 
-    if (sampledGeometry !== sourceGeometry) sampledGeometry.dispose();
-    sourceGeometry.dispose();
-
     return {
       posA: pA,
       posB: pB,
@@ -354,7 +377,7 @@ const Particles = () => {
     const vec3 ROSE_ANCHOR_MOBILE = vec3(0.0, -1.8, -4.0);
 
     void main() {
-      float brainSpin = uTime * 0.16;
+      float brainSpin = uTime * 0.14;
       mat2 brainRot = mat2(
         cos(brainSpin),
         -sin(brainSpin),
@@ -365,6 +388,17 @@ const Particles = () => {
       brainPos.xz -= BRAIN_CENTER_XZ;
       brainPos.xz = brainRot * brainPos.xz;
       brainPos.xz += BRAIN_CENTER_XZ;
+
+      // Breathing: global radial pulse + per-particle ripple along surface normal.
+      vec3 brainCenter3 = vec3(BRAIN_CENTER_XZ.x, 0.0, BRAIN_CENTER_XZ.y);
+      vec3 brainRel = brainPos - brainCenter3;
+      float brainLen = length(brainRel);
+      float brainLenSafe = max(brainLen, 0.001);
+      vec3 brainDir = brainRel / brainLenSafe;
+      float globalBreath = 1.0 + sin(uTime * 0.42) * 0.028;
+      float ripple = sin(uTime * 0.62 + aSeed * 6.2831) * 0.22;
+      brainPos = brainDir * (brainLen * globalBreath + ripple) + brainCenter3;
+
       brainPos = mix(
         brainPos,
         (brainPos - vec3(BRAIN_CENTER_XZ.x, 0.0, BRAIN_CENTER_XZ.y)) * 0.58 +
@@ -523,22 +557,308 @@ const Particles = () => {
   );
 };
 
+const Atmosphere = () => {
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+  const scrollRef = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const max = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        1
+      );
+      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  useFrame((state, delta) => {
+    if (!matRef.current) return;
+    matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+    matRef.current.uniforms.uScroll.value = THREE.MathUtils.lerp(
+      matRef.current.uniforms.uScroll.value,
+      scrollRef.current,
+      1 - Math.exp(-delta * 4)
+    );
+  });
+
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uScroll: { value: 0 },
+    }),
+    []
+  );
+
+  const vertexShader = `
+    varying vec3 vWorldDir;
+    void main() {
+      vWorldDir = normalize(position);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `;
+
+  const fragmentShader = `
+    uniform float uTime;
+    uniform float uScroll;
+    varying vec3 vWorldDir;
+
+    float hash3(vec3 p) {
+      return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
+    }
+    float vnoise(vec3 p) {
+      vec3 i = floor(p);
+      vec3 f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      float n000 = hash3(i);
+      float n100 = hash3(i + vec3(1.0, 0.0, 0.0));
+      float n010 = hash3(i + vec3(0.0, 1.0, 0.0));
+      float n110 = hash3(i + vec3(1.0, 1.0, 0.0));
+      float n001 = hash3(i + vec3(0.0, 0.0, 1.0));
+      float n101 = hash3(i + vec3(1.0, 0.0, 1.0));
+      float n011 = hash3(i + vec3(0.0, 1.0, 1.0));
+      float n111 = hash3(i + vec3(1.0, 1.0, 1.0));
+      float n00 = mix(n000, n100, f.x);
+      float n10 = mix(n010, n110, f.x);
+      float n01 = mix(n001, n101, f.x);
+      float n11 = mix(n011, n111, f.x);
+      return mix(mix(n00, n10, f.y), mix(n01, n11, f.y), f.z);
+    }
+    float fbm3(vec3 p) {
+      float s = 0.0;
+      float a = 0.55;
+      for (int i = 0; i < 5; i++) {
+        s += vnoise(p) * a;
+        p *= 2.07;
+        a *= 0.52;
+      }
+      return s;
+    }
+    float stars(vec3 dir) {
+      vec3 s = dir * 220.0;
+      float n = hash3(floor(s));
+      float pt = smoothstep(0.9965, 0.9998, n);
+      return pt;
+    }
+
+    void main() {
+      vec3 d = normalize(vWorldDir);
+      float t = uTime * 0.018;
+      float driftA = fbm3(d * 2.2 + vec3(t, t * 0.62, -t * 0.41));
+      float driftB = fbm3(d * 5.6 - vec3(t * 0.48, t * 0.22, t * 0.35));
+      float nebula = driftA * 0.72 + driftB * 0.28;
+
+      vec3 deepSpace  = vec3(0.003, 0.005, 0.013);
+      vec3 nightTeal  = vec3(0.008, 0.028, 0.050);
+      vec3 plasmaBlue = vec3(0.014, 0.028, 0.095);
+      vec3 violetGas  = vec3(0.055, 0.018, 0.098);
+      vec3 goldWarm   = vec3(0.195, 0.120, 0.032);
+
+      float tealMix   = smoothstep(0.28, 0.62, nebula);
+      float plasmaMix = smoothstep(0.44, 0.78, nebula);
+      float violetMix = smoothstep(0.58, 0.88, nebula);
+      float goldMix   = smoothstep(0.82, 0.97, nebula);
+
+      vec3 col = deepSpace;
+      col = mix(col, nightTeal,   tealMix * 0.55);
+      col = mix(col, plasmaBlue,  plasmaMix * 0.45);
+      col = mix(col, violetGas,   violetMix * 0.50);
+      col += goldWarm * goldMix * 0.22;
+
+      // Scroll-driven tint: push warmer toward rose state.
+      vec3 warmShift = vec3(0.024, 0.010, -0.006) * smoothstep(0.35, 0.9, uScroll);
+      col += warmShift * (0.4 + nebula * 0.5);
+
+      // Subtle vertical gradient + horizon glow.
+      float vert = smoothstep(-0.6, 0.9, d.y);
+      col *= mix(1.1, 0.58, vert);
+      float horizon = exp(-pow(d.y, 2.0) * 7.0);
+      col += vec3(0.008, 0.014, 0.026) * horizon * 0.30;
+
+      // Stars — keep faint, let bloom catch only brightest.
+      col += vec3(0.75, 0.85, 1.0) * stars(d) * 0.32;
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  return (
+    <mesh scale={[140, 140, 140]} frustumCulled={false} renderOrder={-1}>
+      <sphereGeometry args={[1, 48, 32]} />
+      <shaderMaterial
+        ref={matRef}
+        side={THREE.BackSide}
+        depthWrite={false}
+        depthTest={false}
+        uniforms={uniforms}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+      />
+    </mesh>
+  );
+};
+
+type CameraKeyframe = {
+  t: number;
+  pos: [number, number, number];
+  look: [number, number, number];
+  fov: number;
+};
+
+const CAMERA_KEYFRAMES: CameraKeyframe[] = [
+  { t: 0.0, pos: [0, 0, 38], look: [0, 0, -4], fov: 45 },
+  { t: 0.22, pos: [2.2, -0.6, 33], look: [4, -0.8, -4], fov: 44 },
+  { t: 0.48, pos: [-3.4, -2.6, 40], look: [0, -1.4, -4], fov: 46 },
+  { t: 0.72, pos: [2.2, -2.8, 29], look: [9.5, -1.6, -4], fov: 44 },
+  { t: 0.9, pos: [1.0, -1.2, 34], look: [10.5, 0.2, -4], fov: 45 },
+  { t: 1.0, pos: [0.0, -0.2, 40], look: [2.0, -0.2, -4], fov: 45 },
+];
+
+const smoothstep = (x: number) => x * x * (3 - 2 * x);
+
+const CameraRig = () => {
+  const scrollRef = useRef(0);
+  const basePosRef = useRef(new THREE.Vector3(0, 0, 38));
+  const baseLookRef = useRef(new THREE.Vector3(0, 0, -4));
+  const baseFovRef = useRef(45);
+  const tmpPos = useMemo(() => new THREE.Vector3(), []);
+  const tmpLook = useMemo(() => new THREE.Vector3(), []);
+  const finalLook = useMemo(() => new THREE.Vector3(), []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const max = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        1
+      );
+      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  useFrame(({ camera, clock }, delta) => {
+    const t = scrollRef.current;
+
+    // Keyframe lookup.
+    let k1 = CAMERA_KEYFRAMES[0];
+    let k2 = CAMERA_KEYFRAMES[CAMERA_KEYFRAMES.length - 1];
+    for (let i = 0; i < CAMERA_KEYFRAMES.length - 1; i++) {
+      if (t <= CAMERA_KEYFRAMES[i + 1].t) {
+        k1 = CAMERA_KEYFRAMES[i];
+        k2 = CAMERA_KEYFRAMES[i + 1];
+        break;
+      }
+    }
+    const local = (t - k1.t) / Math.max(k2.t - k1.t, 0.0001);
+    const eased = smoothstep(THREE.MathUtils.clamp(local, 0, 1));
+
+    tmpPos.set(
+      THREE.MathUtils.lerp(k1.pos[0], k2.pos[0], eased),
+      THREE.MathUtils.lerp(k1.pos[1], k2.pos[1], eased),
+      THREE.MathUtils.lerp(k1.pos[2], k2.pos[2], eased)
+    );
+    tmpLook.set(
+      THREE.MathUtils.lerp(k1.look[0], k2.look[0], eased),
+      THREE.MathUtils.lerp(k1.look[1], k2.look[1], eased),
+      THREE.MathUtils.lerp(k1.look[2], k2.look[2], eased)
+    );
+    const targetFov = THREE.MathUtils.lerp(k1.fov, k2.fov, eased);
+
+    const smooth = 1 - Math.exp(-delta * 2.4);
+    basePosRef.current.lerp(tmpPos, smooth);
+    baseLookRef.current.lerp(tmpLook, smooth);
+    baseFovRef.current = THREE.MathUtils.lerp(
+      baseFovRef.current,
+      targetFov,
+      smooth
+    );
+
+    // Organic micro-drift overlaid on smoothed base (non-lerped for persistence).
+    const tm = clock.elapsedTime;
+    const bobY = Math.sin(tm * 0.24) * 0.22;
+    const bobX = Math.cos(tm * 0.17) * 0.32;
+    const bobZ = Math.sin(tm * 0.11) * 0.18;
+
+    camera.position.set(
+      basePosRef.current.x + bobX,
+      basePosRef.current.y + bobY,
+      basePosRef.current.z + bobZ
+    );
+    finalLook.copy(baseLookRef.current);
+    finalLook.x += Math.sin(tm * 0.19) * 0.08;
+    finalLook.y += Math.cos(tm * 0.27) * 0.06;
+    camera.lookAt(finalLook);
+
+    if ((camera as THREE.PerspectiveCamera).isPerspectiveCamera) {
+      const persp = camera as THREE.PerspectiveCamera;
+      const fovBreath =
+        baseFovRef.current + Math.sin(tm * 0.31) * 0.35;
+      if (Math.abs(persp.fov - fovBreath) > 0.01) {
+        persp.fov = fovBreath;
+        persp.updateProjectionMatrix();
+      }
+    }
+  });
+
+  return null;
+};
+
 export default function SpatialBackground() {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 bg-[#020308]">
       <Canvas
         frameloop="always"
-        dpr={[1, 1]}
+        dpr={[1, 2]}
         camera={{ position: [0, 0, 38], fov: 45 }}
         gl={{
           antialias: false,
           alpha: true,
           powerPreference: "high-performance",
+          toneMapping: THREE.NoToneMapping,
         }}
       >
         <color attach="background" args={["#020308"]} />
         <ambientLight intensity={0.35} />
+        <CameraRig />
+        <Atmosphere />
         <Particles />
+        {POSTFX_ENABLED && (
+          <EffectComposer
+            multisampling={0}
+            frameBufferType={THREE.HalfFloatType}
+            disableNormalPass
+          >
+            <Bloom
+              intensity={1.35}
+              luminanceThreshold={0.08}
+              luminanceSmoothing={0.9}
+              mipmapBlur
+              radius={0.9}
+              levels={8}
+            />
+            <ChromaticAberration
+              offset={new THREE.Vector2(0.0012, 0.0012)}
+              blendFunction={BlendFunction.NORMAL}
+              radialModulation={true}
+              modulationOffset={0.35}
+            />
+            <Vignette eskil={false} offset={0.28} darkness={0.62} />
+            <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+            <SMAA />
+          </EffectComposer>
+        )}
       </Canvas>
     </div>
   );
