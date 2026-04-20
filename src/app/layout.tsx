@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "EGE DENIZ — All-around Developer",
+  title: "Ege Deniz — AI-native Builder · Spatial Web",
   description:
-    "Architecting immersive web experiences, intelligent systems, & elite digital environments and graphics and applications.",
+    "AI-native builder shipping agent workflows, Claude skills, and cinematic spatial web experiences. Custom R3F engines and landing pages for AI developer tools.",
 };
 
 export default function RootLayout({

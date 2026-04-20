@@ -186,11 +186,12 @@ export default function Hero() {
             />
           </div>
           <p className="font-body text-[clamp(0.88rem,1.3vw,1.1rem)] text-white/70 leading-[1.75] max-w-[420px] text-shadow-hero">
-            Architecting immersive web experiences, intelligent systems, &{" "}
+            Building AI-native tools with a spatial edge — agent workflows,
+            custom shaders, and{" "}
             <span className="font-serif italic text-gold text-[1.1em]">
-              elite digital environments
+              cinematic landings
             </span>{" "}
-            and graphics and applications.
+            that don&apos;t look like the template.
           </p>
         </motion.div>
 

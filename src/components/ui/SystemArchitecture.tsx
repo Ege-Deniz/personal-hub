@@ -3,23 +3,23 @@
 const CAPABILITY_TRACKS = [
   {
     code: "01 // AI Engineering",
-    title: "AI systems + agents",
-    copy: "LLM workflows and applied intelligence shipped as real product behavior.",
-    metric: "LLMs / Python / Systems",
+    title: "Agent workflows + LLM systems",
+    copy: "Tool-use, memory, streaming UIs. Shipped as product surfaces, not demo chatboxes.",
+    metric: "Claude / Python / Agents",
     accent: "text-cyan",
   },
   {
-    code: "02 // All-Around Development",
-    title: "Full-stack product architecture",
-    copy: "Frontend, backend, APIs, and infrastructure connected into one build flow.",
-    metric: "Next.js / React / APIs",
+    code: "02 // Full-Stack Architecture",
+    title: "Product architecture, end to end",
+    copy: "Next.js App Router, typed APIs, auth, and deploy pipelines connected into one build flow.",
+    metric: "Next.js / TypeScript / Vercel",
     accent: "text-purple-300",
   },
   {
-    code: "03 // Visual & Web Design",
-    title: "Spatial UI + graphic systems",
-    copy: "Visual direction, interface design, motion language, and 3D web scenes.",
-    metric: "UI / Motion / Graphics",
+    code: "03 // Spatial Web & Visual",
+    title: "Spatial interfaces + shader systems",
+    copy: "Three.js + R3F, custom GLSL, post-processing. Cinematic, not templated.",
+    metric: "Three.js / R3F / GLSL",
     accent: "text-gold",
   },
 ];
@@ -45,8 +45,8 @@ export default function SystemArchitecture() {
             </h2>
 
             <p className="mt-4 max-w-md text-[0.8rem] leading-[1.75] text-white/45">
-              One closing snapshot of how your AI, engineering, and visual
-              work connect into a single studio system.
+              One closing snapshot of how AI, engineering, and spatial craft
+              fuse into a single studio operating system.
             </p>
 
             <div className="mt-6 space-y-3">
