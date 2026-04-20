@@ -69,10 +69,10 @@ export default function HomePage() {
                     <InferenceText text="SYSTEM INIT" delay={200} />
                   </h2>
                   <p className="font-display text-[1rem] sm:text-[1.15rem] font-semibold text-gold/80 tracking-wide">
-                    All-Around Developer &amp; Systems Architect
+                    AI-Native Builder · Spatial Web Engineer
                   </p>
                   <p className="text-[0.78rem] text-white/30 leading-[1.7] max-w-md mt-1">
-                    Engineering intelligent systems, full-stack environments, and graphic design. Whether architecting AI algorithms or building web design environments, the underlying approach remains the same: absolute focus and precision.
+                    Ship AI systems that feel like products, not demos. Agent workflows, shader-driven interfaces, and cinematic landings for AI developer tools. Claude skills and R3F engines live in the open.
                   </p>
                 </div>
               </GlassCard>
@@ -175,10 +175,18 @@ export default function HomePage() {
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <h4 className="font-display text-[0.85rem] font-bold mb-1">
-                          System Architecture
+                          AI Systems
                         </h4>
                         <p className="text-[0.7rem] text-white/25 leading-[1.55]">
-                          Full-stack environments &amp; neural network logic.
+                          Agent workflows, LLM pipelines, tool-use UIs shipped as real product behavior.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="font-display text-[0.85rem] font-bold mb-1">
+                          Spatial Web
+                        </h4>
+                        <p className="text-[0.7rem] text-white/25 leading-[1.55]">
+                          Three.js, R3F, custom shaders &mdash; particle engines that feel cinematic, not templated.
                         </p>
                       </div>
                       <div>
@@ -186,15 +194,7 @@ export default function HomePage() {
                           Competitive FPS
                         </h4>
                         <p className="text-[0.7rem] text-white/25 leading-[1.55]">
-                          Tactical precision and high-level mechanics.
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className="font-display text-[0.85rem] font-bold mb-1">
-                          Cinematic Visuals
-                        </h4>
-                        <p className="text-[0.7rem] text-white/25 leading-[1.55]">
-                          Motion design &amp; immersive storytelling.
+                          Tactical mechanics and frame-perfect decisions. The operator discipline behind the code.
                         </p>
                       </div>
                     </div>
