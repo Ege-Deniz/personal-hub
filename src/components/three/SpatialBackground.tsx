@@ -12,6 +12,7 @@ import {
 } from "@react-three/postprocessing";
 import { BlendFunction, ToneMappingMode } from "postprocessing";
 import * as THREE from "three";
+import { FIRE_POINTS, FIRE_POINT_COUNT } from "./firePoints";
 
 const POSTFX_ENABLED = process.env.NEXT_PUBLIC_POSTFX !== "0";
 
@@ -179,34 +180,15 @@ const Particles = () => {
         continue;
       }
 
-      // Fibonacci-lattice direction on unit sphere.
-      const coreIdx = i + 0.5;
-      const fibY = 1 - (2 * coreIdx) / CORE_PARTICLE_COUNT;
-      const fibR = Math.sqrt(Math.max(0, 1 - fibY * fibY));
-      const fibTheta = GOLDEN_ANGLE * coreIdx;
-      const dirX = Math.cos(fibTheta) * fibR;
-      const dirZ = Math.sin(fibTheta) * fibR;
-      const dirY = fibY;
+      // Sample a point from the baked fire-in-the-sky surface (normalized to unit radius).
+      const fpIdx = i % FIRE_POINT_COUNT;
+      const fx = FIRE_POINTS[fpIdx * 3];
+      const fy = FIRE_POINTS[fpIdx * 3 + 1];
+      const fz = FIRE_POINTS[fpIdx * 3 + 2];
 
-      // ~28% volumetric interior, ~72% surface shell with organic cortex folds.
-      const interiorRoll = hash3(coreIdx * 0.173, coreIdx * 0.219, 7.3);
-      const isInterior = interiorRoll < 0.28;
-
-      let radialScale: number;
-      if (isInterior) {
-        // Weighted toward outer interior (sqrt for volume-balanced distribution).
-        const rNorm = hash3(coreIdx * 0.331, 1.13, coreIdx * 0.197);
-        radialScale = 0.22 + Math.sqrt(rNorm) * 0.68;
-      } else {
-        const foldNoise = fbm(dirX * 1.9, dirY * 1.9, dirZ * 1.9);
-        const detailNoise = fbm(dirX * 4.3, dirY * 4.3, dirZ * 4.3);
-        radialScale = 1 + foldNoise * 0.11 + detailNoise * 0.035;
-      }
-      const brainRadius = BRAIN_RADIUS * radialScale;
-
-      pA[baseIndex] = BRAIN_CX + dirX * brainRadius;
-      pA[baseIndex + 1] = dirY * brainRadius;
-      pA[baseIndex + 2] = BRAIN_CZ + dirZ * brainRadius;
+      pA[baseIndex] = BRAIN_CX + fx * BRAIN_RADIUS;
+      pA[baseIndex + 1] = fy * BRAIN_RADIUS;
+      pA[baseIndex + 2] = BRAIN_CZ + fz * BRAIN_RADIUS;
 
       const fieldAngle = i * GOLDEN_ANGLE;
       const fieldRadius = 12 + Math.pow(seed, 0.45) * 42;
