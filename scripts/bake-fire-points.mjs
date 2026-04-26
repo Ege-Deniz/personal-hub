@@ -92,7 +92,9 @@ const visit = (node, parentMat) => {
         const cz = ux*vy - uy*vx;
         const area = 0.5 * Math.sqrt(cx*cx + cy*cy + cz*cz);
         if (area <= 0 || !Number.isFinite(area)) continue;
-        triangles.push({ a, b, c, area });
+        const cenx = (a[0]+b[0]+c[0])/3, ceny = (a[1]+b[1]+c[1])/3, cenz = (a[2]+b[2]+c[2])/3;
+        const inv = 1/Math.sqrt(cx*cx+cy*cy+cz*cz);
+        triangles.push({ a, b, c, area, cen:[cenx,ceny,cenz], n:[cx*inv,cy*inv,cz*inv] });
         triCount++;
       }
     }
@@ -104,8 +106,30 @@ for (const scene of root.listScenes()) {
   for (const node of scene.listChildren()) visit(node, mat4Identity());
 }
 
-console.log(`triangles: ${triCount}`);
+console.log(`triangles total: ${triCount}`);
 if (triCount === 0) { console.error("no triangles found in GLB"); process.exit(2); }
+
+// Cull inward-facing triangles to recover the silhouette shell. Without
+// this, samples drawn from interior surfaces of the GLB blur the figure.
+let bx0=+Infinity,by0=+Infinity,bz0=+Infinity,bx1=-Infinity,by1=-Infinity,bz1=-Infinity;
+for (const tri of triangles) {
+  const [x,y,z] = tri.cen;
+  if (x<bx0) bx0=x; if (y<by0) by0=y; if (z<bz0) bz0=z;
+  if (x>bx1) bx1=x; if (y>by1) by1=y; if (z>bz1) bz1=z;
+}
+const mx=(bx0+bx1)/2, my=(by0+by1)/2, mz=(bz0+bz1)/2;
+const before = triangles.length;
+let writeIdx = 0;
+for (let i = 0; i < triangles.length; i++) {
+  const { cen, n } = triangles[i];
+  const dx=cen[0]-mx, dy=cen[1]-my, dz=cen[2]-mz;
+  const len = Math.sqrt(dx*dx+dy*dy+dz*dz);
+  if (len < 1e-6 || (n[0]*dx + n[1]*dy + n[2]*dz) / len > 0) {
+    triangles[writeIdx++] = triangles[i];
+  }
+}
+triangles.length = writeIdx;
+console.log(`triangles after outward-facing cull: ${triangles.length} (kept ${(triangles.length/before*100).toFixed(1)}%)`);
 
 const cum = new Float64Array(triangles.length);
 let total = 0;

@@ -37,11 +37,15 @@ const CORE_PARTICLE_COUNT = 5000;
 const AMBIENT_PARTICLE_COUNT = 360;
 const PARTICLE_COUNT = CORE_PARTICLE_COUNT + AMBIENT_PARTICLE_COUNT;
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+// Fire-in-the-sky temperature ramp: deep-cobalt edge -> ionized magenta ->
+// sodium ember -> white-hot core. Ordered cool[0] to hot[3]; particles are
+// colored by radial distance from the cluster centroid (see below) so the
+// figure reads as a 3D glowing body rather than randomly tinted dots.
 const COLOR_PALETTE = [
-  new THREE.Color("#00F2FE"),
-  new THREE.Color("#0055FF"),
-  new THREE.Color("#7000FF"),
-  new THREE.Color("#FFD700"),
+  new THREE.Color("#1A2DFF"),
+  new THREE.Color("#FF2EFF"),
+  new THREE.Color("#FF7A2E"),
+  new THREE.Color("#FFE8C2"),
 ];
 
 const Particles = () => {
@@ -278,11 +282,18 @@ const Particles = () => {
           roseCenterZ + Math.sin(leafAngle) * leafWidth * 0.28;
       }
 
-      const colorRoll = seed;
-      let color = COLOR_PALETTE[3];
-      if (colorRoll < 0.42) color = COLOR_PALETTE[0];
-      else if (colorRoll < 0.72) color = COLOR_PALETTE[1];
-      else if (colorRoll < 0.9) color = COLOR_PALETTE[2];
+      // Heat from radial distance to cluster centroid: body interior glows
+      // white-hot, surface limbs cool toward deep cobalt. Seed noise breaks
+      // the bands so the gradient never reads as a perfect onion.
+      const dx = (pA[baseIndex] - BRAIN_CX) / BRAIN_RADIUS;
+      const dy = pA[baseIndex + 1] / BRAIN_RADIUS;
+      const dz = (pA[baseIndex + 2] - BRAIN_CZ) / BRAIN_RADIUS;
+      const radial = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      const heatRoll = (1 - radial) + (seed - 0.5) * 0.32;
+      let color = COLOR_PALETTE[0];
+      if (heatRoll > 0.62) color = COLOR_PALETTE[3];
+      else if (heatRoll > 0.34) color = COLOR_PALETTE[2];
+      else if (heatRoll > 0.1) color = COLOR_PALETTE[1];
 
       cols[baseIndex] = color.r;
       cols[baseIndex + 1] = color.g;
@@ -371,7 +382,9 @@ const Particles = () => {
     const vec3 ROSE_ANCHOR_MOBILE = vec3(0.0, -1.8, -4.0);
 
     void main() {
-      float brainSpin = uTime * 0.14;
+      // Slow turn (was 0.14) so the GLB silhouette holds its pose long enough
+      // to register as the asset, not as an abstract blob in motion.
+      float brainSpin = uTime * 0.025;
       mat2 brainRot = mat2(
         cos(brainSpin),
         -sin(brainSpin),
