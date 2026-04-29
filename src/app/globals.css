@@ -100,6 +100,57 @@ body {
   }
 }
 
+@keyframes brainPreviewBreathe {
+  0%,
+  100% {
+    transform: scale(1.025);
+    filter: brightness(0.94) saturate(1.05);
+  }
+  50% {
+    transform: scale(1.055);
+    filter: brightness(1.05) saturate(1.16);
+  }
+}
+
+@keyframes brainPreviewAura {
+  0%,
+  100% {
+    opacity: 0.24;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.08);
+  }
+}
+
+.brain-preview-shell {
+  isolation: isolate;
+}
+
+.brain-preview-image {
+  animation: brainPreviewBreathe 5.8s ease-in-out infinite;
+  transform-origin: 72% 42%;
+  will-change: transform, filter;
+}
+
+.brain-preview-breath {
+  background:
+    radial-gradient(circle at 72% 42%, rgba(212, 168, 83, 0.28), transparent 23%),
+    radial-gradient(circle at 72% 42%, rgba(0, 229, 255, 0.13), transparent 34%);
+  mix-blend-mode: screen;
+  animation: brainPreviewAura 5.8s ease-in-out infinite;
+  transform-origin: 72% 42%;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brain-preview-image,
+  .brain-preview-breath {
+    animation: none;
+  }
+}
+
 /* ═══ Bento Grid — Explicit placement ═══ */
 .bento-grid {
   display: grid;

@@ -82,13 +82,14 @@ export default function BrainOperatorFeature() {
             </div>
           </div>
 
-          <div className="order-1 relative min-h-[430px] overflow-hidden rounded-xl border border-gold/[0.12] bg-[#05070d]/70 shadow-[0_30px_80px_rgba(0,0,0,0.35)] lg:order-none">
+          <div className="brain-preview-shell order-1 relative min-h-[430px] overflow-hidden rounded-xl border border-gold/[0.12] bg-[#05070d]/70 shadow-[0_30px_80px_rgba(0,0,0,0.35)] lg:order-none">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/brain-operator-preview.png"
               alt="Brain Operator landing page with a cinematic particle brain hero"
-              className="absolute inset-0 h-full w-full scale-[1.03] object-cover opacity-80 saturate-[1.08]"
+              className="brain-preview-image absolute inset-0 h-full w-full object-cover opacity-80 saturate-[1.08]"
             />
+            <div className="brain-preview-breath absolute inset-0" aria-hidden="true" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,transparent_0,rgba(5,7,13,0.04)_22%,rgba(5,7,13,0.74)_82%),linear-gradient(180deg,rgba(5,7,13,0.18),rgba(5,7,13,0.88))]" />
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#05070d] via-[#05070d]/70 to-transparent" />
 
