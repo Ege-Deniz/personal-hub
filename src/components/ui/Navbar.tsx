@@ -6,6 +6,7 @@ import { Github, Instagram } from "lucide-react";
 const NAV_LINKS = [
   { label: "Intro", href: "#hero" },
   { label: "Personal Hub", href: "#hub" },
+  { label: "Brain Operator", href: "#brain-operator" },
   { label: "Studio Stack", href: "#system" },
   { label: "Contact", href: "#network" },
 ];
