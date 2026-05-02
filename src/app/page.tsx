@@ -85,7 +85,7 @@ export default function HomePage() {
                   <div className="flex items-center justify-center w-full h-full p-5">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/headset-character.jpeg"
+                      src="/headset-character.avif"
                       alt="Ege Deniz"
                       className="w-[120px] h-[120px] rounded-full object-contain bg-cyan/[0.04] border-[1.5px] border-cyan/15 shadow-[0_0_20px_rgba(0,229,255,0.08)]"
                     />
@@ -93,15 +93,31 @@ export default function HomePage() {
                 </GlassCard>
 
                 <GlassCard
-                  className="card-setup !p-0 relative overflow-hidden"
+                  className="card-setup relative overflow-hidden"
                   delay={0.1}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/setup.jpeg"
-                    alt="Battlestation"
-                    className="w-full h-full object-cover absolute inset-0 scale-[1.08] origin-bottom hover:scale-[1.12] transition-transform duration-700"
-                  />
+                  <div className="p-6 h-full flex flex-col justify-between gap-4">
+                    <div className="flex flex-col gap-2">
+                      <div className="font-mono text-[0.4rem] tracking-[3px] uppercase text-cyan/50 flex items-center gap-2">
+                        <span className="inline-block w-2 h-2 rounded-full bg-cyan animate-pulse" />
+                        Now Building
+                      </div>
+                      <div className="font-display text-[1.6rem] font-bold leading-[1.05] tracking-tight">
+                        Backprop Room
+                      </div>
+                      <p className="text-[0.72rem] text-white/40 leading-[1.6]">
+                        A 35-10-6 neural classifier rendered as a spatial scene. Forward and backward passes animate across 3D layers. Built in C, defended in 3D.
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <div className="font-mono text-[0.45rem] uppercase tracking-[2px] text-gold/40">
+                        Defense · June 2026
+                      </div>
+                      <div className="font-mono text-[0.45rem] uppercase tracking-[2px] text-white/20">
+                        Fenerbahçe University
+                      </div>
+                    </div>
+                  </div>
                 </GlassCard>
 
                 <GlassCard className="card-location" delay={0.08}>
@@ -118,53 +134,100 @@ export default function HomePage() {
                   </div>
                 </GlassCard>
 
-                {/* ═══ ROW 3: Four image cards ═══ */}
+                {/* ═══ ROW 3: Four project tiles ═══ */}
                 <GlassCard
-                  className="card-img1 !p-0 relative min-h-[200px] overflow-hidden"
+                  className="card-img1 relative min-h-[200px] overflow-hidden"
                   delay={0.15}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/ig1.jpeg"
-                    alt="Editorial"
-                    className="w-full h-full object-cover absolute inset-0 hover:scale-[1.03] transition-transform duration-700"
-                  />
+                  <div className="p-5 h-full flex flex-col justify-center gap-2">
+                    <div className="font-mono text-[0.4rem] tracking-[3px] uppercase text-gold/50">
+                      Project · Live
+                    </div>
+                    <div className="font-display text-[1.1rem] font-bold leading-tight">
+                      Brain Operator
+                    </div>
+                    <p className="text-[0.7rem] text-white/30 leading-[1.55]">
+                      Obsidian plugin that operates your second brain — Quick mode, Agent Pulse, GitHub Connect.
+                    </p>
+                    <a
+                      href="https://brainoperator.rowy.engineer"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-[0.55rem] uppercase tracking-[1px] text-cyan/60 hover:text-cyan transition-colors mt-1"
+                    >
+                      brainoperator.rowy.engineer →
+                    </a>
+                  </div>
                 </GlassCard>
 
                 <GlassCard
-                  className="card-img2 !p-0 relative min-h-[200px] overflow-hidden"
+                  className="card-img2 relative min-h-[200px] overflow-hidden"
                   delay={0.2}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/ig2.jpeg"
-                    alt="Dreams"
-                    className="w-full h-full object-cover absolute inset-0 hover:scale-[1.03] transition-transform duration-700"
-                  />
+                  <div className="p-5 h-full flex flex-col justify-center gap-2">
+                    <div className="font-mono text-[0.4rem] tracking-[3px] uppercase text-gold/50">
+                      Project · Live
+                    </div>
+                    <div className="font-display text-[1.1rem] font-bold leading-tight">
+                      SIBA
+                    </div>
+                    <p className="text-[0.7rem] text-white/30 leading-[1.55]">
+                      Spatial-web hero overlay for a Mediterranean dealership. Cursor-reactive, model switching, live preview.
+                    </p>
+                    <a
+                      href="https://siba.rowy.engineer"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-[0.55rem] uppercase tracking-[1px] text-cyan/60 hover:text-cyan transition-colors mt-1"
+                    >
+                      siba.rowy.engineer →
+                    </a>
+                  </div>
                 </GlassCard>
 
                 <GlassCard
-                  className="card-img3 !p-0 relative min-h-[200px] overflow-hidden"
+                  className="card-img3 relative min-h-[200px] overflow-hidden"
                   delay={0.25}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/ig3.jpeg"
-                    alt="Coding"
-                    className="w-full h-full object-cover absolute inset-0 hover:scale-[1.03] transition-transform duration-700"
-                  />
+                  <div className="p-5 h-full flex flex-col justify-center gap-2">
+                    <div className="font-mono text-[0.4rem] tracking-[3px] uppercase text-gold/50">
+                      Open Source
+                    </div>
+                    <div className="font-display text-[1.1rem] font-bold leading-tight">
+                      GitHub
+                    </div>
+                    <p className="text-[0.7rem] text-white/30 leading-[1.55]">
+                      Skills, scenes, agent harnesses, and proof artifacts shipped as public repositories.
+                    </p>
+                    <a
+                      href="https://github.com/Ege-Deniz"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-[0.55rem] uppercase tracking-[1px] text-cyan/60 hover:text-cyan transition-colors mt-1"
+                    >
+                      github.com/Ege-Deniz →
+                    </a>
+                  </div>
                 </GlassCard>
 
                 <GlassCard
-                  className="card-img4 !p-0 relative min-h-[200px] overflow-hidden"
+                  className="card-img4 relative min-h-[200px] overflow-hidden"
                   delay={0.3}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/ig4.jpeg"
-                    alt="Sunset"
-                    className="w-full h-full object-cover object-bottom absolute inset-0 hover:scale-[1.03] transition-transform duration-700"
-                  />
+                  <div className="p-5 h-full flex flex-col justify-center gap-2">
+                    <div className="font-mono text-[0.4rem] tracking-[3px] uppercase text-white/20">
+                      Project · In Progress
+                    </div>
+                    <div className="font-display text-[1.1rem] font-bold leading-tight">
+                      More shipping
+                    </div>
+                    <p className="text-[0.7rem] text-white/30 leading-[1.55]">
+                      Cinematic landings, R3F engines, and Claude skills queued for release post-defense.
+                    </p>
+                    <div className="font-mono text-[0.55rem] uppercase tracking-[1px] text-white/20 mt-1">
+                      June 2026 →
+                    </div>
+                  </div>
                 </GlassCard>
 
                 {/* ═══ ROW 4: Disciplines (2col) + Terminal (2col) ═══ */}
