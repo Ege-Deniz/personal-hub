@@ -85,7 +85,7 @@ export default function HomePage() {
                   <div className="flex items-center justify-center w-full h-full p-5">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/headset-character.jpeg"
+                      src="/headset-character.avif"
                       alt="Ege Deniz"
                       className="w-[120px] h-[120px] rounded-full object-contain bg-cyan/[0.04] border-[1.5px] border-cyan/15 shadow-[0_0_20px_rgba(0,229,255,0.08)]"
                     />
