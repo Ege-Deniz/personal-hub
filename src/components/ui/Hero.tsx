@@ -180,7 +180,7 @@ export default function Hero() {
           <div className="w-[68px] h-[68px] rounded-full overflow-hidden shadow-[0_0_20px_rgba(0,229,255,0.12)] border border-cyan/15 flex-shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/headset-character.png"
+              src="/headset-character.avif"
               alt="Ege Deniz"
               className="w-full h-full object-cover scale-[1.35] translate-y-[8%]"
             />
