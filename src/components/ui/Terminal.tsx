@@ -50,7 +50,11 @@ export default function Terminal() {
       clearTimeout(timer);
       if (interval) clearInterval(interval);
     };
-  }, [isInView, currentLine]);
+    // Bug fix 2026-05-03: previously also depended on `currentLine`, which
+    // re-ran the cleanup every time a line finished and killed the interval.
+    // The interval reads `currentLineRef.current` so it doesn't need
+    // `currentLine` as a dep — set up once when isInView becomes true.
+  }, [isInView]);
 
   useEffect(() => {
     const line = TERMINAL_LINES[currentLine];
