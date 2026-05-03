@@ -43,12 +43,91 @@ const COLOR_PALETTE = [
   new THREE.Color("#FFD700"),
 ];
 
+// ── Stable scroll + mobile detection ─────────────────────────────────────────
+//
+// Replaces the per-component inline implementations that recomputed
+// `maxScroll = scrollHeight - innerHeight` inside every scroll event AND
+// derived mobileMix from R3F's `state.viewport.width` once per frame. On iOS
+// Safari and mobile Chrome, the URL bar slides in/out during scroll, which
+// changes `innerHeight` and the canvas aspect — the old code reacted to that
+// every frame, making the rose anchor wobble visibly as you scrolled.
+//
+// Fix:
+//   1. Cache `maxScroll` in a closure; only recompute on actual `resize` and
+//      `visualViewport.resize` events (the latter fires for iOS URL-bar
+//      show/hide; standard `resize` does not).
+//   2. Detect mobile once via `matchMedia("(max-width: 768px)")` and only
+//      flip on real breakpoint changes — never per frame.
+function useStableScrollAndMobile(systemSectionId?: string) {
+  const isMobileRef = useRef(false);
+  const scrollProgressRef = useRef(0);
+  const systemStageRef = useRef(0);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 768px)");
+    const updateMobile = () => {
+      isMobileRef.current = mql.matches;
+    };
+    updateMobile();
+    mql.addEventListener("change", updateMobile);
+
+    let maxScroll = 1;
+    let systemSection: HTMLElement | null = null;
+
+    const onScroll = () => {
+      scrollProgressRef.current = THREE.MathUtils.clamp(
+        window.scrollY / maxScroll,
+        0,
+        1
+      );
+      if (systemSectionId) {
+        if (!systemSection) {
+          systemSection = document.getElementById(systemSectionId);
+        }
+        if (systemSection) {
+          const rect = systemSection.getBoundingClientRect();
+          const span = window.innerHeight + rect.height;
+          systemStageRef.current = THREE.MathUtils.clamp(
+            (window.innerHeight - rect.top) / span,
+            0,
+            1
+          );
+        }
+      }
+    };
+
+    const recalcMax = () => {
+      maxScroll = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        1
+      );
+      onScroll();
+    };
+
+    recalcMax();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", recalcMax, { passive: true });
+    // iOS URL-bar show/hide fires visualViewport.resize, not window.resize.
+    const vv = window.visualViewport;
+    vv?.addEventListener("resize", recalcMax);
+
+    return () => {
+      mql.removeEventListener("change", updateMobile);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", recalcMax);
+      vv?.removeEventListener("resize", recalcMax);
+    };
+  }, [systemSectionId]);
+
+  return { isMobileRef, scrollProgressRef, systemStageRef };
+}
+
 const Particles = () => {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const scrollTargetRef = useRef(0);
-  const systemStageTargetRef = useRef(0);
-  const systemSectionRef = useRef<HTMLElement | null>(null);
+  const { isMobileRef, scrollProgressRef, systemStageRef } =
+    useStableScrollAndMobile("system");
   const pointerNdcRef = useRef(new THREE.Vector2(999, 999));
   const pointerWorldRef = useRef(new THREE.Vector3(999, 999, 0));
   const parallaxRef = useRef(new THREE.Vector2(0, 0));
@@ -56,32 +135,6 @@ const Particles = () => {
   const hoverMixRef = useRef(0);
 
   useEffect(() => {
-    const updateScroll = () => {
-      const maxScroll = Math.max(
-        document.documentElement.scrollHeight - window.innerHeight,
-        1
-      );
-      scrollTargetRef.current = THREE.MathUtils.clamp(
-        window.scrollY / maxScroll,
-        0,
-        1
-      );
-
-      if (!systemSectionRef.current) {
-        systemSectionRef.current = document.getElementById("system");
-      }
-
-      if (systemSectionRef.current) {
-        const rect = systemSectionRef.current.getBoundingClientRect();
-        const stageSpan = window.innerHeight + rect.height;
-        systemStageTargetRef.current = THREE.MathUtils.clamp(
-          (window.innerHeight - rect.top) / stageSpan,
-          0,
-          1
-        );
-      }
-    };
-
     const resetPointer = () => {
       pointerNdcRef.current.set(999, 999);
       hoverTargetRef.current = 0;
@@ -95,10 +148,6 @@ const Particles = () => {
       hoverTargetRef.current = 1;
     };
 
-    updateScroll();
-
-    window.addEventListener("scroll", updateScroll, { passive: true });
-    window.addEventListener("resize", updateScroll, { passive: true });
     window.addEventListener("pointermove", handlePointerMove, {
       capture: true,
       passive: true,
@@ -107,8 +156,6 @@ const Particles = () => {
     window.addEventListener("blur", resetPointer);
 
     return () => {
-      window.removeEventListener("scroll", updateScroll);
-      window.removeEventListener("resize", updateScroll);
       window.removeEventListener("pointermove", handlePointerMove, true);
       window.removeEventListener("pointerleave", resetPointer);
       window.removeEventListener("blur", resetPointer);
@@ -340,19 +387,15 @@ const Particles = () => {
     materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
     materialRef.current.uniforms.uProgress.value = THREE.MathUtils.lerp(
       materialRef.current.uniforms.uProgress.value,
-      scrollTargetRef.current,
+      scrollProgressRef.current,
       smoothing
     );
     materialRef.current.uniforms.uSystemStage.value = THREE.MathUtils.lerp(
       materialRef.current.uniforms.uSystemStage.value,
-      systemStageTargetRef.current,
+      systemStageRef.current,
       1 - Math.exp(-delta * 7)
     );
-    materialRef.current.uniforms.uMobileMix.value = THREE.MathUtils.clamp(
-      (22 - state.viewport.width) / 10,
-      0,
-      1
-    );
+    materialRef.current.uniforms.uMobileMix.value = isMobileRef.current ? 1 : 0;
     materialRef.current.uniforms.uMouse.value.lerp(
       pointerWorldRef.current,
       1 - Math.exp(-delta * 14)
@@ -571,31 +614,14 @@ const Particles = () => {
 
 const Atmosphere = () => {
   const matRef = useRef<THREE.ShaderMaterial>(null);
-  const scrollRef = useRef(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const max = Math.max(
-        document.documentElement.scrollHeight - window.innerHeight,
-        1
-      );
-      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
+  const { scrollProgressRef } = useStableScrollAndMobile();
 
   useFrame((state, delta) => {
     if (!matRef.current) return;
     matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
     matRef.current.uniforms.uScroll.value = THREE.MathUtils.lerp(
       matRef.current.uniforms.uScroll.value,
-      scrollRef.current,
+      scrollProgressRef.current,
       1 - Math.exp(-delta * 4)
     );
   });
@@ -717,39 +743,9 @@ const Atmosphere = () => {
 };
 
 const NeuralEdges = () => {
-  const scrollRef = useRef(0);
-  const systemStageRef = useRef(0);
   const matRef = useRef<THREE.ShaderMaterial>(null);
-
-  useEffect(() => {
-    const systemSection = { current: null as HTMLElement | null };
-    const onScroll = () => {
-      const max = Math.max(
-        document.documentElement.scrollHeight - window.innerHeight,
-        1
-      );
-      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
-      if (!systemSection.current) {
-        systemSection.current = document.getElementById("system");
-      }
-      if (systemSection.current) {
-        const rect = systemSection.current.getBoundingClientRect();
-        const span = window.innerHeight + rect.height;
-        systemStageRef.current = THREE.MathUtils.clamp(
-          (window.innerHeight - rect.top) / span,
-          0,
-          1
-        );
-      }
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
+  const { isMobileRef, scrollProgressRef, systemStageRef } =
+    useStableScrollAndMobile("system");
 
   const positions = useMemo(() => {
     const BRAIN_RADIUS = 13.8;
@@ -824,7 +820,7 @@ const NeuralEdges = () => {
     const smoothFactor = 1 - Math.exp(-delta * 8);
     m.uniforms.uProgress.value = THREE.MathUtils.lerp(
       m.uniforms.uProgress.value,
-      scrollRef.current,
+      scrollProgressRef.current,
       smoothFactor
     );
     m.uniforms.uSystemStage.value = THREE.MathUtils.lerp(
@@ -832,11 +828,7 @@ const NeuralEdges = () => {
       systemStageRef.current,
       1 - Math.exp(-delta * 7)
     );
-    m.uniforms.uMobileMix.value = THREE.MathUtils.clamp(
-      (22 - state.viewport.width) / 10,
-      0,
-      1
-    );
+    m.uniforms.uMobileMix.value = isMobileRef.current ? 1 : 0;
   });
 
   const vertexShader = `
@@ -907,39 +899,9 @@ const DISCHARGE_COUNT = 10;
 const DISCHARGE_SEGMENTS = 18;
 
 const NeuralDischarges = () => {
-  const scrollRef = useRef(0);
-  const systemStageRef = useRef(0);
   const matRef = useRef<THREE.ShaderMaterial>(null);
-
-  useEffect(() => {
-    const systemSection = { current: null as HTMLElement | null };
-    const onScroll = () => {
-      const max = Math.max(
-        document.documentElement.scrollHeight - window.innerHeight,
-        1
-      );
-      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
-      if (!systemSection.current) {
-        systemSection.current = document.getElementById("system");
-      }
-      if (systemSection.current) {
-        const rect = systemSection.current.getBoundingClientRect();
-        const span = window.innerHeight + rect.height;
-        systemStageRef.current = THREE.MathUtils.clamp(
-          (window.innerHeight - rect.top) / span,
-          0,
-          1
-        );
-      }
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
+  const { isMobileRef, scrollProgressRef, systemStageRef } =
+    useStableScrollAndMobile("system");
 
   const { positions, arcAttribs } = useMemo(() => {
     const BRAIN_RADIUS = 13.8;
@@ -1058,7 +1020,7 @@ const NeuralDischarges = () => {
     m.uniforms.uTime.value = state.clock.elapsedTime;
     m.uniforms.uProgress.value = THREE.MathUtils.lerp(
       m.uniforms.uProgress.value,
-      scrollRef.current,
+      scrollProgressRef.current,
       1 - Math.exp(-delta * 8)
     );
     m.uniforms.uSystemStage.value = THREE.MathUtils.lerp(
@@ -1066,11 +1028,7 @@ const NeuralDischarges = () => {
       systemStageRef.current,
       1 - Math.exp(-delta * 7)
     );
-    m.uniforms.uMobileMix.value = THREE.MathUtils.clamp(
-      (22 - state.viewport.width) / 10,
-      0,
-      1
-    );
+    m.uniforms.uMobileMix.value = isMobileRef.current ? 1 : 0;
   });
 
   const vertexShader = `
@@ -1173,39 +1131,9 @@ const NeuralDischarges = () => {
 const ORBITAL_PROBE_COUNT = 240;
 
 const OrbitalProbes = () => {
-  const scrollRef = useRef(0);
-  const systemStageRef = useRef(0);
   const matRef = useRef<THREE.ShaderMaterial>(null);
-
-  useEffect(() => {
-    const systemSection = { current: null as HTMLElement | null };
-    const onScroll = () => {
-      const max = Math.max(
-        document.documentElement.scrollHeight - window.innerHeight,
-        1
-      );
-      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
-      if (!systemSection.current) {
-        systemSection.current = document.getElementById("system");
-      }
-      if (systemSection.current) {
-        const rect = systemSection.current.getBoundingClientRect();
-        const span = window.innerHeight + rect.height;
-        systemStageRef.current = THREE.MathUtils.clamp(
-          (window.innerHeight - rect.top) / span,
-          0,
-          1
-        );
-      }
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
+  const { isMobileRef, scrollProgressRef, systemStageRef } =
+    useStableScrollAndMobile("system");
 
   const { positions, ringData } = useMemo(() => {
     const pos = new Float32Array(ORBITAL_PROBE_COUNT * 3);
@@ -1244,7 +1172,7 @@ const OrbitalProbes = () => {
     m.uniforms.uTime.value = state.clock.elapsedTime;
     m.uniforms.uProgress.value = THREE.MathUtils.lerp(
       m.uniforms.uProgress.value,
-      scrollRef.current,
+      scrollProgressRef.current,
       1 - Math.exp(-delta * 8)
     );
     m.uniforms.uSystemStage.value = THREE.MathUtils.lerp(
@@ -1252,11 +1180,7 @@ const OrbitalProbes = () => {
       systemStageRef.current,
       1 - Math.exp(-delta * 7)
     );
-    m.uniforms.uMobileMix.value = THREE.MathUtils.clamp(
-      (22 - state.viewport.width) / 10,
-      0,
-      1
-    );
+    m.uniforms.uMobileMix.value = isMobileRef.current ? 1 : 0;
   });
 
   const vertexShader = `
@@ -1400,7 +1324,7 @@ const CAMERA_KEYFRAMES: CameraKeyframe[] = [
 const smoothstep = (x: number) => x * x * (3 - 2 * x);
 
 const CameraRig = () => {
-  const scrollRef = useRef(0);
+  const { isMobileRef, scrollProgressRef } = useStableScrollAndMobile();
   const basePosRef = useRef(new THREE.Vector3(0, 0, 38));
   const baseLookRef = useRef(new THREE.Vector3(0, 0, -4));
   const baseFovRef = useRef(45);
@@ -1408,25 +1332,8 @@ const CameraRig = () => {
   const tmpLook = useMemo(() => new THREE.Vector3(), []);
   const finalLook = useMemo(() => new THREE.Vector3(), []);
 
-  useEffect(() => {
-    const onScroll = () => {
-      const max = Math.max(
-        document.documentElement.scrollHeight - window.innerHeight,
-        1
-      );
-      scrollRef.current = THREE.MathUtils.clamp(window.scrollY / max, 0, 1);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  useFrame(({ camera, clock, viewport }, delta) => {
-    const t = scrollRef.current;
+  useFrame(({ camera, clock }, delta) => {
+    const t = scrollProgressRef.current;
 
     // Keyframe lookup.
     let k1 = CAMERA_KEYFRAMES[0];
@@ -1443,11 +1350,7 @@ const CameraRig = () => {
 
     // Mobile damping: shrink keyframe deltas so lookAt stays near origin
     // (which is where the mobile brain/rose anchor lands).
-    const mobileMix = THREE.MathUtils.clamp(
-      (22 - viewport.width) / 10,
-      0,
-      1
-    );
+    const mobileMix = isMobileRef.current ? 1 : 0;
     const posDamp = THREE.MathUtils.lerp(1.0, 0.35, mobileMix);
     const lookDamp = THREE.MathUtils.lerp(1.0, 0.2, mobileMix);
 
