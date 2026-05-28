@@ -7,6 +7,7 @@ import Hero from "@/components/ui/Hero";
 import ChapterGate from "@/components/ui/ChapterGate";
 import BentoGrid from "@/components/ui/BentoGrid";
 import BrainOperatorFeature from "@/components/ui/BrainOperatorFeature";
+import SelectedSystems from "@/components/ui/SelectedSystems";
 import SystemArchitecture from "@/components/ui/SystemArchitecture";
 import GlassCard from "@/components/ui/GlassCard";
 import Terminal from "@/components/ui/Terminal";
@@ -298,6 +299,8 @@ export default function HomePage() {
               </BentoGrid>
 
               <BrainOperatorFeature />
+
+              <SelectedSystems />
 
               <SystemArchitecture />
 
