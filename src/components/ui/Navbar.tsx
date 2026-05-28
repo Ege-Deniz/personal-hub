@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Github, Instagram } from "lucide-react";
 
@@ -7,7 +8,9 @@ const NAV_LINKS = [
   { label: "Intro", href: "#hero" },
   { label: "Personal Hub", href: "#hub" },
   { label: "Brain Operator", href: "#brain-operator" },
+  { label: "Systems", href: "#systems" },
   { label: "Studio Stack", href: "#system" },
+  { label: "Offer", href: "/cinematic-ai-landing-sprint" },
   { label: "Contact", href: "#network" },
 ];
 
@@ -37,6 +40,52 @@ const SOCIAL_LINKS = [
   },
 ];
 
+const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/<>*#";
+
+function ScrambleLink({ label, href }: { label: string; href: string }) {
+  const [display, setDisplay] = useState(label);
+  const raf = useRef<number | null>(null);
+
+  const scramble = () => {
+    const start = performance.now();
+    const duration = 360;
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / duration);
+      const revealed = Math.floor(p * label.length);
+      let out = "";
+      for (let i = 0; i < label.length; i++) {
+        if (label[i] === " " || i < revealed) {
+          out += label[i];
+        } else {
+          out += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        }
+      }
+      setDisplay(out);
+      if (p < 1) raf.current = requestAnimationFrame(tick);
+      else setDisplay(label);
+    };
+    if (raf.current) cancelAnimationFrame(raf.current);
+    raf.current = requestAnimationFrame(tick);
+  };
+
+  useEffect(
+    () => () => {
+      if (raf.current) cancelAnimationFrame(raf.current);
+    },
+    []
+  );
+
+  return (
+    <a
+      href={href}
+      onMouseEnter={scramble}
+      className="font-mono text-[0.62rem] uppercase tracking-[0.18em] tabular-nums text-white/30 transition-colors duration-300 hover:text-cyan"
+    >
+      {display}
+    </a>
+  );
+}
+
 export default function Navbar() {
   return (
     <motion.nav
@@ -65,18 +114,13 @@ export default function Navbar() {
       </a>
 
       {/* Center links */}
-      <div className="hidden md:flex items-center gap-1 text-[0.7rem] font-medium tracking-[0.06em]">
+      <div className="hidden items-center gap-1 md:flex">
         {NAV_LINKS.map((link, i) => (
           <span key={link.label} className="flex items-center">
             {i > 0 && (
-              <span className="mx-2.5 text-white/10 text-[0.45rem]">·</span>
+              <span className="mx-2.5 text-[0.45rem] text-white/10">/</span>
             )}
-            <a
-              href={link.href}
-              className="text-white/25 hover:text-cyan transition-colors"
-            >
-              {link.label}
-            </a>
+            <ScrambleLink label={link.label} href={link.href} />
           </span>
         ))}
       </div>
@@ -92,9 +136,9 @@ export default function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               title={s.label}
-              className="w-[1.9rem] h-[1.9rem] rounded-full flex items-center justify-center text-white/40 bg-[rgba(6,12,24,0.5)] border border-cyan/[0.06] backdrop-blur-md hover:text-cyan hover:scale-110 hover:border-cyan/25 hover:shadow-[0_0_14px_rgba(0,229,255,0.08)] transition-all"
+              className="flex h-[1.9rem] w-[1.9rem] items-center justify-center rounded-full border border-cyan/[0.06] bg-[rgba(6,12,24,0.5)] text-white/40 backdrop-blur-md transition-all hover:border-cyan/30 hover:text-cyan"
             >
-              <Icon className="w-[0.9rem] h-[0.9rem]" />
+              <Icon className="h-[0.9rem] w-[0.9rem]" />
             </a>
           );
         })}
