@@ -1,32 +1,85 @@
 "use client";
 
-import { Github, Instagram, Mail } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpRight, Github, Instagram, Mail } from "lucide-react";
 
 const LINKS = [
   { icon: Github, href: "https://github.com/Ege-Deniz", label: "GitHub" },
   { icon: Instagram, href: "https://www.instagram.com/eqe.deniz/", label: "Instagram" },
-  { icon: Mail, href: "mailto:ege@rowy.engineer", label: "Contact" },
+  { icon: Mail, href: "mailto:ege@rowy.engineer", label: "Email" },
+];
+
+const MARQUEE = [
+  "AI-Native Developer",
+  "Agent Infrastructure",
+  "ML Foundations",
+  "Spatial Web",
 ];
 
 export default function Footer() {
   return (
-    <footer className="relative z-10 mt-4 flex flex-col items-center justify-between gap-3 border-t border-cyan/[0.03] px-4 py-4 sm:flex-row lg:px-16">
-      <p className="text-white/25 text-[0.7rem]">
-        &copy; 2026 Ege Deniz. All rights reserved.
-      </p>
-      <div className="flex gap-4">
-        {LINKS.map((l) => (
-          <a
-            key={l.label}
-            href={l.href}
-            target={l.href.startsWith("http") ? "_blank" : undefined}
-            rel="noopener noreferrer"
-            className="text-white/25 text-[0.7rem] hover:text-cyan transition-colors flex items-center gap-1.5"
-          >
-            <l.icon className="w-3.5 h-3.5" />
-            {l.label}
-          </a>
-        ))}
+    <footer
+      id="open-channel"
+      className="relative z-10 mt-10 scroll-mt-24 border-t border-white/[0.08] px-4 pt-16 lg:px-16"
+    >
+      {/* Marquee strip */}
+      <div className="mb-14 overflow-hidden">
+        <motion.div
+          className="flex w-max gap-6 whitespace-nowrap"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 26, ease: "linear", repeat: Infinity }}
+        >
+          {[...MARQUEE, ...MARQUEE, ...MARQUEE, ...MARQUEE].map((m, i) => (
+            <span
+              key={i}
+              className="flex items-center gap-6 font-display text-[clamp(1.4rem,3vw,2.4rem)] font-extrabold uppercase tracking-[-0.02em] text-white/[0.08]"
+            >
+              {m}
+              <span className="text-cyan/30">✦</span>
+            </span>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Contact CTA */}
+      <div className="mb-16">
+        <div className="mb-5 flex items-center gap-3 font-mono text-[0.58rem] uppercase tracking-[0.32em] text-cyan/70">
+          <span className="h-px w-8 bg-cyan/40" />
+          Open Channel
+        </div>
+        <a
+          href="mailto:ege@rowy.engineer"
+          data-cursor
+          className="group inline-flex max-w-full items-center gap-4 font-display text-[clamp(2rem,7vw,5.5rem)] font-extrabold leading-[0.95] tracking-[-0.04em] text-white/90 transition-colors duration-500 hover:text-cyan"
+        >
+          <span className="break-words">ege@rowy.engineer</span>
+          <ArrowUpRight className="hidden h-[clamp(2rem,5vw,4rem)] w-[clamp(2rem,5vw,4rem)] flex-shrink-0 text-white/30 transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-cyan sm:block" />
+        </a>
+        <p className="mt-6 max-w-md text-[0.85rem] leading-[1.7] text-white/40">
+          AI-native developer building agent systems, ML, and spatial web.
+          Heading into an AI masters. Open to collaborate.
+        </p>
+      </div>
+
+      {/* Credits row */}
+      <div className="flex flex-col items-start justify-between gap-4 border-t border-white/[0.06] py-6 sm:flex-row sm:items-center">
+        <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-white/25">
+          &copy; 2026 Ege Deniz &middot; Cyprus 34.7&deg;N
+        </p>
+        <div className="flex gap-5">
+          {LINKS.map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              target={l.href.startsWith("http") ? "_blank" : undefined}
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 font-mono text-[0.62rem] uppercase tracking-[0.15em] text-white/30 transition-colors duration-300 hover:text-cyan"
+            >
+              <l.icon className="h-3.5 w-3.5" />
+              {l.label}
+            </a>
+          ))}
+        </div>
       </div>
     </footer>
   );
