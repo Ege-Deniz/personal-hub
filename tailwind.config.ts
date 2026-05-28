@@ -18,10 +18,16 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["Syne", "sans-serif"],
-        body: ["Inter", "sans-serif"],
-        mono: ["Space Mono", "monospace"],
-        serif: ["Instrument Serif", "Georgia", "serif"],
+        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        body: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
+        serif: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+      },
+      transitionTimingFunction: {
+        "linear-out": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        snap: "cubic-bezier(1, 0, 0, 1)",
+        material: "cubic-bezier(0.4, 0, 0.2, 1)",
       },
       backdropBlur: {
         glass: "20px",

@@ -2,7 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap");
+/* Fonts: Geist + Geist Mono self-hosted via next/font (see layout.tsx) */
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
 
 :root {
   --bg: #030812;
@@ -16,6 +34,15 @@
   --text: #e8eaf0;
   --text-mid: rgba(220, 225, 240, 0.7);
   --text-dim: rgba(200, 210, 230, 0.35);
+
+  /* Motion — Linear-grade easing */
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-snap: cubic-bezier(1, 0, 0, 1);
+  --ease-material: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Single system accent: cyan owns all interactive chrome. Gold = artifact/imagery only. */
+  --accent: var(--cyan);
+  --hairline: rgba(0, 229, 255, 0.18);
 }
 
 * {
@@ -29,14 +56,15 @@
 }
 
 html {
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 ::selection {
@@ -98,6 +126,48 @@ body {
   .text-shadow-hero {
     text-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 0, 0, 0.5);
   }
+
+  /* Linear-style soft edge fade — dissolve into the field, not hard borders */
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+  }
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  }
+
+  /* Shine-beam hairline (Linear) — lit top edge, replaces glow */
+  .shine-hairline {
+    position: relative;
+  }
+  .shine-hairline::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: radial-gradient(60% 100% at 50% 0%, var(--accent), transparent 70%);
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  /* Tabular numerals for HUD/metrics */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+}
+
+/* Blend-mode grain — resolution-independent, keeps navy true */
+.grain-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
 }
 
 @keyframes brainPreviewBreathe {
