@@ -70,10 +70,10 @@ export default function HomePage() {
                     <InferenceText text="SYSTEM INIT" delay={200} />
                   </h2>
                   <p className="font-display text-[1rem] sm:text-[1.15rem] font-semibold text-gold/80 tracking-wide">
-                    AI-Native Builder · Spatial Web Engineer
+                    AI-Native Developer
                   </p>
                   <p className="text-[0.78rem] text-white/30 leading-[1.7] max-w-md mt-1">
-                    Ship AI systems that feel like products, not demos. Agent workflows, shader-driven interfaces, and cinematic landings for AI developer tools. Claude skills and R3F engines live in the open.
+                    Build agent infrastructure that ships as product, not demos &mdash; brain-operator, computer-use QA, patch loops &mdash; grounded in ML from first principles. Heading into an AI masters to go deeper. Claude skills and R3F engines live in the open.
                   </p>
                 </div>
               </GlassCard>
@@ -173,13 +173,21 @@ export default function HomePage() {
                     <div className="font-mono text-[0.4rem] tracking-[3px] uppercase text-gold/50">
                       Disciplines
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 gap-x-5 gap-y-4">
                       <div>
                         <h4 className="font-display text-[0.85rem] font-bold mb-1">
-                          AI Systems
+                          AI Agent Infrastructure
                         </h4>
                         <p className="text-[0.7rem] text-white/25 leading-[1.55]">
-                          Agent workflows, LLM pipelines, tool-use UIs shipped as real product behavior.
+                          brain-operator, rowy-operator &mdash; computer-use QA, patch loops, durable handoffs. I build the tooling, not just the prompts.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="font-display text-[0.85rem] font-bold mb-1">
+                          ML Foundations
+                        </h4>
+                        <p className="text-[0.7rem] text-white/25 leading-[1.55]">
+                          Backprop and tree search built from scratch &mdash; the math under the models. Deepening it next at an AI masters.
                         </p>
                       </div>
                       <div>

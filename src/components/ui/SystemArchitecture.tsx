@@ -2,9 +2,9 @@
 
 const CAPABILITY_TRACKS = [
   {
-    code: "01 // AI Engineering",
-    title: "Agent workflows + LLM systems",
-    copy: "Tool-use, memory, streaming UIs. Shipped as product surfaces, not demo chatboxes.",
+    code: "01 // AI Systems",
+    title: "Agent infrastructure + ML foundations",
+    copy: "Computer-use QA, patch loops, durable context — built on backprop-level fundamentals, not just API calls.",
     metric: "Claude / Python / Agents",
     accent: "text-cyan",
   },

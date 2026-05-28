@@ -170,6 +170,26 @@ export default function Hero() {
           </span>
         </h1>
 
+        {/* Kinetic identity line */}
+        <div className="ml-[clamp(1rem,4vw,5rem)] mb-7 flex items-center gap-4">
+          <motion.span
+            className="block h-px bg-cyan/50"
+            initial={{ width: 0 }}
+            animate={{ width: "clamp(2.5rem,6vw,5.5rem)" }}
+            transition={{ delay: 1.3, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          />
+          <span className="inline-block overflow-hidden">
+            <motion.span
+              className="inline-block font-mono text-[clamp(0.7rem,1.05vw,0.95rem)] uppercase tracking-[0.4em] text-cyan"
+              initial={{ y: "120%" }}
+              animate={{ y: 0 }}
+              transition={{ delay: 1.25, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            >
+              AI-Native Developer
+            </motion.span>
+          </span>
+        </div>
+
         {/* Subtitle */}
         <motion.div
           className="flex items-center gap-6 flex-wrap ml-[clamp(1rem,4vw,5rem)]"
@@ -185,13 +205,11 @@ export default function Hero() {
               className="w-full h-full object-cover scale-[1.35] translate-y-[8%]"
             />
           </div>
-          <p className="font-body text-[clamp(0.88rem,1.3vw,1.1rem)] text-white/70 leading-[1.75] max-w-[420px] text-shadow-hero">
-            Building AI-native tools with a spatial edge — agent workflows,
-            custom shaders, and{" "}
-            <span className="font-serif italic text-gold text-[1.1em]">
-              cinematic landings
-            </span>{" "}
-            that don&apos;t look like the template.
+          <p className="font-body text-[clamp(0.88rem,1.3vw,1.1rem)] text-white/70 leading-[1.75] max-w-[440px] text-shadow-hero">
+            Building agent infrastructure and ML-grounded tools, shipped
+            through{" "}
+            <span className="italic text-white text-[1.05em]">cinematic</span>{" "}
+            spatial interfaces that don&apos;t look like the template.
           </p>
         </motion.div>
 
