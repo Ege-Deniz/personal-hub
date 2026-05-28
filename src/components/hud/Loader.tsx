@@ -14,18 +14,18 @@ export default function Loader({ onComplete }: LoaderProps) {
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
-        const next = prev + Math.random() * 7 + 2;
+        const next = prev + Math.random() * 11 + 7;
         if (next >= 100) {
           clearInterval(interval);
           setTimeout(() => {
             setVisible(false);
-            setTimeout(onComplete, 600);
-          }, 500);
+            setTimeout(onComplete, 320);
+          }, 220);
           return 100;
         }
         return next;
       });
-    }, 80);
+    }, 55);
 
     return () => clearInterval(interval);
   }, [onComplete]);
@@ -36,7 +36,7 @@ export default function Loader({ onComplete }: LoaderProps) {
         <motion.div
           className="fixed inset-0 z-[10000] bg-abyss flex flex-col items-center justify-center"
           exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <div className="font-mono text-[0.55rem] tracking-[0.4em] uppercase text-cyan/50 mb-10">
             Charting Course
