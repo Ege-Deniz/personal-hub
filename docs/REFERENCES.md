@@ -1,43 +1,62 @@
 # REFERENCES — Ege's X bookmarks → rowy.engineer design inputs
 
-Swept from @Rowyice X bookmarks via Chrome on 2026-05-31 (16 saved refs, full loaded set).
-**Refresh workflow:** Chrome → `x.com/i/bookmarks` → scroll-sweep extracting handle/text/links → update this file → map new refs to sections.
+Full sweep of @Rowyice X bookmarks via Chrome on 2026-05-31 (~91 refs captured; X paginates in chunks, re-sweep can surface more).
+**Refresh workflow:** Chrome → `x.com/i/bookmarks` → scroll to bottom, jiggle (up ~1800px then back to bottom) to re-trigger X's chunked loader, extract handle/text via DOM, update this file, map new refs to sections.
 
-## Taste signal (the headline)
+## Headline taste signal
 
-Your saved gallery is **soft-premium**: gradient-rich backgrounds, clean minimal app UI, generous whitespace, and AI-native design tooling. It is the *opposite* of the sci-fi HUD. Direction this points to: keep the serious/restraint strip-down, and add a **soft-premium gradient/grain layer** (warmer, painterly) instead of hard cyber-neon.
+Your saved gallery is **hero-forward, soft-premium, and AI-native**. Three loud, repeated themes:
+1. **Premium hero sections** — the thing you save most. Textured, cinematic, "way too premium," Blender/3D heroes, landing-page heroes.
+2. **Soft background textures** — gradient wash, fluted glass, ASCII, halftone. Saved repeatedly. This is the *surface treatment* you're drawn to.
+3. **AI-native design craft** — Claude/Gemini design skills, Claude-built storytelling + 3D sites, design systems shipped as agent skills.
 
-## A. Pullable assets → backgrounds / textures (highest-value)
+It is the opposite of sci-fi-HUD cosplay. Direction: **a premium, softly-textured hero + clean type + AI-native-designer identity.** Warm the dark base with gradient/halftone washes; keep a refined WebGL hero; let craft be invisible.
 
-- **@uihssn (Ahmed Hassan)** — "Dreamgrain Wash" soft-gradient backgrounds; "Fluted glass gradients" for landing pages, products, branding (100+ library). → **rowy:** section backgrounds, hero field texture, card surfaces. Recreate as CSS/canvas gradients or use as imagery.
-- **@ahmedrann** — "1100+ gradients in one click." → same use.
+## A. Background / texture ASSETS → pull directly (highest-value)
 
-## B. UI / layout / interaction
+- **@uihssn (Ahmed Hassan)** — recurring: "Dreamgrain Wash" gradients, "Fluted glass gradients," "ASCII backgrounds for hero sections," premium hero-section sets. The single most-saved asset source.
+- **@ahmedrann** — 1100+ gradient pack.
+- **@nexgridco** — "halftone textures every designer should save."
+- **@yasirahmadnoori** — "hero section feels way too premium — HALFTONE background made using Nano [Banana]."
+→ **rowy:** recreate as CSS/canvas/WebGL textures for hero field + section backgrounds + card surfaces. Halftone + fluted-glass + soft-gradient wash are the signature surfaces to build.
 
-- **@hiyandel (yandel)** — clean minimal mobile app screens (whitespace, soft, modern). → whitespace + type discipline; Work-section layout.
-- **@framer** — "4 incredibly interactive websites made in Framer." → tasteful web interaction patterns (validates keeping a refined WebGL hero, kept classy).
-- **@RoundtableSpace** — motion gallery "vibe-coded with Claude Opus." → motion/interaction reference.
-- **@gizakdag** — design work ("From Tennis Court, With Love"). → aesthetic reference.
+## B. Hero sections (your #1 saved category)
 
-## C. AI-native design tooling (workflow + identity)
+- **@pankajstwt** ("recent hero designs"), **@simoom_design** ("hero iteration 101"), **@alex_barashkov** ("hero section bts, made in Blender"), **@Ahtasham_Design** ("fav landing page design list"), **@jameslaurents** ("immersive experience, not static boring website"), **@viktoroddy** ("Gemini 3.1 + ThreeJS for 3D landing pages").
+→ **rowy:** the hero is the priority surface. Premium, textured, one cinematic idea. Blender/3D-rendered hero imagery is on-brand.
 
-- **@UiSavior** — "Claude Skills for UI/UX Engineers"; "sharpest tools for creators & innovators." → reinforces AI-native-*designer* identity; our build workflow.
-- **@viktoroddy** — Claude design prompts/workflows.
+## C. AI-native design workflow + identity
 
-## D. AI products / brand craft (positioning refs)
+- **@UiSavior** (Claude Skills for UI/UX & designers; "Top 100 Websites," inspiration-site lists, bold color combos), **@viktoroddy**, **@UKelvin28625**, **@Suryanshti777** (Claude design technique), **@Oluwaphilemon1** (Claude-built storytelling + per-product 3D-scene sites), **@zeke** (Swiss International Style design system as an `npx` agent skill), **@markproduct** (Claude + Higgsfield → Figma), **@dhruvmakes**, **@damienghader** (one-prompt Lovable sites).
+→ **rowy:** reinforces the AI-native-*developer/designer* identity; also our literal build workflow.
 
-- **@suekhim** (Koji AI), **@ClippingHOF** (AI clipping), **@GoogleAI** (Gemini Omni), **@RoundtableSpace** (Claude income systems). → AI-native brand/positioning context, not direct UI lifts.
+## D. Design-reference sites + tool collections (resources)
 
-## E. Personal — keep OFF the professional surface
+- **@bbssppllvv** (styles.refero.design), **@riverhohai** (refto.one), **@toolfolio** (product design-system tools), **@tom_doerr** (awesome AI UI/UX tools), **@AlbiaHossain** ("sites for designers"), **@UiSavior** ("Top 100 Websites Every Designer Should Know 2026").
+→ Sources to mine for specific site/component lifts.
 
-- **@NvsionGear** (Wooting keyboard), **@BrettFromDJ** (designer-community drama). → not design-system inputs; consistent with rowy = professional, IG = creator lane.
+## E. Components / motion / portfolios
 
-## How this maps to the redesign (next moves)
+- **@tojawuzik** ("buttons can have stunning motion — details, details"), **@jhicks2306** (Framer Tiles), **@framer** ("4 interactive websites"), **@asynkimo** (AI animate anything).
+- Portfolios/studios: **@framojo_com** (Huehaus Studio — "portfolios that don't play it safe"), **@Soni_UX** (Lusion.co — "jaw dropping"), **@farhanrizzvi** (art gallery site).
+→ **rowy:** button/hover micro-interaction craft; refined-WebGL-but-serious benchmarks (Lusion confirmed by both your bookmarks AND our research).
 
-1. **Soft-premium gradient layer** — introduce Ahmed-Hassan-style wash / fluted-glass gradient textures as low-opacity section backgrounds and card surfaces. Warms the cold cyber palette toward premium without breaking the dark base.
-2. **Brain** — keep the monochrome field, but consider a softer, more gradient-blended treatment (less hard particles, more wash).
-3. **Work section** — yandel-clean: generous whitespace, every item a linked artifact.
-4. **Interaction** — framer-tier tasteful and restrained; refined WebGL kept, no cosplay.
+## F. AI image generation (asset production)
+
+- Heavy: GPT Image 2 / Nano Banana / Gemini prompts (@gaborpribek normal-maps-for-lighting, @fMinZhou 360° panoramas, @AmirMushich jeweled logo renders, @kumiko_shiraki, @LexnLin, many more).
+→ **rowy:** we can *generate* bespoke hero/section assets (textures, renders) via these tools rather than ship stock.
+
+## G. Personal — keep OFF the professional surface
+
+- **@NvsionGear** (Wooting keyboard), **@bpthaber / @FIFATRADEBRASIL / @rakibisasirt** (football/sports design). → not design-system inputs; rowy stays professional, IG is the creator lane.
+
+## How this maps to the redesign (next moves, prioritized)
+
+1. **Premium soft-textured hero** — the highest-leverage surface per your own saves. Treat the hero with a soft-premium texture layer (halftone / fluted-glass / gradient wash), keep the monochrome brain refined, one cinematic idea, clean type.
+2. **Section + card surfaces** — low-opacity gradient/halftone washes to warm the dark base toward premium.
+3. **Work section** — clean, every item a linked artifact (yandel-clean whitespace).
+4. **Move personal tiles off** the main surface (confirmed).
+5. **Generate bespoke assets** with AI image tools rather than stock, for any hero/section imagery.
 
 ## See also
 `docs/CONCEPT.md` · `docs/PATTERNS.md` · `docs/LIFTS.md` · `docs/BUILD-PLAN.md`
