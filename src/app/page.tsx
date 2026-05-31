@@ -13,7 +13,6 @@ import GlassCard from "@/components/ui/GlassCard";
 import Terminal from "@/components/ui/Terminal";
 import Footer from "@/components/ui/Footer";
 import CustomCursor from "@/components/hud/CustomCursor";
-import HUDOverlay from "@/components/hud/HUDOverlay";
 import Loader from "@/components/hud/Loader";
 import InferenceText from "@/components/hud/InferenceText";
 
@@ -24,7 +23,6 @@ const SpatialBackground = dynamic(
 
 export default function HomePage() {
   const [loaded, setLoaded] = useState(false);
-  const status = "Status: Navigating";
   const handleLoaderDone = useCallback(() => setLoaded(true), []);
 
   return (
@@ -52,7 +50,6 @@ export default function HomePage() {
             }}
           />
 
-          <HUDOverlay status={status} />
 
           <div className="relative z-10">
             <Navbar />

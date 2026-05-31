@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Github, Instagram } from "lucide-react";
 
@@ -40,48 +39,13 @@ const SOCIAL_LINKS = [
   },
 ];
 
-const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/<>*#";
-
-function ScrambleLink({ label, href }: { label: string; href: string }) {
-  const [display, setDisplay] = useState(label);
-  const raf = useRef<number | null>(null);
-
-  const scramble = () => {
-    const start = performance.now();
-    const duration = 360;
-    const tick = (now: number) => {
-      const p = Math.min(1, (now - start) / duration);
-      const revealed = Math.floor(p * label.length);
-      let out = "";
-      for (let i = 0; i < label.length; i++) {
-        if (label[i] === " " || i < revealed) {
-          out += label[i];
-        } else {
-          out += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-        }
-      }
-      setDisplay(out);
-      if (p < 1) raf.current = requestAnimationFrame(tick);
-      else setDisplay(label);
-    };
-    if (raf.current) cancelAnimationFrame(raf.current);
-    raf.current = requestAnimationFrame(tick);
-  };
-
-  useEffect(
-    () => () => {
-      if (raf.current) cancelAnimationFrame(raf.current);
-    },
-    []
-  );
-
+function NavLink({ label, href }: { label: string; href: string }) {
   return (
     <a
       href={href}
-      onMouseEnter={scramble}
-      className="font-mono text-[0.62rem] uppercase tracking-[0.18em] tabular-nums text-white/30 transition-colors duration-300 hover:text-cyan"
+      className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-white/30 transition-colors duration-300 hover:text-cyan"
     >
-      {display}
+      {label}
     </a>
   );
 }
@@ -120,7 +84,7 @@ export default function Navbar() {
             {i > 0 && (
               <span className="mx-2.5 text-[0.45rem] text-white/10">/</span>
             )}
-            <ScrambleLink label={link.label} href={link.href} />
+            <NavLink label={link.label} href={link.href} />
           </span>
         ))}
       </div>

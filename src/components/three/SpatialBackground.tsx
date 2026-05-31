@@ -37,10 +37,10 @@ const AMBIENT_PARTICLE_COUNT = 360;
 const PARTICLE_COUNT = CORE_PARTICLE_COUNT + AMBIENT_PARTICLE_COUNT;
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 const COLOR_PALETTE = [
-  new THREE.Color("#00F2FE"),
-  new THREE.Color("#0055FF"),
-  new THREE.Color("#7000FF"),
-  new THREE.Color("#FFD700"),
+  new THREE.Color("#00E5FF"),
+  new THREE.Color("#3AD9FF"),
+  new THREE.Color("#9FE9FF"),
+  new THREE.Color("#E8FBFF"),
 ];
 
 // ── Stable scroll + mobile detection ─────────────────────────────────────────
@@ -432,7 +432,7 @@ const Particles = () => {
     const vec3 ROSE_ANCHOR_MOBILE = vec3(0.0, -1.8, -4.0);
 
     void main() {
-      float brainSpin = uTime * 0.14;
+      float brainSpin = uTime * 0.085;
       mat2 brainRot = mat2(
         cos(brainSpin),
         -sin(brainSpin),
@@ -707,7 +707,7 @@ const Atmosphere = () => {
       col = mix(col, nightTeal,   tealMix * 0.55);
       col = mix(col, plasmaBlue,  plasmaMix * 0.45);
       col = mix(col, violetGas,   violetMix * 0.50);
-      col += goldWarm * goldMix * 0.22;
+      col += goldWarm * goldMix * 0.05;
 
       // Scroll-driven tint: push warmer toward rose state.
       vec3 warmShift = vec3(0.024, 0.010, -0.006) * smoothstep(0.35, 0.9, uScroll);
@@ -1267,8 +1267,8 @@ const OrbitalProbes = () => {
       float vis = (1.0 - fieldFade) * (1.0 - rosFade);
 
       vec3 coolCyan = vec3(0.05, 0.9, 1.0);
-      vec3 warmGold = vec3(1.0, 0.72, 0.18);
-      vec3 col = mix(coolCyan, warmGold, vSpark) * (1.2 + vSpark * 2.5);
+      vec3 brightWhite = vec3(0.85, 0.97, 1.0);
+      vec3 col = mix(coolCyan, brightWhite, vSpark) * (1.0 + vSpark * 1.8);
 
       gl_FragColor = vec4(col, soft * vis * 0.9);
     }
@@ -1435,12 +1435,12 @@ export default function SpatialBackground() {
             enableNormalPass={false}
           >
             <Bloom
-              intensity={1.35}
-              luminanceThreshold={0.08}
-              luminanceSmoothing={0.9}
+              intensity={0.85}
+              luminanceThreshold={0.2}
+              luminanceSmoothing={0.85}
               mipmapBlur
-              radius={0.9}
-              levels={8}
+              radius={0.7}
+              levels={7}
             />
             <ChromaticAberration
               offset={new THREE.Vector2(0.0012, 0.0012)}
