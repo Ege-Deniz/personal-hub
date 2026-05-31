@@ -60,16 +60,8 @@ export default function Hero() {
       id="hero"
       className="relative z-10 mx-auto flex min-h-screen scroll-mt-24 max-w-[1400px] flex-col items-start justify-center px-[5%]"
     >
-      {/* Soft-premium texture: gradient wash + masked halftone, left-weighted so the brain stays clean */}
+      {/* Soft-premium atmosphere: layered gradient wash, left-weighted so the brain stays clean */}
       <div className="tex-wash pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
-      <div
-        className="tex-halftone pointer-events-none absolute inset-0 z-0 opacity-[0.35]"
-        style={{
-          WebkitMaskImage: "linear-gradient(to right, #000 28%, transparent 68%)",
-          maskImage: "linear-gradient(to right, #000 28%, transparent 68%)",
-        }}
-        aria-hidden="true"
-      />
       <div className="relative z-10 w-full flex flex-col items-start">
         {/* Name — per-letter blur-in reveal */}
         <h1 className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold uppercase leading-[0.92] tracking-[-4px]">
