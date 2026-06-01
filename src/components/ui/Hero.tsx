@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
@@ -54,14 +55,79 @@ function AnimatedLetters({
   );
 }
 
+// Hero atmosphere directions — compare via ?v=a (aurora) | b (fluted glass) | c (editorial).
+// Default (no param) = current soft wash. The brain (SpatialBackground) sits behind all of them.
+function HeroAtmosphere({ variant }: { variant: string | null }) {
+  if (variant === "a") {
+    return (
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(38% 50% at 18% 30%, rgba(0,229,255,0.20), transparent 60%)," +
+            "radial-gradient(44% 54% at 58% 68%, rgba(150,90,255,0.16), transparent 62%)," +
+            "radial-gradient(40% 46% at 86% 34%, rgba(255,90,160,0.11), transparent 60%)," +
+            "radial-gradient(52% 52% at 34% 88%, rgba(255,180,90,0.07), transparent 66%)",
+          filter: "blur(26px)",
+        }}
+      />
+    );
+  }
+  if (variant === "b") {
+    return (
+      <>
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          aria-hidden="true"
+          style={{
+            background:
+              "radial-gradient(52% 62% at 22% 42%, rgba(0,229,255,0.12), transparent 70%)",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-0 w-[52%]"
+          aria-hidden="true"
+          style={{
+            background:
+              "repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0px, rgba(255,255,255,0.11) 2px, rgba(255,255,255,0) 5px, rgba(255,255,255,0) 12px)",
+            WebkitMaskImage: "linear-gradient(to right, #000 65%, transparent)",
+            maskImage: "linear-gradient(to right, #000 65%, transparent)",
+          }}
+        />
+      </>
+    );
+  }
+  if (variant === "c") {
+    return (
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(38% 44% at 12% 16%, rgba(0,229,255,0.12), transparent 58%)",
+        }}
+      />
+    );
+  }
+  return (
+    <div className="tex-wash pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
+  );
+}
+
 export default function Hero() {
+  const [variant] = useState<string | null>(() =>
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("v")
+      : null
+  );
+
   return (
     <section
       id="hero"
       className="relative z-10 mx-auto flex min-h-screen scroll-mt-24 max-w-[1400px] flex-col items-start justify-center px-[5%]"
     >
-      {/* Soft-premium atmosphere: layered gradient wash, left-weighted so the brain stays clean */}
-      <div className="tex-wash pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
+      <HeroAtmosphere variant={variant} />
       <div className="relative z-10 w-full flex flex-col items-start">
         {/* Name — per-letter blur-in reveal */}
         <h1 className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold uppercase leading-[0.92] tracking-[-4px]">
