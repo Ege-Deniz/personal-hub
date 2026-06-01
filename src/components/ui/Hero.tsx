@@ -55,94 +55,101 @@ function AnimatedLetters({
   );
 }
 
-// Hero atmosphere directions — compare via ?v=a (aurora) | b (fluted glass) | c (editorial).
-// Default (no param) = current soft wash. The brain (SpatialBackground) sits behind all of them.
-function HeroAtmosphere({ variant }: { variant: string | null }) {
-  if (variant === "a") {
-    return (
-      <div
-        className="pointer-events-none absolute inset-0 z-0"
-        aria-hidden="true"
-        style={{
-          background:
-            "radial-gradient(38% 50% at 18% 30%, rgba(0,229,255,0.20), transparent 60%)," +
-            "radial-gradient(44% 54% at 58% 68%, rgba(150,90,255,0.16), transparent 62%)," +
-            "radial-gradient(40% 46% at 86% 34%, rgba(255,90,160,0.11), transparent 60%)," +
-            "radial-gradient(52% 52% at 34% 88%, rgba(255,180,90,0.07), transparent 66%)",
-          filter: "blur(26px)",
-        }}
-      />
-    );
-  }
-  if (variant === "b") {
-    return (
-      <>
-        <div
-          className="pointer-events-none absolute inset-0 z-0"
-          aria-hidden="true"
-          style={{
-            background:
-              "radial-gradient(52% 62% at 22% 42%, rgba(0,229,255,0.12), transparent 70%)",
-          }}
-        />
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-0 w-[52%]"
-          aria-hidden="true"
-          style={{
-            background:
-              "repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0px, rgba(255,255,255,0.11) 2px, rgba(255,255,255,0) 5px, rgba(255,255,255,0) 12px)",
-            WebkitMaskImage: "linear-gradient(to right, #000 65%, transparent)",
-            maskImage: "linear-gradient(to right, #000 65%, transparent)",
-          }}
-        />
-      </>
-    );
-  }
-  if (variant === "c") {
-    return (
-      <div
-        className="pointer-events-none absolute inset-0 z-0"
-        aria-hidden="true"
-        style={{
-          background:
-            "radial-gradient(38% 44% at 12% 16%, rgba(0,229,255,0.12), transparent 58%)",
-        }}
-      />
-    );
-  }
-  return (
-    <div className="tex-wash pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
-  );
-}
-
 export default function Hero() {
-  const [variant] = useState<string | null>(() =>
+  const [v] = useState<string | null>(() =>
     typeof window !== "undefined"
       ? new URLSearchParams(window.location.search).get("v")
       : null
   );
+  const isA = v === "a"; // color-drenched
+  const isB = v === "b"; // frosted glass panel
+  const isC = v === "c"; // massive editorial
+
+  const nameSize = isC
+    ? "text-[clamp(5rem,17vw,15rem)]"
+    : "text-[clamp(4.5rem,12vw,11rem)]";
 
   return (
     <section
       id="hero"
-      className="relative z-10 mx-auto flex min-h-screen scroll-mt-24 max-w-[1400px] flex-col items-start justify-center px-[5%]"
+      className={`relative z-10 mx-auto flex min-h-screen scroll-mt-24 max-w-[1400px] flex-col justify-center px-[5%] ${
+        isC ? "items-center text-center" : "items-start"
+      }`}
     >
-      <HeroAtmosphere variant={variant} />
-      <div className="relative z-10 w-full flex flex-col items-start">
-        {/* Name — per-letter blur-in reveal */}
-        <h1 className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold uppercase leading-[0.92] tracking-[-4px]">
+      {/* ── Per-variant backdrop ───────────────────────────── */}
+      {/* A — color-drenched: vivid mesh that recolors the scene via screen blend */}
+      {isA && (
+        <div
+          className="pointer-events-none absolute inset-0 z-[1]"
+          aria-hidden="true"
+          style={{
+            background:
+              "radial-gradient(40% 50% at 22% 30%, rgba(0,229,255,0.55), transparent 55%)," +
+              "radial-gradient(45% 55% at 62% 64%, rgba(150,70,255,0.42), transparent 58%)," +
+              "radial-gradient(40% 48% at 88% 32%, rgba(255,70,150,0.38), transparent 55%)," +
+              "radial-gradient(52% 52% at 38% 92%, rgba(255,170,70,0.28), transparent 60%)",
+            mixBlendMode: "screen",
+            filter: "blur(8px)",
+          }}
+        />
+      )}
+      {/* B — frosted glass panel the content sits on */}
+      {isB && (
+        <>
+          <div className="tex-wash pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
+          <div
+            className="pointer-events-none absolute inset-y-[10%] left-[2%] z-[1] hidden w-[48%] rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_40px_120px_rgba(0,0,0,0.45)] backdrop-blur-2xl md:block"
+            aria-hidden="true"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 9px)",
+            }}
+          />
+        </>
+      )}
+      {/* C — editorial: dim the brain so the type dominates */}
+      {isC && (
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] bg-abyss/55"
+          aria-hidden="true"
+          style={{
+            background:
+              "radial-gradient(60% 60% at 50% 45%, rgba(3,8,18,0.35), rgba(3,8,18,0.72))",
+          }}
+        />
+      )}
+      {/* default — current soft wash */}
+      {!isA && !isB && !isC && (
+        <div className="tex-wash pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
+      )}
+
+      <div
+        className={`relative z-10 flex w-full flex-col ${
+          isC ? "items-center" : "items-start"
+        }`}
+      >
+        {/* Name */}
+        <h1
+          className={`mb-9 flex flex-col font-display ${nameSize} font-extrabold uppercase leading-[0.92] tracking-[-4px] ${
+            isC ? "items-center" : ""
+          }`}
+        >
           <AnimatedLetters
             text="EGE"
             className="text-white text-shadow-hero"
             baseDelay={0.4}
           />
-          <span className="ml-[clamp(2rem,8vw,10rem)]">
+          <span className={isC ? "" : "ml-[clamp(2rem,8vw,10rem)]"}>
             <AnimatedLetters text="DENIZ" baseDelay={0.85} strokeOnly />
           </span>
         </h1>
 
-        {/* Identity line — single quiet reveal */}
-        <div className="ml-[clamp(1rem,4vw,5rem)] mb-7 flex items-center gap-4">
+        {/* Identity line */}
+        <div
+          className={`mb-7 flex items-center gap-4 ${
+            isC ? "" : "ml-[clamp(1rem,4vw,5rem)]"
+          }`}
+        >
           <motion.span
             className="block h-px bg-cyan/50"
             initial={{ width: 0 }}
@@ -163,19 +170,23 @@ export default function Hero() {
 
         {/* Subtitle */}
         <motion.div
-          className="flex items-center gap-6 flex-wrap ml-[clamp(1rem,4vw,5rem)]"
+          className={`flex items-center gap-6 flex-wrap ${
+            isC ? "justify-center max-w-2xl" : "ml-[clamp(1rem,4vw,5rem)]"
+          }`}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="w-[68px] h-[68px] rounded-full overflow-hidden border border-cyan/15 flex-shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/headset-character.png"
-              alt="Ege Deniz"
-              className="w-full h-full object-cover scale-[1.35] translate-y-[8%]"
-            />
-          </div>
+          {!isC && (
+            <div className="w-[68px] h-[68px] rounded-full overflow-hidden border border-cyan/15 flex-shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/headset-character.png"
+                alt="Ege Deniz"
+                className="w-full h-full object-cover scale-[1.35] translate-y-[8%]"
+              />
+            </div>
+          )}
           <p className="font-body text-[clamp(0.88rem,1.3vw,1.1rem)] text-white/70 leading-[1.75] max-w-[440px] text-shadow-hero">
             Building agent infrastructure and ML-grounded tools, shipped through
             spatial interfaces that don&apos;t look like the template.
