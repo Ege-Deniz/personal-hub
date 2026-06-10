@@ -1,20 +1,13 @@
 "use client";
 
-// ACT 6 — SIGNAL. The human layer: a velocity-coupled marquee (speed and skew
-// ride the Lenis scroll velocity), live HUD, social channels, and the off-duty
-// media strip. Warmer, faster cut than the system acts.
+// ACT 6 — SIGNAL (Direction A). The human layer as a calm instrument strip:
+// live status, channels, the off-duty wall, the soundtrack. No marquee —
+// nothing moves except the clock and one pulse dot.
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useClock } from "@/hooks/useClock";
-import { scrollState } from "@/lib/scrollState";
 import { useActFlow } from "./useActTrigger";
-
-const MARQUEE_ITEMS = [
-  "Signal online",
-  "Cyprus 34°41'N",
-  "Next: Maastricht",
-  "Operator: Ege Deniz",
-];
+import { ActHeader, Reveal } from "./Reveal";
 
 const CHANNELS = [
   { label: "Twitch", href: "https://www.twitch.tv/Rowy" },
@@ -23,59 +16,13 @@ const CHANNELS = [
   { label: "GitHub", href: "https://github.com/Ege-Deniz" },
 ];
 
-const MEDIA = [
-  { src: "/setup.jpeg", alt: "Battlestation" },
+const STRIP = [
   { src: "/ig1.jpeg", alt: "Editorial" },
   { src: "/ig2.jpeg", alt: "Dreams" },
   { src: "/ig3.jpeg", alt: "Coding" },
   { src: "/ig4.jpeg", alt: "Sunset" },
+  { src: "/setup.jpeg", alt: "Battlestation" },
 ];
-
-function VelocityMarquee() {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-
-    let x = 0;
-    let raf = 0;
-    let last = performance.now();
-    const loop = (now: number) => {
-      const dt = Math.min((now - last) / 1000, 1 / 20);
-      last = now;
-      const vel = scrollState.velocity;
-      const speed = 60 + Math.min(Math.abs(vel) * 14, 480);
-      x -= speed * dt;
-      const half = track.scrollWidth / 2;
-      if (-x >= half) x += half;
-      const skew = Math.max(-6, Math.min(6, vel * 0.35));
-      track.style.transform = `translateX(${x}px) skewX(${skew}deg)`;
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  const row = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
-  return (
-    <div className="overflow-hidden py-2">
-      <div ref={trackRef} className="flex w-max items-center gap-8 whitespace-nowrap will-change-transform">
-        {[...row, ...row].map((m, i) => (
-          <span
-            key={i}
-            className="flex items-center gap-8 font-display text-[clamp(2rem,5vw,4rem)] font-extrabold uppercase tracking-[-0.02em] text-white/[0.07]"
-          >
-            {m}
-            <span className="text-cyan/25 text-[0.5em]">✦</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function ActSignal() {
   const ref = useRef<HTMLElement>(null);
@@ -86,64 +33,62 @@ export default function ActSignal() {
     <section
       id="act-signal"
       ref={ref}
-      className="relative z-10 w-full overflow-hidden py-[12vh]"
+      className="relative z-10 mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-[12vh] md:px-8"
     >
-      <div className="mb-10 px-[6%]">
-        <div className="flex items-center gap-3 font-mono text-[0.58rem] uppercase tracking-[0.32em] text-cyan/70">
-          <span className="h-px w-8 bg-cyan/40" />
-          06 — Signal
-        </div>
-      </div>
+      <ActHeader index="05" title="Signal" className="mb-12" />
 
-      <VelocityMarquee />
-
-      <div className="mx-auto mt-12 flex w-full max-w-7xl flex-col gap-10 px-[6%]">
-        {/* Live HUD row */}
-        <div className="flex flex-wrap items-center gap-x-10 gap-y-4 border-y border-white/[0.07] py-5 font-mono text-[0.62rem] uppercase tracking-[0.22em] text-white/35">
-          <span className="flex items-center gap-2.5">
+      {/* Status instrument row */}
+      <Reveal>
+        <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-4 border-t border-white/[0.07] py-6">
+          <div className="flex items-center gap-3 font-mono text-[0.62rem] uppercase tracking-[0.25em] text-white/50">
             <span className="inline-block h-1.5 w-1.5 animate-pulse-dot rounded-full bg-cyan" />
             Operator online
-          </span>
-          <span className="tnum text-white/55">{time} local</span>
-          <span>Cyprus · 34°41&apos;N 33°02&apos;E</span>
-          <span className="hidden sm:inline">Coding sessions + competitive FPS</span>
+          </div>
+          <div className="tnum font-mono text-[0.62rem] uppercase tracking-[0.25em] text-white/35">
+            {time} local
+          </div>
+          <div className="tnum hidden font-mono text-[0.62rem] uppercase tracking-[0.25em] text-white/25 md:block">
+            34°41&apos;N · 33°02&apos;E
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            {CHANNELS.map((c) => (
+              <a
+                key={c.label}
+                href={c.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-white/[0.1] px-4 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.15em] text-white/40 transition-colors hover:border-cyan/40 hover:text-cyan"
+              >
+                {c.label}
+              </a>
+            ))}
+          </div>
         </div>
+      </Reveal>
 
-        {/* Channels */}
-        <div className="flex flex-wrap gap-3">
-          {CHANNELS.map((c) => (
-            <a
-              key={c.label}
-              href={c.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-md border border-cyan/10 px-5 py-2.5 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/35 transition-all hover:border-cyan/40 hover:bg-cyan/[0.04] hover:text-cyan"
-            >
-              {c.label}
-            </a>
-          ))}
-        </div>
-
-        {/* Off-duty media strip */}
-        <div className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {MEDIA.map((m) => (
+      {/* Off-duty wall */}
+      <Reveal delay={0.08}>
+        <div className="grid grid-cols-2 gap-3 border-t border-white/[0.07] py-8 sm:grid-cols-5">
+          {STRIP.map((img) => (
             <div
-              key={m.src}
-              className="relative h-32 w-44 flex-shrink-0 overflow-hidden rounded-lg border border-white/[0.07] transition-all duration-500 hover:border-cyan/30 sm:h-36 sm:w-52"
+              key={img.src}
+              className="group relative aspect-[4/5] overflow-hidden rounded-lg border border-white/[0.06]"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={m.src}
-                alt={m.alt}
+                src={img.src}
+                alt={img.alt}
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.06]"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
               />
             </div>
           ))}
         </div>
+      </Reveal>
 
-        {/* Now playing */}
-        <div className="max-w-xl">
+      {/* Soundtrack */}
+      <Reveal delay={0.12}>
+        <div className="border-t border-white/[0.07] pt-8">
           <iframe
             style={{ borderRadius: "12px" }}
             src="https://open.spotify.com/embed/playlist/2nW3ZjVuPDtAkKFWRp7mWI?utm_source=generator&theme=0"
@@ -152,10 +97,10 @@ export default function ActSignal() {
             frameBorder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
-            title="Now playing — Spotify"
+            title="Spotify Playlist"
           />
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

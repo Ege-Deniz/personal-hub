@@ -4,7 +4,8 @@
 // Click scrolls via Lenis when available. Hidden on mobile.
 
 import { useEffect, useState } from "react";
-import { actTimeline } from "@/lib/fieldState";
+import { actTimeline, syncActs } from "@/lib/fieldState";
+import { scrollState } from "@/lib/scrollState";
 
 const ACTS = [
   { id: "act-mind", label: "Mind" },
@@ -26,6 +27,8 @@ export default function ActNavRail() {
   useEffect(() => {
     let raf = 0;
     const loop = () => {
+      // The rail owns act-state sync now that no canvas director runs.
+      syncActs(scrollState.scroll);
       const t = actTimeline();
       const idx = Math.max(0, Math.min(6, Math.floor(t + 0.02)));
       setActive((prev) => (prev === idx ? prev : idx));

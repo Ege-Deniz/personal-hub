@@ -1,12 +1,10 @@
 "use client";
 
-// rowy.engineer — "The brain is the interface."
-// One persistent GPGPU neural field; seven scroll acts travel through it.
-// Acts feed fieldState; the canvas director morphs camera + sim per act.
+// rowy.engineer — Typographic Authority (Direction A, docs/REDESIGN-DNA).
+// Type carries the site; numbered acts in calm vertical rhythm; the one
+// living object (ArtifactBrain) lives inside the Brain Operator act.
 
-import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
-import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/ui/Navbar";
 import CustomCursor from "@/components/hud/CustomCursor";
@@ -21,26 +19,12 @@ import ActChannel from "@/components/acts/ActChannel";
 import ActNavRail from "@/components/acts/ActNavRail";
 import { fieldState } from "@/lib/fieldState";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
-const NeuralField = dynamic(() => import("@/components/three/NeuralField"), {
-  ssr: false,
-});
-
 export default function HomePage() {
   const [loaded, setLoaded] = useState(false);
 
   const handleLoaderDone = useCallback(() => {
     setLoaded(true);
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      fieldState.boot = 1;
-    } else {
-      gsap.to(fieldState, { boot: 1, duration: 1.9, ease: "power3.inOut" });
-    }
-    // Pins were measured behind the loader; re-measure once revealed.
+    // Sections were measured behind the loader; re-measure once revealed.
     requestAnimationFrame(() => ScrollTrigger.refresh());
   }, []);
 
@@ -56,7 +40,6 @@ export default function HomePage() {
 
   return (
     <>
-      <NeuralField />
       <CustomCursor />
       <Loader onComplete={handleLoaderDone} />
 
