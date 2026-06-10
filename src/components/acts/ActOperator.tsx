@@ -6,7 +6,7 @@
 
 import { useRef } from "react";
 import { useActFlow } from "./useActTrigger";
-import { ActHeader, Reveal } from "./Reveal";
+import { Reveal, ToolCall } from "./Reveal";
 
 const STATEMENTS = [
   {
@@ -33,7 +33,7 @@ export default function ActOperator() {
       ref={ref}
       className="relative z-10 mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-[14vh] md:px-8"
     >
-      <ActHeader index="01" title="The Operator" className="mb-14" />
+      <ToolCall index="01" cmd="read operator.md" result="3 statements" className="mb-14" />
 
       <div className="flex flex-col">
         {STATEMENTS.map((s, i) => (

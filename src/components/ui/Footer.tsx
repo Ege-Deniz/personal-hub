@@ -14,11 +14,15 @@ export default function Footer() {
       id="open-channel"
       className="relative z-10 mt-10 scroll-mt-24 border-t border-white/[0.08] px-4 pt-16 lg:px-16"
     >
-      {/* Contact CTA */}
+      {/* Handoff — the session ends; the visitor picks it up */}
       <div className="mb-16">
-        <div className="mb-5 flex items-center gap-3 font-mono text-[0.58rem] uppercase tracking-[0.32em] text-cyan/70">
-          <span className="h-px w-8 bg-cyan/40" />
-          Open Channel
+        <div className="mb-5 flex items-baseline gap-3 font-mono">
+          <span className="tnum text-[0.6rem] tracking-[0.08em] text-white/40">
+            [06]
+          </span>
+          <span className="text-[0.68rem] lowercase tracking-[0.06em] text-cyan/80">
+            &gt; handoff --to visitor
+          </span>
         </div>
         <a
           href="mailto:ege@rowy.engineer"
@@ -29,8 +33,9 @@ export default function Footer() {
           <ArrowUpRight className="hidden h-[clamp(2rem,5vw,4rem)] w-[clamp(2rem,5vw,4rem)] flex-shrink-0 text-white/30 transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-cyan sm:block" />
         </a>
         <p className="mt-6 max-w-md text-[0.85rem] leading-[1.7] text-white/40">
-          AI-native developer building agent systems, ML, and spatial web.
-          Heading into an AI masters. Open to collaborate.
+          The session ends here. AI-native developer building agent systems,
+          ML, and spatial web — heading into an AI master&apos;s. Pick the
+          trace up where it stopped.
         </p>
       </div>
 

@@ -57,3 +57,42 @@ export function ActHeader({
     </Reveal>
   );
 }
+
+/**
+ * Tool-call receipt header — each act is a step in the session trace:
+ * `[01] > read operator.md ———————— ✓ 3 statements`
+ * Gold variant reserved for the signature artifact.
+ */
+export function ToolCall({
+  index,
+  cmd,
+  result,
+  gold = false,
+  className = "",
+}: {
+  index: string;
+  cmd: string;
+  result: string;
+  gold?: boolean;
+  className?: string;
+}) {
+  const accent = gold ? "text-gold/80" : "text-cyan/80";
+  const dim = gold ? "text-gold/45" : "text-white/40";
+  const rule = gold ? "bg-gold/[0.12]" : "bg-white/[0.07]";
+  return (
+    <Reveal className={className}>
+      <div className="flex items-baseline gap-3 font-mono">
+        <span className={`tnum text-[0.6rem] tracking-[0.08em] ${dim}`}>
+          [{index}]
+        </span>
+        <span className={`text-[0.68rem] lowercase tracking-[0.06em] ${accent}`}>
+          &gt; {cmd}
+        </span>
+        <span className={`h-px flex-1 self-center ${rule}`} />
+        <span className={`text-[0.58rem] lowercase tracking-[0.12em] ${dim}`}>
+          ✓ {result}
+        </span>
+      </div>
+    </Reveal>
+  );
+}

@@ -7,7 +7,7 @@
 import { useRef } from "react";
 import { useClock } from "@/hooks/useClock";
 import { useActFlow } from "./useActTrigger";
-import { ActHeader, Reveal } from "./Reveal";
+import { Reveal, ToolCall } from "./Reveal";
 
 const CHANNELS = [
   { label: "Twitch", href: "https://www.twitch.tv/Rowy" },
@@ -35,7 +35,7 @@ export default function ActSignal() {
       ref={ref}
       className="relative z-10 mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-[12vh] md:px-8"
     >
-      <ActHeader index="05" title="Signal" className="mb-12" />
+      <ToolCall index="05" cmd="signal --live" result="operator online" className="mb-12" />
 
       {/* Status instrument row */}
       <Reveal>

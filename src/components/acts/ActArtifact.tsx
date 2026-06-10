@@ -8,7 +8,7 @@ import { useRef } from "react";
 import { ArrowUpRight, BrainCircuit, GitBranch, ShieldCheck } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useActFlow } from "./useActTrigger";
-import { Reveal } from "./Reveal";
+import { Reveal, ToolCall } from "./Reveal";
 
 const ArtifactBrain = dynamic(() => import("@/components/three/ArtifactBrain"), {
   ssr: false,
@@ -44,18 +44,14 @@ export default function ActArtifact() {
       ref={ref}
       className="relative z-10 mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-[12vh] md:px-8"
     >
-      {/* Gold-numbered header — the one act allowed off the cyan rail */}
-      <Reveal className="mb-12">
-        <div className="flex items-baseline gap-4">
-          <span className="tnum font-mono text-[0.68rem] tracking-[0.08em] text-gold/80">
-            {"//"}03
-          </span>
-          <span className="font-mono text-[0.62rem] uppercase tracking-[0.32em] text-gold/50">
-            Signature Artifact
-          </span>
-          <span className="h-px flex-1 self-center bg-gold/[0.12]" />
-        </div>
-      </Reveal>
+      {/* Gold tool call — the one act allowed off the cyan rail */}
+      <ToolCall
+        index="03"
+        cmd="open brain-operator"
+        result="live preview"
+        gold
+        className="mb-12"
+      />
 
       <div className="grid gap-12 md:grid-cols-[0.9fr_1.1fr]">
         {/* Identity column */}

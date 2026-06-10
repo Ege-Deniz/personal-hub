@@ -38,8 +38,8 @@ export default function Loader({ onComplete }: LoaderProps) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <div className="font-mono text-[0.55rem] tracking-[0.4em] uppercase text-cyan/50 mb-10">
-            Charting Course
+          <div className="font-mono text-[0.55rem] tracking-[0.4em] lowercase text-cyan/50 mb-10">
+            booting ege-brain
           </div>
           <div className="w-[200px] h-px bg-cyan/[0.08] relative overflow-hidden">
             <div
@@ -54,8 +54,8 @@ export default function Loader({ onComplete }: LoaderProps) {
           <div className="font-display text-[3.2rem] font-light text-white mt-6 tracking-[-0.04em]">
             {Math.floor(progress)}
           </div>
-          <div className="font-mono text-[0.45rem] text-cyan/25 mt-4 tracking-[0.25em]">
-            34°41&apos;N · 33°02&apos;E — SIGNAL LOCKED
+          <div className="font-mono text-[0.45rem] lowercase text-cyan/25 mt-4 tracking-[0.25em]">
+            session granted — mission: introduce the operator
           </div>
         </motion.div>
       )}

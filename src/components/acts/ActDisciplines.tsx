@@ -6,7 +6,7 @@
 
 import { useRef } from "react";
 import { useActFlow } from "./useActTrigger";
-import { ActHeader, Reveal } from "./Reveal";
+import { Reveal, ToolCall } from "./Reveal";
 
 const DISCIPLINES = [
   {
@@ -45,7 +45,7 @@ export default function ActDisciplines() {
       ref={ref}
       className="relative z-10 mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-[12vh] md:px-8"
     >
-      <ActHeader index="02" title="Disciplines" className="mb-12" />
+      <ToolCall index="02" cmd="search disciplines/" result="4 results" className="mb-12" />
 
       <div>
         {DISCIPLINES.map((d, i) => (

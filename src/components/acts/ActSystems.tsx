@@ -9,7 +9,7 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useActFlow } from "./useActTrigger";
-import { ActHeader } from "./Reveal";
+import { ToolCall } from "./Reveal";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -136,7 +136,7 @@ export default function ActSystems() {
       ref={ref}
       className="relative z-10 mx-auto w-full max-w-7xl scroll-mt-28 px-4 pb-20 pt-[16vh] md:px-8"
     >
-      <ActHeader index="04" title="Selected Systems" className="mb-8" />
+      <ToolCall index="04" cmd="list shipped/" result="5 systems · 3 live" className="mb-8" />
       <h2 className="mb-12 max-w-3xl font-display text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-[0.95] tracking-[-0.04em] text-white">
         Things I&apos;ve shipped, end to end.
       </h2>

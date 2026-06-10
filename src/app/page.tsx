@@ -18,7 +18,7 @@ import ActArtifact from "@/components/acts/ActArtifact";
 import ActSystems from "@/components/acts/ActSystems";
 import ActSignal from "@/components/acts/ActSignal";
 import ActChannel from "@/components/acts/ActChannel";
-import ActNavRail from "@/components/acts/ActNavRail";
+import TraceRail, { SessionHeader } from "@/components/acts/SessionChrome";
 import { fieldState } from "@/lib/fieldState";
 
 // Ege's tuned living field — rendered as-is, never rewritten.
@@ -67,6 +67,7 @@ export default function HomePage() {
 
       <div className="relative z-10">
         <Navbar />
+        <SessionHeader />
         <ActMind play={loaded} />
         <ActOperator />
         <ActDisciplines />
@@ -76,7 +77,7 @@ export default function HomePage() {
         <ActChannel />
       </div>
 
-      <ActNavRail />
+      <TraceRail />
     </>
   );
 }

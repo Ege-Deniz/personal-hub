@@ -27,7 +27,18 @@ export default function ActMind({ play }: { play: boolean }) {
       <div className="tex-wash pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col items-start">
-        {/* Name — single clip reveal, then permanent */}
+        {/* The session's first query — the site's premise in one line */}
+        <motion.div
+          className="mb-6 flex items-center gap-3 font-mono text-[0.72rem] lowercase tracking-[0.06em] text-cyan/80"
+          initial={reduce ? false : { opacity: 0 }}
+          animate={shown ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.4, delay: 0.05 }}
+        >
+          <span>&gt; query: who is the operator?</span>
+          <span className="inline-block h-[1.1em] w-[7px] animate-blink bg-cyan/70" />
+        </motion.div>
+
+        {/* Name — the answer outputs once, then permanent */}
         <motion.h1
           className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold uppercase leading-[0.92] tracking-[-4px]"
           initial={reduce ? false : { opacity: 0, y: 20 }}
@@ -80,15 +91,15 @@ export default function ActMind({ play }: { play: boolean }) {
           </p>
         </motion.div>
 
-        {/* HUD coordinates */}
+        {/* Receipt line */}
         <motion.div
-          className="pointer-events-none absolute -bottom-[16vh] left-0 hidden items-center gap-3 font-mono text-[0.55rem] uppercase tracking-[0.3em] text-white/20 md:flex"
+          className="pointer-events-none absolute -bottom-[16vh] left-0 hidden items-center gap-3 font-mono text-[0.55rem] lowercase tracking-[0.18em] text-white/20 md:flex"
           initial={reduce ? false : { opacity: 0 }}
           animate={shown ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.5, delay: 0.9 }}
         >
-          <span className="inline-block h-1 w-1 animate-pulse-dot rounded-full bg-cyan/70" />
-          34°41&apos;N · 33°02&apos;E — SIGNAL LOCKED
+          <span className="text-cyan/50">✓</span> operator identified · 34°41&apos;n
+          33°02&apos;e · signal locked
         </motion.div>
       </div>
 
