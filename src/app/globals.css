@@ -156,6 +156,12 @@ body {
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
   }
+
+  /* Outline display type — catalog numerals, ghost stamps */
+  .text-outline {
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.13);
+    color: transparent;
+  }
 }
 
 /* Blend-mode grain — resolution-independent, keeps navy true */

@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import { Github, Instagram } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "Intro", href: "#hero" },
-  { label: "Personal Hub", href: "#hub" },
-  { label: "Brain Operator", href: "#brain-operator" },
-  { label: "Systems", href: "#systems" },
-  { label: "Studio Stack", href: "#system" },
-  { label: "Offer", href: "/cinematic-ai-landing-sprint" },
-  { label: "Contact", href: "#network" },
+  { label: "Intro", href: "#act-mind" },
+  { label: "Operator", href: "#act-operator" },
+  { label: "Disciplines", href: "#act-disciplines" },
+  { label: "Brain Operator", href: "#act-artifact" },
+  { label: "Systems", href: "#act-systems" },
+  { label: "Signal", href: "#act-signal" },
+  { label: "Contact", href: "#open-channel" },
 ];
 
 const SOCIAL_LINKS = [

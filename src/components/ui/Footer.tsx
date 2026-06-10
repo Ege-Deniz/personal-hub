@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowUpRight, Github, Instagram, Mail } from "lucide-react";
 
 const LINKS = [
@@ -9,38 +8,12 @@ const LINKS = [
   { icon: Mail, href: "mailto:ege@rowy.engineer", label: "Email" },
 ];
 
-const MARQUEE = [
-  "AI-Native Developer",
-  "Agent Infrastructure",
-  "ML Foundations",
-  "Spatial Web",
-];
-
 export default function Footer() {
   return (
     <footer
       id="open-channel"
       className="relative z-10 mt-10 scroll-mt-24 border-t border-white/[0.08] px-4 pt-16 lg:px-16"
     >
-      {/* Marquee strip */}
-      <div className="mb-14 overflow-hidden">
-        <motion.div
-          className="flex w-max gap-6 whitespace-nowrap"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 26, ease: "linear", repeat: Infinity }}
-        >
-          {[...MARQUEE, ...MARQUEE, ...MARQUEE, ...MARQUEE].map((m, i) => (
-            <span
-              key={i}
-              className="flex items-center gap-6 font-display text-[clamp(1.4rem,3vw,2.4rem)] font-extrabold uppercase tracking-[-0.02em] text-white/[0.08]"
-            >
-              {m}
-              <span className="text-cyan/30">✦</span>
-            </span>
-          ))}
-        </motion.div>
-      </div>
-
       {/* Contact CTA */}
       <div className="mb-16">
         <div className="mb-5 flex items-center gap-3 font-mono text-[0.58rem] uppercase tracking-[0.32em] text-cyan/70">
