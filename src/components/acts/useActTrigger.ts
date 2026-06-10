@@ -8,10 +8,25 @@
 import { useLayoutEffect, type RefObject } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { fieldState } from "@/lib/fieldState";
+import { actRanges } from "@/lib/fieldState";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+}
+
+// Keep the registered range in sync with the trigger's measured start/end
+// (re-measured on every ScrollTrigger.refresh).
+function track(index: number, st: ScrollTrigger) {
+  const write = () => {
+    actRanges[index] = { start: st.start, end: st.end };
+  };
+  write();
+  const onRefresh = () => write();
+  ScrollTrigger.addEventListener("refresh", onRefresh);
+  return () => {
+    ScrollTrigger.removeEventListener("refresh", onRefresh);
+    actRanges[index] = null;
+  };
 }
 
 export const DESKTOP_MOTION =
@@ -46,24 +61,23 @@ export function useActPin(
           pin: true,
           scrub: 0.6,
           anticipatePin: 1,
-          onUpdate: (st) => {
-            fieldState.acts[index] = st.progress;
-          },
         },
       });
       opts.build?.(tl, el);
+      const untrack = tl.scrollTrigger ? track(index, tl.scrollTrigger) : null;
+      return () => untrack?.();
     });
 
     mm.add(MOBILE_OR_REDUCED, () => {
-      ScrollTrigger.create({
+      const st = ScrollTrigger.create({
         trigger: el,
-        start: "top 70%",
+        // Act 1 sits at the document top — anchor its progress there so the
+        // field rests in the hero state on load instead of mid-travel.
+        start: index === 1 ? "top top" : "top 70%",
         end: "bottom 35%",
-        scrub: 0.5,
-        onUpdate: (st) => {
-          fieldState.acts[index] = st.progress;
-        },
       });
+      const untrack = track(index, st);
+      return () => untrack();
     });
 
     return () => mm.revert();
@@ -84,11 +98,11 @@ export function useActFlow(
       trigger: el,
       start: opts?.start ?? "top 75%",
       end: opts?.end ?? "bottom 55%",
-      scrub: 0.5,
-      onUpdate: (s) => {
-        fieldState.acts[index] = s.progress;
-      },
     });
-    return () => st.kill();
+    const untrack = track(index, st);
+    return () => {
+      untrack();
+      st.kill();
+    };
   }, []);
 }

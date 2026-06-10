@@ -28,6 +28,7 @@ export default function SmoothScroll({
     lenis.on("scroll", (e: { animatedScroll: number; limit: number; velocity: number }) => {
       ScrollTrigger.update();
       scrollState.progress = e.animatedScroll / Math.max(1, e.limit);
+      scrollState.scroll = e.animatedScroll;
       scrollState.velocity = e.velocity;
     });
 

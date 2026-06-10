@@ -46,6 +46,9 @@ export default function HomePage() {
 
   // Late-loading assets (fonts, images) can shift pin distances.
   useEffect(() => {
+    (window as unknown as { __fieldState?: typeof fieldState }).__fieldState =
+      fieldState;
+    (window as unknown as { __ST?: typeof ScrollTrigger }).__ST = ScrollTrigger;
     const onLoad = () => ScrollTrigger.refresh();
     window.addEventListener("load", onLoad);
     return () => window.removeEventListener("load", onLoad);

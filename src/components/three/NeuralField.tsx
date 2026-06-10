@@ -31,7 +31,8 @@ import {
 import { BlendFunction, ToneMappingMode } from "postprocessing";
 import * as THREE from "three";
 import { GPUComputationRenderer } from "three-stdlib";
-import { fieldState, actTimeline } from "@/lib/fieldState";
+import { fieldState, actTimeline, syncActs } from "@/lib/fieldState";
+import { scrollState } from "@/lib/scrollState";
 
 const POSTFX_ENABLED = process.env.NEXT_PUBLIC_POSTFX !== "0";
 
@@ -546,6 +547,17 @@ function Simulation({ isMobile }: { isMobile: boolean }) {
     homeTex.needsUpdate = true;
 
     const gpu = new GPUComputationRenderer(SIZE, SIZE, gl);
+    // iOS / Apple GPUs can't render to full-float targets (three.js #9628,
+    // #19837) — swap the sim render targets to half float there. Slight
+    // position quantization is invisible at mobile DPR; full float elsewhere.
+    const isAppleTouch =
+      typeof navigator !== "undefined" &&
+      (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
+    const hasFloatRT = !!gl.extensions.get("EXT_color_buffer_float");
+    if (isAppleTouch || !hasFloatRT) {
+      gpu.setDataType(THREE.HalfFloatType);
+    }
     const dtPos = gpu.createTexture();
     const dtVel = gpu.createTexture();
     // Seed positions from home, but keep w (energy) at zero — home's w is class.
@@ -652,6 +664,9 @@ function Simulation({ isMobile }: { isMobile: boolean }) {
     const t = state.clock.elapsedTime;
 
     // ── Act timeline (smoothed) ──
+    // Recompute act progress from absolute scroll — deterministic, immune to
+    // ScrollTrigger refresh/scrub transients.
+    syncActs(scrollState.scroll);
     const targetT = actTimeline();
     actTRef.current = THREE.MathUtils.lerp(
       actTRef.current,

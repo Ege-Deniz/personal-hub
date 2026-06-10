@@ -3,6 +3,8 @@
 export const scrollState = {
   /** 0..1 normalized document scroll progress */
   progress: 0,
+  /** absolute scroll position in px (Lenis animatedScroll) */
+  scroll: 0,
   /** instantaneous scroll velocity from Lenis */
   velocity: 0,
 };
