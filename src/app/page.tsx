@@ -1,9 +1,11 @@
 "use client";
 
-// rowy.engineer — Typographic Authority (Direction A, docs/REDESIGN-DNA).
-// Type carries the site; numbered acts in calm vertical rhythm; the one
-// living object (ArtifactBrain) lives inside the Brain Operator act.
+// rowy.engineer — Typographic Authority over the Living Field.
+// Ege's own tuned particle system (SpatialBackground: shard-brain, warm core,
+// atmosphere, discharges) is the full-page spine that keeps the site alive;
+// the calm numbered type system reads on top of it. One register, one soul.
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/ui/Navbar";
@@ -18,6 +20,12 @@ import ActSignal from "@/components/acts/ActSignal";
 import ActChannel from "@/components/acts/ActChannel";
 import ActNavRail from "@/components/acts/ActNavRail";
 import { fieldState } from "@/lib/fieldState";
+
+// Ege's tuned living field — rendered as-is, never rewritten.
+const SpatialBackground = dynamic(
+  () => import("@/components/three/SpatialBackground"),
+  { ssr: false }
+);
 
 export default function HomePage() {
   const [loaded, setLoaded] = useState(false);
@@ -40,6 +48,7 @@ export default function HomePage() {
 
   return (
     <>
+      <SpatialBackground />
       <CustomCursor />
       <Loader onComplete={handleLoaderDone} />
 

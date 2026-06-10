@@ -60,7 +60,7 @@ export default function ActDisciplines() {
                 </span>
                 <div className="flex-1">
                   <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
-                    <h3 className="font-display text-[clamp(1.6rem,3.4vw,2.8rem)] font-bold leading-[1] tracking-[-0.03em] text-white/90">
+                    <h3 className="text-shadow-hero font-display text-[clamp(1.6rem,3.4vw,2.8rem)] font-bold leading-[1] tracking-[-0.03em] text-white/90">
                       {d.title}
                     </h3>
                     <div className="hidden gap-2.5 md:flex">

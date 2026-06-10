@@ -44,12 +44,12 @@ export default function ActOperator() {
               }`}
             >
               <div className="grid items-baseline gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
-                <h2 className="font-display text-[clamp(1.9rem,4.6vw,3.8rem)] font-extrabold leading-[1.04] tracking-[-0.03em] text-white">
+                <h2 className="text-shadow-hero font-display text-[clamp(1.9rem,4.6vw,3.8rem)] font-extrabold leading-[1.04] tracking-[-0.03em] text-white">
                   {s.lines[0]}
                   <br />
                   {s.lines[1]}
                 </h2>
-                <p className="font-mono text-[0.66rem] uppercase leading-[2] tracking-[0.18em] text-white/35 md:justify-self-end md:text-right">
+                <p className="text-shadow-hero font-mono text-[0.66rem] uppercase leading-[2] tracking-[0.18em] text-white/45 md:justify-self-end md:text-right">
                   {s.sub}
                 </p>
               </div>
