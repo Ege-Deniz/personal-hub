@@ -3,13 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useInView } from "framer-motion";
 
+// Real receipts only — every line below is verifiable in a repo, a thesis,
+// or a public artifact. No cosplay telemetry.
 const TERMINAL_LINES = [
-  "> [SYSTEM]: Initializing daily_growth.sh...",
-  "> Voyage Log // Initialized.",
-  "> [STATUS]: Epoch 0842 / ∞",
-  "> [LOG]: 1% improvement committed. Precision locked.",
-  "> Neural model compiled. Forward pass OK.",
-  "> [RESULT]: Gradient descent towards excellence optimized.",
+  "> session: rowy.engineer — operator console",
+  "> brain-operator v0.6.6 · parser 117/117 · apply-guard e2e 6/6",
+  "> thesis: backpropagation in C · 35-10-6 · converged @ epoch 207",
+  "> noise robustness 100 / 100 / 98.3 % at 1 / 3 / 5 flipped pixels",
+  "> defended 2026-07-01 · BSc Computer Engineering",
+  "> next: MSc Artificial Intelligence · Maastricht · 2026-09",
 ];
 
 export default function Terminal() {

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import InferenceText from "../hud/InferenceText";
+import AsciiFlowTrail from "@/components/fx/AsciiFlowTrail";
+import MagneticCTA from "@/components/fx/MagneticCTA";
 
 const LETTER_VARIANTS = {
   hidden: { opacity: 0, y: 32, filter: "blur(18px)" },
@@ -110,7 +112,11 @@ function LiveHUD() {
     >
       <span>
         <span className="text-cyan/60">build</span>{" "}
-        <span className="text-white/55">0.4.20</span>
+        <span className="text-white/55">v1.0.0</span>
+      </span>
+      <span>
+        <span className="text-cyan/60">field</span>{" "}
+        <span className="text-white/55">5,360 particles</span>
       </span>
       <span>
         <span className="text-cyan/60">uptime</span>{" "}
@@ -140,6 +146,8 @@ export default function Hero() {
       id="hero"
       className="relative z-10 mx-auto flex min-h-screen scroll-mt-24 max-w-[1400px] flex-col items-start justify-center px-[5%]"
     >
+      {/* glyph wake follows the cursor across the hero (2D canvas, no WebGL) */}
+      <AsciiFlowTrail opacity={0.34} />
       <div className="relative z-10 w-full flex flex-col items-start">
         {/* Top rule */}
         <motion.div
@@ -154,12 +162,15 @@ export default function Hero() {
           </div>
           <div className="font-mono text-[0.5rem] tracking-[2px] uppercase text-white/25 flex items-center gap-2">
             <span className="w-[5px] h-[5px] rounded-full bg-cyan shadow-[0_0_8px_rgba(0,229,255,0.4)] animate-pulse-dot" />
-            Neural Simulation Active
+            Field resident · GPGPU morph live
           </div>
         </motion.div>
 
         {/* Name — per-letter blur-in reveal */}
-        <h1 className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold uppercase leading-[0.92] tracking-[-4px]">
+        <h1
+          aria-label="Ege Deniz"
+          className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold uppercase leading-[0.92] tracking-[-4px]"
+        >
           <AnimatedLetters
             text="EGE"
             className="text-white text-shadow-hero"
@@ -205,13 +216,15 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8, duration: 0.6 }}
         >
-          <a
-            href="#hub"
-            className="w-[42px] h-[42px] rounded-full flex items-center justify-center border border-cyan/15 bg-cyan/[0.02] hover:border-cyan hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] transition-all animate-bounce"
-            aria-label="Scroll to personal hub"
-          >
-            <ChevronDown className="w-4 h-4 text-cyan" />
-          </a>
+          <MagneticCTA strength={0.4}>
+            <a
+              href="#hub"
+              className="w-[42px] h-[42px] rounded-full flex items-center justify-center border border-cyan/15 bg-cyan/[0.02] hover:border-cyan hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] transition-all animate-bounce"
+              aria-label="Scroll to the work ledger"
+            >
+              <ChevronDown className="w-4 h-4 text-cyan" />
+            </a>
+          </MagneticCTA>
         </motion.div>
       </div>
     </section>

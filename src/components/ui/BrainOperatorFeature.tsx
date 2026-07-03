@@ -103,7 +103,7 @@ export default function BrainOperatorFeature() {
                 </div>
               </div>
               <div className="rounded-full border border-gold/20 bg-gold/[0.08] px-3 py-1 font-mono text-[0.5rem] uppercase tracking-[2px] text-gold">
-                v0.6.1
+                v0.6.6
               </div>
             </div>
 

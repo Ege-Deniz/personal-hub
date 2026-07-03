@@ -16,6 +16,10 @@
   --text: #e8eaf0;
   --text-mid: rgba(220, 225, 240, 0.7);
   --text-dim: rgba(200, 210, 230, 0.35);
+
+  /* Motion tokens — required by the fx suite (TextFX transitions) */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --hairline: rgba(0, 229, 255, 0.12);
 }
 
 * {
