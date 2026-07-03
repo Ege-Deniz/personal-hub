@@ -7,6 +7,7 @@
 // "where are the framer components": running, right here, open source.
 
 import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 import AsciiFlowTrail from "@/components/fx/AsciiFlowTrail";
 import DotGridField from "@/components/fx/DotGridField";
 import FluidImage from "@/components/fx/FluidImage";
@@ -34,8 +35,8 @@ function Cell({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
       className={`group relative overflow-hidden rounded-2xl border border-cyan/[0.1] bg-[rgba(4,10,22,0.72)] ${className ?? ""}`}
@@ -63,6 +64,36 @@ function Cell({
 }
 
 export default function ComponentLab() {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  // Elastic grid scroll: middle column leads, outer columns lag — the grid
+  // breathes with scroll velocity and settles flat at rest. Transform-only.
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    let lastY = window.scrollY;
+    let vel = 0;
+    const lag = [0.9, 0.35, 0.7]; // px of offset per px/frame of velocity, per column
+
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      const dy = window.scrollY - lastY;
+      lastY = window.scrollY;
+      vel += (dy - vel) * (Math.abs(dy) > Math.abs(vel) ? 0.25 : 0.07);
+      const v = Math.max(-34, Math.min(34, vel));
+      const cells = grid.children;
+      for (let i = 0; i < cells.length; i++) {
+        (cells[i] as HTMLElement).style.transform =
+          `translateY(${(-v * lag[i % 3]).toFixed(2)}px)`;
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   return (
     <section
       id="lab"
@@ -94,7 +125,7 @@ export default function ComponentLab() {
         no templates. Touch them. Then read the source.
       </p>
 
-      <div className="relative mt-10 grid grid-cols-1 gap-4 md:grid-cols-3 md:auto-rows-[260px]">
+      <div ref={gridRef} className="relative mt-10 grid grid-cols-1 gap-4 md:grid-cols-3 md:auto-rows-[260px]">
         {/* ascii wake — wide */}
         <Cell
           name="AsciiFlowTrail"
