@@ -103,7 +103,7 @@ function LiveHUD() {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1.55, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ delay: 3.85, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       className="mt-7 ml-[clamp(1rem,4vw,5rem)] flex flex-wrap gap-x-6 gap-y-2 font-mono text-[0.55rem] uppercase tracking-[2.5px] text-white/35"
       aria-hidden="true"
     >
@@ -151,7 +151,7 @@ export default function Hero() {
           className="w-full border-t border-cyan/[0.12] pt-5 mb-10 flex justify-between items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
+          transition={{ delay: 2.6, duration: 0.8 }}
         >
           <div className="font-mono text-[0.65rem] tracking-[4px] uppercase text-cyan flex items-center gap-3">
             <span className="w-7 h-px bg-cyan" />
@@ -171,10 +171,10 @@ export default function Hero() {
           <AnimatedLetters
             text="EGE"
             className="text-white text-shadow-hero"
-            baseDelay={0.5}
+            baseDelay={2.8}
           />
           <span className="ml-[clamp(2rem,8vw,10rem)]">
-            <AnimatedLetters text="DENIZ" baseDelay={0.95} strokeOnly />
+            <AnimatedLetters text="DENIZ" baseDelay={3.25} strokeOnly />
           </span>
         </h1>
 
@@ -183,7 +183,7 @@ export default function Hero() {
           className="flex items-center gap-6 flex-wrap ml-[clamp(1rem,4vw,5rem)]"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.25, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 3.55, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="w-[68px] h-[68px] rounded-full overflow-hidden shadow-[0_0_20px_rgba(0,229,255,0.12)] border border-cyan/15 flex-shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -211,7 +211,7 @@ export default function Hero() {
           className="absolute bottom-14 right-[5%]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.8, duration: 0.6 }}
+          transition={{ delay: 4.1, duration: 0.6 }}
         >
           <MagneticCTA strength={0.4}>
             <a

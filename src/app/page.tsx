@@ -21,7 +21,7 @@ const SpatialBackground = dynamic(
 );
 
 export default function HomePage() {
-  const [loaded, setLoaded] = useState(false);
+  const [, setLoaded] = useState(false);
   const status = "Status: Navigating";
   const handleLoaderDone = useCallback(() => setLoaded(true), []);
 
@@ -31,8 +31,9 @@ export default function HomePage() {
       <CustomCursor />
       <Loader onComplete={handleLoaderDone} />
 
-      {loaded && (
-        <>
+      {/* Content renders from first paint (SSR-complete HTML; the loader is
+          a pure overlay). `loaded` remains for anything reveal-keyed. */}
+      <>
           {/* Grain overlay */}
           <div
             className="fixed inset-0 z-[9998] pointer-events-none opacity-[0.025]"
@@ -174,8 +175,7 @@ export default function HomePage() {
               </div>
               <Footer />
           </div>
-        </>
-      )}
+      </>
     </>
   );
 }
