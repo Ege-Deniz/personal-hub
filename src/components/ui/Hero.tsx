@@ -4,8 +4,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import InferenceText from "../hud/InferenceText";
-import AsciiFlowTrail from "@/components/fx/AsciiFlowTrail";
 import MagneticCTA from "@/components/fx/MagneticCTA";
+import ImageTrail from "@/components/fx/ImageTrail";
+import KineticType from "@/components/fx/KineticType";
 
 const LETTER_VARIANTS = {
   hidden: { opacity: 0, y: 32, filter: "blur(18px)" },
@@ -148,8 +149,15 @@ export default function Hero() {
       id="hero"
       className="relative z-10 mx-auto flex min-h-screen scroll-mt-24 max-w-[1400px] flex-col items-start justify-center px-[5%]"
     >
-      {/* glyph wake follows the cursor across the hero (2D canvas, no WebGL) */}
-      <AsciiFlowTrail opacity={0.34} />
+      {/* the hero's single interaction: artifact imagery trails the cursor */}
+      <ImageTrail
+        images={[
+          "/brain-operator-preview.png",
+          "/setup.jpeg",
+          "/readme-preview.png",
+          "/headset-character.jpeg",
+        ]}
+      />
       <div className="relative z-10 w-full flex flex-col items-start">
         {/* Top rule */}
         <motion.div
@@ -169,6 +177,7 @@ export default function Hero() {
         </motion.div>
 
         {/* Name — per-letter blur-in reveal */}
+        <KineticType intensity={1.2}>
         <h1
           aria-label="Ege Deniz"
           className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold uppercase leading-[0.92] tracking-[-4px]"
@@ -182,6 +191,7 @@ export default function Hero() {
             <AnimatedLetters text="DENIZ" baseDelay={d(3.25)} strokeOnly />
           </span>
         </h1>
+        </KineticType>
 
         {/* Subtitle */}
         <motion.div

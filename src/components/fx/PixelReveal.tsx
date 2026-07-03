@@ -13,15 +13,19 @@ const ROWS = 9;
 export default function PixelReveal({ children }: { children: ReactNode }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [go, setGo] = useState(false);
-  const [order] = useState(() => {
+  // Shuffled client-side only — randomizing during render breaks hydration
+  // (server and client produce different orders).
+  const [order, setOrder] = useState<number[] | null>(null);
+
+  useEffect(() => {
     const idx = Array.from({ length: COLS * ROWS }, (_, i) => i);
     // Fisher–Yates shuffle for the dissolve order
     for (let i = idx.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [idx[i], idx[j]] = [idx[j], idx[i]];
     }
-    return idx;
-  });
+    setOrder(idx);
+  }, []);
 
   useEffect(() => {
     const el = hostRef.current;
@@ -59,13 +63,15 @@ export default function PixelReveal({ children }: { children: ReactNode }) {
           pointerEvents: "none",
         }}
       >
-        {order.map((rank, i) => (
+        {Array.from({ length: COLS * ROWS }, (_, i) => (
           <div
             key={i}
             style={{
               background: "var(--bg)",
-              opacity: go ? 0 : 1,
-              transition: `opacity 0.22s ease ${(rank / (COLS * ROWS)) * 0.9}s`,
+              opacity: go && order ? 0 : 1,
+              transition: order
+                ? `opacity 0.22s ease ${(order[i] / (COLS * ROWS)) * 0.9}s`
+                : undefined,
             }}
           />
         ))}

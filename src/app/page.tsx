@@ -4,15 +4,14 @@ import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 import Navbar from "@/components/ui/Navbar";
 import ArtifactLedger from "@/components/ui/ArtifactLedger";
+import ComponentLab from "@/components/ui/ComponentLab";
 import OperatorSignal from "@/components/ui/OperatorSignal";
 import Hero from "@/components/ui/Hero";
-import ChapterGate from "@/components/ui/ChapterGate";
 import BrainOperatorFeature from "@/components/ui/BrainOperatorFeature";
 import SystemArchitecture from "@/components/ui/SystemArchitecture";
 import GlassCard from "@/components/ui/GlassCard";
 import Footer from "@/components/ui/Footer";
 import CustomCursor from "@/components/hud/CustomCursor";
-import HUDOverlay from "@/components/hud/HUDOverlay";
 import Loader from "@/components/hud/Loader";
 
 const SpatialBackground = dynamic(
@@ -22,7 +21,6 @@ const SpatialBackground = dynamic(
 
 export default function HomePage() {
   const [, setLoaded] = useState(false);
-  const status = "Status: Navigating";
   const handleLoaderDone = useCallback(() => setLoaded(true), []);
 
   return (
@@ -51,12 +49,11 @@ export default function HomePage() {
             }}
           />
 
-          <HUDOverlay status={status} />
-
           <div className="relative z-10">
             <Navbar />
             <Hero />
-            <ChapterGate />
+
+            <ComponentLab />
 
             <ArtifactLedger />
 

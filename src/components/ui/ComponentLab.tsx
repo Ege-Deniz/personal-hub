@@ -1,0 +1,219 @@
+"use client";
+
+// THE LAB (#lab) — the components ARE the portfolio. Every cell is a live,
+// touchable instance of an instrument built for this site, with its spec and
+// where it runs. Asymmetric grid (Framer "Asymmetric Grid" reference), each
+// demo interactive at full pointer strength — this is the answer to
+// "where are the framer components": running, right here, open source.
+
+import { motion } from "framer-motion";
+import AsciiFlowTrail from "@/components/fx/AsciiFlowTrail";
+import DotGridField from "@/components/fx/DotGridField";
+import FluidImage from "@/components/fx/FluidImage";
+import MagneticCTA from "@/components/fx/MagneticCTA";
+import WavyTicker from "@/components/fx/WavyTicker";
+import { ShineText, TextReveal } from "@/components/fx/TextFX";
+
+const SOURCE =
+  "https://github.com/Ege-Deniz/personal-hub/tree/feat/awwwards-live-rebuild/src/components/fx";
+
+function Cell({
+  name,
+  spec,
+  usage,
+  className,
+  children,
+  delay = 0,
+}: {
+  name: string;
+  spec: string;
+  usage: string;
+  className?: string;
+  children: React.ReactNode;
+  delay?: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={`group relative overflow-hidden rounded-2xl border border-cyan/[0.1] bg-[rgba(4,10,22,0.72)] ${className ?? ""}`}
+    >
+      <div className="relative h-full min-h-[230px] flex flex-col">
+        <div className="relative flex-1">{children}</div>
+        <div className="relative z-10 flex items-end justify-between gap-3 border-t border-cyan/[0.07] bg-[rgba(3,8,18,0.78)] px-4 py-3">
+          <div>
+            <div className="font-display text-[0.92rem] font-bold text-white/90">
+              {name}
+            </div>
+            <div className="mt-0.5 font-mono text-[0.5rem] uppercase tracking-[1.5px] text-white/30">
+              {spec}
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="font-mono text-[0.48rem] uppercase tracking-[1.5px] text-gold/50">
+              {usage}
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function ComponentLab() {
+  return (
+    <section
+      id="lab"
+      className="relative z-10 mx-auto w-full max-w-7xl scroll-mt-24 px-4 md:px-8 py-24"
+    >
+      {/* calm scrim — the demos perform inside their cells, not the backdrop */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 inset-y-6 rounded-3xl"
+        style={{
+          background:
+            "radial-gradient(130% 110% at 28% 12%, rgba(3,8,18,0.86), rgba(3,8,18,0.5) 62%, rgba(3,8,18,0.22))",
+          backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
+        }}
+      />
+      <div className="relative mb-3 font-mono text-[0.65rem] tracking-[4px] uppercase text-cyan/60 flex items-center gap-3">
+        <span className="w-7 h-px bg-cyan/60" />
+        {"// The Lab"}
+      </div>
+      <h2
+        className="relative font-display text-[clamp(2rem,5vw,3.6rem)] font-bold tracking-tight text-white"
+        aria-label="The instruments, running live."
+      >
+        <TextReveal>The instruments, running live.</TextReveal>
+      </h2>
+      <p className="relative mt-2 max-w-[54ch] text-[0.85rem] leading-[1.7] text-white/35">
+        Every effect on this site is a component built for it — no libraries,
+        no templates. Touch them. Then read the source.
+      </p>
+
+      <div className="relative mt-10 grid grid-cols-1 gap-4 md:grid-cols-3 md:auto-rows-[260px]">
+        {/* ascii wake — wide */}
+        <Cell
+          name="AsciiFlowTrail"
+          spec="glyph lattice · pointer wake · 2d canvas"
+          usage="lab exclusive"
+          className="md:col-span-2"
+          delay={0}
+        >
+          <div className="absolute inset-0">
+            <AsciiFlowTrail opacity={0.85} />
+          </div>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center font-mono text-[0.6rem] uppercase tracking-[3px] text-white/20 group-hover:opacity-0 transition-opacity">
+            move the cursor
+          </div>
+        </Cell>
+
+        {/* dot orbit grid */}
+        <Cell
+          name="DotGridField"
+          spec="orbital physics · tilted planes · ease-out decay"
+          usage="ledger"
+          delay={0.06}
+        >
+          <div className="absolute inset-0">
+            <DotGridField opacity={0.9} />
+          </div>
+        </Cell>
+
+        {/* fluid displacement */}
+        <Cell
+          name="FluidImage"
+          spec="webgl ripple · velocity smear · raw glsl"
+          usage="flagship"
+          delay={0.12}
+        >
+          <FluidImage
+            src="/setup.jpeg"
+            alt="Workstation photograph with liquid cursor displacement"
+            className="absolute inset-0"
+          />
+        </Cell>
+
+        {/* text fx — wide */}
+        <Cell
+          name="TextFX"
+          spec="word reveal · light sweep · scroll highlight"
+          usage="every heading"
+          className="md:col-span-2"
+          delay={0.18}
+        >
+          <div className="absolute inset-0 flex flex-col items-start justify-center gap-3 px-6">
+            <span className="font-display text-[clamp(1.4rem,3vw,2.2rem)] font-bold text-white/90">
+              <TextReveal>Words rise on entry.</TextReveal>
+            </span>
+            <span className="font-display text-[clamp(1.4rem,3vw,2.2rem)] font-bold">
+              <ShineText>Light sweeps across the glyphs.</ShineText>
+            </span>
+          </div>
+        </Cell>
+
+        {/* magnetic */}
+        <Cell
+          name="MagneticCTA"
+          spec="pointer attraction · raf lerp · self-stopping"
+          usage="every action"
+          delay={0.24}
+        >
+          <div className="absolute inset-0 flex flex-wrap content-center items-center justify-center gap-3 px-4">
+            <MagneticCTA strength={0.5}>
+              <span className="inline-block rounded-md border border-cyan/25 bg-cyan/[0.06] px-5 py-2.5 font-mono text-[0.6rem] uppercase tracking-[1.5px] text-cyan/80">
+                pull me
+              </span>
+            </MagneticCTA>
+            <MagneticCTA strength={0.5}>
+              <span className="inline-block rounded-md border border-gold/25 bg-gold/[0.06] px-5 py-2.5 font-mono text-[0.6rem] uppercase tracking-[1.5px] text-gold/80">
+                me too
+              </span>
+            </MagneticCTA>
+          </div>
+        </Cell>
+
+        {/* ticker — full width, short */}
+        <Cell
+          name="WavyTicker"
+          spec="sine-riding marquee · scroll-velocity reactive"
+          usage="lab exclusive"
+          className="md:col-span-3 md:!min-h-[150px]"
+          delay={0.3}
+        >
+          <div className="absolute inset-0 flex items-center">
+            <WavyTicker
+              items={[
+                "scroll faster",
+                "the wave steepens",
+                "60fps",
+                "one raf loop",
+              ]}
+              speed={70}
+              className="w-full font-display text-[1.5rem] font-bold text-white/70"
+            />
+          </div>
+        </Cell>
+      </div>
+
+      <div className="relative mt-6 flex items-center justify-between gap-4">
+        <p className="font-mono text-[0.55rem] uppercase tracking-[2px] text-white/25">
+          eight instruments · zero dependencies · reduced-motion aware
+        </p>
+        <MagneticCTA>
+          <a
+            href={SOURCE}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-md border border-cyan/15 px-4 py-2 font-mono text-[0.6rem] uppercase tracking-[1.5px] text-white/45 transition-all hover:border-cyan/50 hover:text-cyan hover:bg-cyan/[0.05]"
+          >
+            read the source ↗
+          </a>
+        </MagneticCTA>
+      </div>
+    </section>
+  );
+}

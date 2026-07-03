@@ -7,7 +7,6 @@
 // deep-dive section right below this one.
 
 import { motion } from "framer-motion";
-import DotGridField from "@/components/fx/DotGridField";
 import MagneticCTA from "@/components/fx/MagneticCTA";
 import { TextReveal } from "@/components/fx/TextFX";
 import Terminal from "@/components/ui/Terminal";
@@ -89,9 +88,6 @@ export default function ArtifactLedger() {
           WebkitBackdropFilter: "blur(7px)",
         }}
       />
-      {/* orbital dot lattice above the scrim, below the content */}
-      <DotGridField opacity={0.3} />
-
       <div className="relative px-2 py-4 md:px-8 md:py-8">
         <div className="mb-3 font-mono text-[0.65rem] tracking-[4px] uppercase text-cyan/60 flex items-center gap-3">
           <span className="w-7 h-px bg-cyan/60" />

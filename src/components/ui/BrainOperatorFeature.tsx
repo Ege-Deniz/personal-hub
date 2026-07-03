@@ -1,6 +1,7 @@
 "use client";
 
 import PixelReveal from "@/components/fx/PixelReveal";
+import FluidImage from "@/components/fx/FluidImage";
 import { ArrowUpRight, BrainCircuit, GitBranch, ShieldCheck } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 
@@ -86,11 +87,10 @@ export default function BrainOperatorFeature() {
           <div className="brain-preview-shell order-1 relative min-h-[430px] overflow-hidden rounded-xl border border-gold/[0.12] bg-[#05070d]/70 shadow-[0_30px_80px_rgba(0,0,0,0.35)] lg:order-none">
             <div className="absolute inset-0">
               <PixelReveal>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <FluidImage
                   src="/brain-operator-preview.png"
                   alt="Brain Operator landing page with a cinematic particle brain hero"
-                  className="brain-preview-image absolute inset-0 h-full w-full object-cover opacity-80 saturate-[1.08]"
+                  className="absolute inset-0 h-full w-full opacity-90"
                 />
               </PixelReveal>
             </div>
