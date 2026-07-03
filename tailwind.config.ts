@@ -18,10 +18,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["Syne", "sans-serif"],
-        body: ["Inter", "sans-serif"],
-        mono: ["Space Mono", "monospace"],
-        serif: ["Instrument Serif", "Georgia", "serif"],
+        display: ["var(--font-syne)", "Syne", "sans-serif"],
+        body: ["var(--font-inter)", "Inter", "sans-serif"],
+        mono: ["var(--font-space-mono)", "Space Mono", "monospace"],
+        serif: ["var(--font-instrument-serif)", "Instrument Serif", "Georgia", "serif"],
       },
       backdropBlur: {
         glass: "20px",
