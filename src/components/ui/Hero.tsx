@@ -91,14 +91,11 @@ function LiveHUD() {
       );
     };
     tick();
+    // 500ms cadence is telemetry-accurate enough; a per-scroll listener here
+    // caused React re-renders on every scroll frame on top of the WebGL loop.
     const intervalId = window.setInterval(tick, 500);
-    const onScroll = () => tick();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
     return () => {
       window.clearInterval(intervalId);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
