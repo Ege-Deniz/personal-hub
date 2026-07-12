@@ -74,7 +74,10 @@ export default function WorkArchive() {
         <h2 className="font-mono text-[10px] uppercase tracking-[3px] text-white/40">
           The Archive — shipped, with receipts
         </h2>
-        <span className="font-mono text-[10px] tracking-[2px] text-white/25 tabular-nums">
+        <span
+          className="font-mono text-[10px] tracking-[2px] text-white/40 tabular-nums"
+          style={{ textShadow: "0 1px 12px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.9)" }}
+        >
           {String(ARTIFACTS.length).padStart(2, "0")} entries
         </span>
       </div>
@@ -99,12 +102,18 @@ export default function WorkArchive() {
               >
                 {a.title}
               </span>
-              <span className="hidden font-mono text-[9.5px] uppercase tracking-[2px] text-white/30 md:block">
+              <span
+                className="hidden font-mono text-[9.5px] uppercase tracking-[2px] text-white/45 md:block"
+                style={{ textShadow: "0 1px 12px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.9)" }}
+              >
                 {a.lane}
                 <br />
                 {a.year}
               </span>
-              <span className="justify-self-end font-mono text-[10px] uppercase tracking-[2px] text-white/40 group-hover:text-white transition-colors">
+              <span
+                className="justify-self-end font-mono text-[10px] uppercase tracking-[2px] text-white/55 group-hover:text-white transition-colors"
+                style={{ textShadow: "0 1px 12px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.9)" }}
+              >
                 {isOpen ? "close" : "open"}
               </span>
             </button>
