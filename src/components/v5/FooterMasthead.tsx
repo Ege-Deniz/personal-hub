@@ -27,7 +27,7 @@ export default function FooterMasthead() {
       <div
         aria-hidden
         className="mt-12 select-none text-center font-display font-bold uppercase leading-[0.8] tracking-[-0.045em] text-white"
-        style={{ fontSize: "clamp(70px, 15.5vw, 260px)" }}
+        style={{ fontSize: "clamp(44px, 15.5vw, 260px)" }}
       >
         Ege&nbsp;Deniz
       </div>

@@ -63,7 +63,7 @@ export default function StatementHero({ booted }: { booted: boolean }) {
         ref={h1Ref}
         aria-label="Instruments, not demos. Every claim on this site is verifiable."
         className="font-display font-bold uppercase leading-[0.94] tracking-[-0.03em] text-white"
-        style={{ fontSize: "clamp(52px, 9.6vw, 150px)" }}
+        style={{ fontSize: "clamp(34px, 9.6vw, 150px)" }}
       >
         <span className="block overflow-hidden"><span data-line className="block">Instruments,</span></span>
         <span className="block overflow-hidden"><span data-line className="block text-white/40">not demos.</span></span>
