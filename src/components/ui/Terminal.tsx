@@ -72,7 +72,7 @@ export default function Terminal() {
   const partialText = activeLine ? activeLine.slice(0, currentChar) : "";
 
   return (
-    <div ref={ref} className="h-full flex flex-col bg-[rgba(3,8,18,0.8)] rounded-xl overflow-hidden">
+    <div ref={ref} className="h-full flex flex-col bg-[rgba(11,11,14,0.8)] rounded-xl overflow-hidden">
       {/* Terminal header */}
       <div className="flex gap-[5px] px-3.5 py-2.5 bg-black/30 border-b border-cyan/[0.04]">
         <div className="w-2 h-2 rounded-full bg-[#ff5f56]" />

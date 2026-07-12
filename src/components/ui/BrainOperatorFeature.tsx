@@ -36,7 +36,7 @@ export default function BrainOperatorFeature() {
                 Brain Operator · technical preview
               </div>
 
-              <h2 className="max-w-2xl font-display text-[clamp(2.6rem,7vw,5.8rem)] font-extrabold leading-[0.85] tracking-[-0.07em] text-white">
+              <h2 className="max-w-2xl font-display text-[clamp(2.6rem,7vw,5.8rem)] font-bold leading-[0.85] tracking-[-0.02em] text-white">
                 An operating layer for local AI work.
               </h2>
 
@@ -72,7 +72,7 @@ export default function BrainOperatorFeature() {
                     className="rounded-lg border border-white/[0.06] bg-black/20 p-4"
                   >
                     <Icon className="mb-3 h-4 w-4 text-gold" />
-                    <div className="font-display text-[0.95rem] font-bold tracking-[-0.04em] text-white">
+                    <div className="font-display text-[0.95rem] font-bold tracking-[-0.01em] text-white">
                       {item.title}
                     </div>
                     <p className="mt-1.5 text-[0.68rem] leading-[1.55] text-white/30">
@@ -84,7 +84,7 @@ export default function BrainOperatorFeature() {
             </div>
           </div>
 
-          <div className="brain-preview-shell order-1 relative min-h-[430px] overflow-hidden rounded-xl border border-gold/[0.12] bg-[#05070d]/70 shadow-[0_30px_80px_rgba(0,0,0,0.35)] lg:order-none">
+          <div className="brain-preview-shell order-1 relative min-h-[430px] overflow-hidden rounded-xl border border-gold/[0.12] bg-[#0b0b0e]/70 shadow-[0_30px_80px_rgba(0,0,0,0.35)] lg:order-none">
             <div className="absolute inset-0">
               <PixelReveal>
                 <FluidImage
@@ -96,14 +96,14 @@ export default function BrainOperatorFeature() {
             </div>
             <div className="brain-preview-breath absolute inset-0" aria-hidden="true" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,transparent_0,rgba(5,7,13,0.04)_22%,rgba(5,7,13,0.74)_82%),linear-gradient(180deg,rgba(5,7,13,0.18),rgba(5,7,13,0.88))]" />
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#05070d] via-[#05070d]/70 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0b0b0e] via-[#0b0b0e]/70 to-transparent" />
 
             <div className="relative z-10 m-4 flex items-center justify-between border-b border-white/[0.06] pb-3">
               <div>
                 <div className="font-mono text-[0.48rem] uppercase tracking-[3px] text-gold/60">
                   cinematic frontend
                 </div>
-                <div className="mt-1 font-display text-[1.15rem] font-bold tracking-[-0.04em] text-white">
+                <div className="mt-1 font-display text-[1.15rem] font-bold tracking-[-0.01em] text-white">
                   Brain Operator
                 </div>
               </div>
@@ -128,7 +128,7 @@ export default function BrainOperatorFeature() {
                 <div className="font-mono text-[0.5rem] uppercase tracking-[3px] text-gold/60">
                   product signal
                 </div>
-                <p className="mt-3 font-display text-[clamp(1.8rem,4.5vw,3rem)] font-extrabold leading-[0.9] tracking-[-0.06em] text-white">
+                <p className="mt-3 font-display text-[clamp(1.8rem,4.5vw,3rem)] font-bold leading-[0.9] tracking-[-0.02em] text-white">
                   The brain is the interface.
                 </p>
                 <p className="mt-3 max-w-sm text-[0.72rem] leading-[1.7] text-white/42">
@@ -144,7 +144,7 @@ export default function BrainOperatorFeature() {
                 href="https://brainoperator.rowy.engineer/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-md border border-gold/20 bg-gold px-4 py-2.5 font-mono text-[0.58rem] uppercase tracking-[1.6px] text-[#05070d] transition-all hover:-translate-y-0.5 hover:bg-[#e5bd6a]"
+                className="inline-flex items-center gap-2 rounded-md border border-gold/20 bg-gold px-4 py-2.5 font-mono text-[0.58rem] uppercase tracking-[1.6px] text-[#0b0b0e] transition-all hover:-translate-y-0.5 hover:bg-[#e5bd6a]"
               >
                 Open live
                 <ArrowUpRight className="h-3.5 w-3.5" />

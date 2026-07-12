@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
-import { Syne, Inter, Space_Mono, Instrument_Serif } from "next/font/google";
+import { Inter, Space_Mono, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 // next/font: self-hosted, preloaded, zero render-blocking CSS @import.
-const syne = Syne({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-syne",
+const clash = localFont({
+  src: [
+    { path: "../../public/fonts/clash-display-500.woff2", weight: "500" },
+    { path: "../../public/fonts/clash-display-600.woff2", weight: "600" },
+    { path: "../../public/fonts/clash-display-700.woff2", weight: "700" },
+  ],
+  variable: "--font-syne", // keeps the existing tailwind var wiring
   display: "swap",
 });
 const inter = Inter({
@@ -30,7 +34,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Ege Deniz — AI-native Builder · Spatial Web",
+  title: "Ege Deniz — Instruments, not demos",
   description:
     "AI-native builder shipping agent workflows, Claude skills, and cinematic spatial web experiences. Custom R3F engines and landing pages for AI developer tools.",
 };
@@ -43,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${inter.variable} ${spaceMono.variable} ${instrumentSerif.variable}`}
+      className={`${clash.variable} ${inter.variable} ${spaceMono.variable} ${instrumentSerif.variable}`}
     >
       <body>{children}</body>
     </html>

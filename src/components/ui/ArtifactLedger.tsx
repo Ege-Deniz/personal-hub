@@ -83,7 +83,7 @@ export default function ArtifactLedger() {
         className="absolute inset-0 rounded-3xl border border-cyan/[0.07]"
         style={{
           background:
-            "radial-gradient(130% 110% at 28% 12%, rgba(3,8,18,0.88), rgba(3,8,18,0.55) 62%, rgba(3,8,18,0.28))",
+            "radial-gradient(130% 110% at 28% 12%, rgba(11,11,14,0.88), rgba(11,11,14,0.55) 62%, rgba(11,11,14,0.28))",
           backdropFilter: "blur(7px)",
           WebkitBackdropFilter: "blur(7px)",
         }}

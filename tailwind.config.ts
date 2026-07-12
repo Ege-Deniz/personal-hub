@@ -5,10 +5,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        abyss: "#030812",
+        abyss: "#0b0b0e",
         "abyss-light": "#0a1628",
         cyan: {
-          DEFAULT: "#00e5ff",
+          DEFAULT: "#f2f2ee",
           dim: "rgba(0,229,255,0.15)",
           glow: "rgba(0,229,255,0.4)",
         },
@@ -18,7 +18,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["var(--font-syne)", "Syne", "sans-serif"],
+        display: ["var(--font-syne)", "Clash Display", "sans-serif"],
         body: ["var(--font-inter)", "Inter", "sans-serif"],
         mono: ["var(--font-space-mono)", "Space Mono", "monospace"],
         serif: ["var(--font-instrument-serif)", "Instrument Serif", "Georgia", "serif"],

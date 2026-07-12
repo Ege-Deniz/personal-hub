@@ -9,7 +9,7 @@ export default function NotFound() {
       <div className="font-mono text-[0.6rem] uppercase tracking-[4px] text-cyan/50">
         34°41&apos;N · 33°02&apos;E — signal lost
       </div>
-      <h1 className="font-display text-[clamp(4rem,14vw,9rem)] font-extrabold leading-none tracking-[-4px] text-white">
+      <h1 className="font-display text-[clamp(4rem,14vw,9rem)] font-bold leading-none tracking-[-0.02em] text-white">
         404
       </h1>
       <p className="max-w-[38ch] text-[0.85rem] leading-[1.7] text-white/40">

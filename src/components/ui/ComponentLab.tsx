@@ -39,11 +39,11 @@ function Cell({
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative overflow-hidden rounded-2xl border border-cyan/[0.1] bg-[rgba(4,10,22,0.72)] ${className ?? ""}`}
+      className={`group relative overflow-hidden rounded-2xl border border-cyan/[0.1] bg-[rgba(14,14,17,0.72)] ${className ?? ""}`}
     >
       <div className="relative h-full min-h-[230px] flex flex-col">
         <div className="relative flex-1">{children}</div>
-        <div className="relative z-10 flex items-end justify-between gap-3 border-t border-cyan/[0.07] bg-[rgba(3,8,18,0.78)] px-4 py-3">
+        <div className="relative z-10 flex items-end justify-between gap-3 border-t border-cyan/[0.07] bg-[rgba(11,11,14,0.78)] px-4 py-3">
           <div>
             <div className="font-display text-[0.92rem] font-bold text-white/90">
               {name}
@@ -105,7 +105,7 @@ export default function ComponentLab() {
         className="absolute inset-x-0 inset-y-6 rounded-3xl"
         style={{
           background:
-            "radial-gradient(130% 110% at 28% 12%, rgba(3,8,18,0.86), rgba(3,8,18,0.5) 62%, rgba(3,8,18,0.22))",
+            "radial-gradient(130% 110% at 28% 12%, rgba(11,11,14,0.86), rgba(11,11,14,0.5) 62%, rgba(11,11,14,0.22))",
           backdropFilter: "blur(6px)",
           WebkitBackdropFilter: "blur(6px)",
         }}
@@ -115,7 +115,7 @@ export default function ComponentLab() {
         {"// The Lab"}
       </div>
       <h2
-        className="relative font-display text-[clamp(2rem,5vw,3.6rem)] font-bold tracking-tight text-white"
+        className="relative font-display text-[clamp(2rem,5vw,3.6rem)] font-bold tracking-[-0.01em] text-white"
         aria-label="The instruments, running live."
       >
         <TextReveal>The instruments, running live.</TextReveal>

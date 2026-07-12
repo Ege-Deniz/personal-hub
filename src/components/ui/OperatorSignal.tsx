@@ -18,7 +18,7 @@ export default function OperatorSignal() {
         className="absolute inset-x-0 inset-y-10 rounded-3xl"
         style={{
           background:
-            "radial-gradient(110% 100% at 25% 30%, rgba(3,8,18,0.8), rgba(3,8,18,0.4) 65%, transparent)",
+            "radial-gradient(110% 100% at 25% 30%, rgba(11,11,14,0.8), rgba(11,11,14,0.4) 65%, transparent)",
           backdropFilter: "blur(5px)",
           WebkitBackdropFilter: "blur(5px)",
         }}

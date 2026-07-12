@@ -3,21 +3,21 @@
 @tailwind utilities;
 
 :root {
-  --bg: #030812;
-  --cyan: #00e5ff;
-  --cyan-dim: rgba(0, 229, 255, 0.15);
-  --cyan-glow: rgba(0, 229, 255, 0.4);
-  --gold: #d4a853;
-  --glass-bg: rgba(6, 14, 30, 0.35);
-  --glass-border: rgba(0, 229, 255, 0.08);
-  --glass-border-hover: rgba(0, 229, 255, 0.22);
+  --bg: #0b0b0e;
+  --cyan: #f2f2ee; /* chrome accent is monochrome paper — the field is the only color */
+  --cyan-dim: rgba(242, 242, 238, 0.15);
+  --cyan-glow: rgba(242, 242, 238, 0.35);
+  --gold: #d4a853; /* sampled from the field; status dots only */
+  --glass-bg: rgba(14, 14, 17, 0.4);
+  --glass-border: rgba(242, 242, 238, 0.08);
+  --glass-border-hover: rgba(242, 242, 238, 0.22);
   --text: #e8eaf0;
   --text-mid: rgba(220, 225, 240, 0.7);
   --text-dim: rgba(200, 210, 230, 0.35);
 
   /* Motion tokens — required by the fx suite (TextFX transitions) */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --hairline: rgba(0, 229, 255, 0.12);
+  --hairline: rgba(242, 242, 238, 0.12);
 }
 
 * {
@@ -42,7 +42,7 @@ body {
 }
 
 ::selection {
-  background: rgba(0, 229, 255, 0.15);
+  background: rgba(242, 242, 238, 0.2);
   color: #fff;
 }
 
@@ -53,11 +53,11 @@ body {
   background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 229, 255, 0.12);
+  background: rgba(242, 242, 238, 0.12);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 229, 255, 0.3);
+  background: rgba(242, 242, 238, 0.3);
 }
 
 /* Glass card utility */
@@ -73,7 +73,7 @@ body {
   .glass:hover {
     border-color: var(--glass-border-hover);
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5),
-      0 0 20px rgba(0, 229, 255, 0.03);
+      0 0 20px rgba(242, 242, 238, 0.03);
   }
 
   .glass-top-line::after {

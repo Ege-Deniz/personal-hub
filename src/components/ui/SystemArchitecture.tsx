@@ -38,7 +38,7 @@ export default function SystemArchitecture() {
               Studio Operating System
             </div>
 
-            <h2 className="font-display text-[clamp(2.2rem,5vw,3.5rem)] font-extrabold leading-[0.92] tracking-[-0.05em] text-white">
+            <h2 className="font-display text-[clamp(2.2rem,5vw,3.5rem)] font-bold leading-[0.92] tracking-[-0.015em] text-white">
               Engineer the logic.
               <br />
               Design the visual world.
@@ -62,7 +62,7 @@ export default function SystemArchitecture() {
                   </div>
                   <div className="mt-2.5 flex items-start justify-between gap-8">
                     <div>
-                      <h3 className="font-display text-[1.15rem] font-bold tracking-[-0.04em] text-white">
+                      <h3 className="font-display text-[1.15rem] font-bold tracking-[-0.01em] text-white">
                         {layer.title}
                       </h3>
                       <p className="mt-1.5 max-w-sm text-[0.7rem] leading-[1.65] text-white/35">

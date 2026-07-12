@@ -1,0 +1,23 @@
+# Ege Deniz — rowy.engineer
+
+AI-native developer: agent tooling, ML from first principles, spatial web.
+Base: Cyprus (34°41'N 33°02'E). Next: MSc Artificial Intelligence, Maastricht, 2026-09.
+
+## Shipped work (every claim verifiable)
+
+- Backpropagation, in C — BSc thesis, defended 2026-07-01. 35-10-6 network from
+  first principles; converged epoch 207; 6/6 clean classification; noise
+  robustness 100/100/98.3% at 1/3/5 flipped pixels.
+  Deck + live demo: https://backprop-public.vercel.app
+- Brain Operator — Obsidian vault as agent devtools; local Claude Code sessions
+  with streamed tool calls and answer tracing. v0.6.6 public; parser tests
+  117/117. https://brainoperator.rowy.engineer · https://github.com/Ege-Deniz/brain-operator
+- SIBA — WebGL experience site, three.js + custom GLSL. https://siba.rowy.engineer
+- Zen Archery for Builders — session discipline for AI-assisted engineering,
+  from a former national archer. https://github.com/Ege-Deniz/zen-archery-for-builders
+- rowy.engineer itself — hand-tuned GPGPU particle field (5,360 instanced
+  particles, brain/field/rose morphs). https://github.com/Ege-Deniz/personal-hub
+
+## Contact
+
+ege@rowy.engineer · https://github.com/Ege-Deniz

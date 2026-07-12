@@ -40,7 +40,7 @@ export default function ImageTrail({
         "border:1px solid rgba(0,229,255,0.18)",
         "box-shadow:0 18px 50px rgba(0,0,0,0.55)",
         "will-change:transform,opacity",
-        "background:#05070d",
+        "background:#0b0b0e",
       ].join(";");
       const img = document.createElement("img");
       img.style.cssText =

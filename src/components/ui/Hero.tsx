@@ -180,7 +180,7 @@ export default function Hero() {
         <KineticType intensity={1.2}>
         <h1
           aria-label="Ege Deniz"
-          className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-extrabold uppercase leading-[0.92] tracking-[-4px]"
+          className="mb-9 flex flex-col font-display text-[clamp(4.5rem,12vw,11rem)] font-bold uppercase leading-[0.92] tracking-[-0.02em]"
         >
           <AnimatedLetters
             text="EGE"
