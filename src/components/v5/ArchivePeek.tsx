@@ -30,8 +30,11 @@ export default function ArchivePeek({
     const el = ref.current;
     if (!el) return;
     let raf = 0;
-    const target = { x: 0, y: 0 };
-    const pos = { x: 0, y: 0 };
+    // start off-screen so the card never flashes at the origin before the
+    // first pointer sample lands (it snaps to the real cursor on first move).
+    const target = { x: -9999, y: -9999 };
+    const pos = { x: -9999, y: -9999 };
+    let primed = false;
     const tick = () => {
       pos.x += (target.x - pos.x) * 0.16;
       pos.y += (target.y - pos.y) * 0.16;
@@ -44,6 +47,12 @@ export default function ArchivePeek({
     const onMove = (e: PointerEvent) => {
       target.x = e.clientX;
       target.y = e.clientY;
+      if (!primed) {
+        // snap to the cursor on the first sample — no lerp from off-screen
+        primed = true;
+        pos.x = e.clientX;
+        pos.y = e.clientY;
+      }
       if (!raf) raf = requestAnimationFrame(tick);
     };
     window.addEventListener("pointermove", onMove);

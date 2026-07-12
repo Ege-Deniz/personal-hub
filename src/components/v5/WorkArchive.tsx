@@ -67,7 +67,7 @@ export default function WorkArchive() {
         className="pointer-events-none absolute inset-y-0 -inset-x-[4.5%]"
         style={{
           background:
-            "linear-gradient(90deg, rgba(11,11,14,0.92) 0%, rgba(11,11,14,0.78) 45%, rgba(11,11,14,0.3) 80%, transparent 100%)",
+            "linear-gradient(90deg, rgba(11,11,14,0.94) 0%, rgba(11,11,14,0.86) 55%, rgba(11,11,14,0.66) 80%, rgba(11,11,14,0.34) 94%, transparent 100%)",
         }}
       />
       <div className="relative mb-10 flex items-baseline justify-between border-b border-white/10 pb-4">
