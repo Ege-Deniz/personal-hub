@@ -17,8 +17,8 @@ import IntroBrighten from "@/components/v5/IntroBrighten";
 import WorkArchive from "@/components/v5/WorkArchive";
 import FooterMasthead from "@/components/v5/FooterMasthead";
 import ComponentLab from "@/components/ui/ComponentLab";
-import BrainOperatorFeature from "@/components/ui/BrainOperatorFeature";
-import SystemArchitecture from "@/components/ui/SystemArchitecture";
+import FlagshipAct from "@/components/v5/FlagshipAct";
+import RoseAct from "@/components/v5/RoseAct";
 import CustomCursor from "@/components/hud/CustomCursor";
 
 const SpatialBackground = dynamic(
@@ -49,9 +49,9 @@ export default function HomePage() {
         <StatementHero booted={booted} />
         <IntroBrighten />
         <WorkArchive />
-        <BrainOperatorFeature />
+        <FlagshipAct />
         <ComponentLab />
-        <SystemArchitecture />
+        <RoseAct />
         <FooterMasthead />
       </div>
     </LenisProvider>

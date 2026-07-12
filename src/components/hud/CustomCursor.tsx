@@ -49,7 +49,7 @@ export default function CustomCursor() {
         if (dotRef.current) {
           dotRef.current.style.width = "6px";
           dotRef.current.style.height = "6px";
-          dotRef.current.style.background = "#00e5ff";
+          dotRef.current.style.background = "#f2f2ee";
           dotRef.current.style.boxShadow = "none";
         }
         if (ringRef.current) {

@@ -53,7 +53,7 @@ function Cell({
             </div>
           </div>
           <div className="text-right">
-            <div className="font-mono text-[0.48rem] uppercase tracking-[1.5px] text-gold/50">
+            <div className="font-mono text-[0.48rem] uppercase tracking-[1.5px] text-white/40">
               {usage}
             </div>
           </div>
@@ -195,12 +195,12 @@ export default function ComponentLab() {
         >
           <div className="absolute inset-0 flex flex-wrap content-center items-center justify-center gap-3 px-4">
             <MagneticCTA strength={0.5}>
-              <span className="inline-block rounded-md border border-cyan/25 bg-cyan/[0.06] px-5 py-2.5 font-mono text-[0.6rem] uppercase tracking-[1.5px] text-cyan/80">
+              <span className="inline-block rounded-md border border-white/20 bg-white/[0.05] px-5 py-2.5 font-mono text-[0.6rem] uppercase tracking-[1.5px] text-white/75">
                 pull me
               </span>
             </MagneticCTA>
             <MagneticCTA strength={0.5}>
-              <span className="inline-block rounded-md border border-gold/25 bg-gold/[0.06] px-5 py-2.5 font-mono text-[0.6rem] uppercase tracking-[1.5px] text-gold/80">
+              <span className="inline-block rounded-md border border-white/20 bg-white/[0.05] px-5 py-2.5 font-mono text-[0.6rem] uppercase tracking-[1.5px] text-white/75">
                 me too
               </span>
             </MagneticCTA>
@@ -232,7 +232,7 @@ export default function ComponentLab() {
 
       <div className="relative mt-6 flex items-center justify-between gap-4">
         <p className="font-mono text-[0.55rem] uppercase tracking-[2px] text-white/25">
-          eight instruments · zero dependencies · reduced-motion aware
+          six instruments live · the full set is in the repo · reduced-motion aware
         </p>
         <MagneticCTA>
           <a

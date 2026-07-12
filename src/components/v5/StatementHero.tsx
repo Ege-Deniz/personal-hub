@@ -61,7 +61,7 @@ export default function StatementHero({ booted }: { booted: boolean }) {
       {/* the statement — fills the viewport width, breaks over three lines */}
       <h1
         ref={h1Ref}
-        aria-label="Instruments, not demos. Every claim on this site is verifiable."
+        aria-label="Instruments, not demos. Proof attached."
         className="font-display font-bold uppercase leading-[0.94] tracking-[-0.03em] text-white"
         style={{ fontSize: "clamp(34px, 9.6vw, 150px)" }}
       >

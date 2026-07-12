@@ -16,6 +16,7 @@ export default function BootRitual({ onDone }: { onDone: () => void }) {
   const [pct, setPct] = useState(0);
   const [lineCount, setLineCount] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const [goneFromDom, setGoneFromDom] = useState(false);
   const doneRef = useRef(false);
 
   useEffect(() => {
@@ -28,24 +29,37 @@ export default function BootRitual({ onDone }: { onDone: () => void }) {
       setLineCount(LINES.length);
       return;
     }
-    const started = performance.now();
-    let raf = 0;
-    const tick = () => {
-      const t = (performance.now() - started) / 1400; // ≤1.4s ritual
-      const p = Math.min(100, Math.floor(t * 100));
-      setPct(p);
-      setLineCount(Math.min(LINES.length, Math.floor(t * 4)));
-      if (p >= 100 && !doneRef.current) {
-        doneRef.current = true;
-        setLeaving(true);
-        setTimeout(onDone, 650);
-        return;
-      }
-      raf = requestAnimationFrame(tick);
+    // Timer-driven, not rAF — rAF throttles/pauses on unfocused or background
+    // tabs, which would freeze the counter and hang the whole page. A wall-
+    // clock interval always advances; the ritual completes no matter what.
+    const started = Date.now();
+    const finish = () => {
+      if (doneRef.current) return;
+      doneRef.current = true;
+      setPct(100);
+      setLineCount(LINES.length);
+      setLeaving(true);
+      setTimeout(onDone, 650);
+      setTimeout(() => setGoneFromDom(true), 1500);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    const id = window.setInterval(() => {
+      const t = (Date.now() - started) / 1400; // ≤1.4s ritual
+      setPct(Math.min(100, Math.floor(t * 100)));
+      setLineCount(Math.min(LINES.length, Math.floor(t * 4)));
+      if (t >= 1) {
+        window.clearInterval(id);
+        finish();
+      }
+    }, 40);
+    // absolute backstop — never hang past 2s regardless of timer coalescing
+    const backstop = window.setTimeout(finish, 2000);
+    return () => {
+      window.clearInterval(id);
+      window.clearTimeout(backstop);
+    };
   }, [onDone]);
+
+  if (goneFromDom) return null;
 
   return (
     <div

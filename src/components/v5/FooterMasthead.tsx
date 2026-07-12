@@ -10,7 +10,7 @@ const ASK = encodeURIComponent(
 
 export default function FooterMasthead() {
   return (
-    <footer className="relative z-10 mt-[8vh] border-t border-white/10 px-[4.5%] pt-14 pb-6">
+    <footer id="signal" className="relative z-10 mt-[8vh] border-t border-white/10 px-[4.5%] pt-14 pb-6">
       <div className="flex flex-wrap items-center justify-between gap-6">
         <div className="flex flex-wrap gap-3">
           <a href="mailto:ege@rowy.engineer" className="rounded-full border border-white/15 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[2px] text-white/60 hover:text-white hover:border-white/50 transition-colors">ege@rowy.engineer</a>
@@ -24,13 +24,12 @@ export default function FooterMasthead() {
         </div>
       </div>
 
-      <div
-        aria-hidden
+      <h2
         className="mt-12 select-none text-center font-display font-bold uppercase leading-[0.8] tracking-[-0.045em] text-white"
         style={{ fontSize: "clamp(44px, 15.5vw, 260px)" }}
       >
         Ege&nbsp;Deniz
-      </div>
+      </h2>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3 font-mono text-[9px] uppercase tracking-[2px] text-white/25">
         <span>© 2026 · built by hand, measured in receipts</span>
         <span>34°41′N 33°02′E — signal locked</span>
