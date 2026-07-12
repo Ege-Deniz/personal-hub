@@ -9,11 +9,13 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ARTIFACTS } from "@/data/artifacts";
+import ArchivePeek from "@/components/v5/ArchivePeek";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function WorkArchive() {
   const [open, setOpen] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
 
@@ -83,6 +85,8 @@ export default function WorkArchive() {
           <article key={a.id} data-row className="relative border-b border-white/10">
             <button
               onClick={() => setOpen(isOpen ? null : a.id)}
+              onMouseEnter={() => setHovered(a.id)}
+              onMouseLeave={() => setHovered((h) => (h === a.id ? null : h))}
               aria-expanded={isOpen}
               className="group grid w-full grid-cols-[52px_1fr_auto] items-baseline gap-4 py-7 text-left md:grid-cols-[80px_1fr_220px_90px]"
             >
@@ -144,6 +148,11 @@ export default function WorkArchive() {
           </article>
         );
       })}
+
+      <ArchivePeek
+        activeId={hovered}
+        items={ARTIFACTS.map((a) => ({ id: a.id, title: a.title, media: a.media }))}
+      />
     </section>
   );
 }

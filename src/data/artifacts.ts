@@ -59,7 +59,7 @@ export const ARTIFACTS: Artifact[] = [
       { label: "live", href: "https://brainoperator.rowy.engineer" },
       { label: "github", href: "https://github.com/Ege-Deniz/brain-operator" },
     ],
-    media: null,
+    media: "/brain-operator-preview.png",
   },
   {
     id: "siba",
