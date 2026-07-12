@@ -1,64 +1,56 @@
 "use client";
 
+// Custom cursor — a paper dot that tracks 1:1 and a ring that lags on an
+// rAF lerp (no framer-motion; the winner stack is gsap/vanilla). Monochrome:
+// paper only, size/opacity changes on interactive hover, gold reserved for
+// status dots elsewhere. Desktop fine-pointer only; the CSS cursor:none rule
+// is scoped to >=768px hover:hover, so touch keeps its native cursor.
+
 import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
-  const dotX = useMotionValue(0);
-  const dotY = useMotionValue(0);
-  const ringX = useSpring(0, { stiffness: 180, damping: 25 });
-  const ringY = useSpring(0, { stiffness: 180, damping: 25 });
-  const isHovering = useRef(false);
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Detect touch devices
     if (typeof window !== "undefined" && "ontouchstart" in window) return;
+    if (window.matchMedia("(hover: none)").matches) return;
+
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring) return;
+
+    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const ringPos = { x: mouse.x, y: mouse.y };
+    let raf = 0;
+
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      // dot tracks exactly; ring lags for weight
+      dot.style.transform = `translate(${mouse.x}px, ${mouse.y}px) translate(-50%, -50%)`;
+      ringPos.x += (mouse.x - ringPos.x) * 0.18;
+      ringPos.y += (mouse.y - ringPos.y) * 0.18;
+      ring.style.transform = `translate(${ringPos.x}px, ${ringPos.y}px) translate(-50%, -50%)`;
+    };
+    raf = requestAnimationFrame(tick);
 
     const onMove = (e: MouseEvent) => {
-      dotX.set(e.clientX);
-      dotY.set(e.clientY);
-      ringX.set(e.clientX);
-      ringY.set(e.clientY);
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
     };
 
+    const setHover = (on: boolean) => {
+      dot.style.width = on ? "14px" : "6px";
+      dot.style.height = on ? "14px" : "6px";
+      ring.style.width = on ? "56px" : "36px";
+      ring.style.height = on ? "56px" : "36px";
+      ring.style.opacity = on ? "0.6" : "0.35";
+    };
     const onOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest("a, button, .glass, .act-btn")) {
-        isHovering.current = true;
-        if (dotRef.current) {
-          dotRef.current.style.width = "14px";
-          dotRef.current.style.height = "14px";
-          dotRef.current.style.background = "#f2f2ee";
-          dotRef.current.style.boxShadow = "0 0 14px rgba(212,168,83,0.35)";
-        }
-        if (ringRef.current) {
-          ringRef.current.style.width = "56px";
-          ringRef.current.style.height = "56px";
-          ringRef.current.style.borderColor = "#f2f2ee";
-          ringRef.current.style.opacity = "0.5";
-        }
-      }
+      if ((e.target as HTMLElement).closest("a, button")) setHover(true);
     };
-
     const onOut = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest("a, button, .glass, .act-btn")) {
-        isHovering.current = false;
-        if (dotRef.current) {
-          dotRef.current.style.width = "6px";
-          dotRef.current.style.height = "6px";
-          dotRef.current.style.background = "#f2f2ee";
-          dotRef.current.style.boxShadow = "none";
-        }
-        if (ringRef.current) {
-          ringRef.current.style.width = "36px";
-          ringRef.current.style.height = "36px";
-          ringRef.current.style.borderColor = "rgba(242,242,238,0.5)";
-          ringRef.current.style.opacity = "0.35";
-        }
-      }
+      if ((e.target as HTMLElement).closest("a, button")) setHover(false);
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
@@ -66,36 +58,26 @@ export default function CustomCursor() {
     document.addEventListener("mouseout", onOut);
 
     return () => {
+      cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOut);
     };
-  }, [dotX, dotY, ringX, ringY]);
+  }, []);
 
-  // Hide on touch devices via media query in CSS
   return (
     <>
-      <motion.div
+      <div
         ref={dotRef}
-        className="fixed top-0 left-0 z-[99999] hidden h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_10px_rgba(242,242,238,0.4)] pointer-events-none md:block"
-        style={{
-          x: dotX,
-          y: dotY,
-          translateX: "-50%",
-          translateY: "-50%",
-          transition: "width 0.2s, height 0.2s, background 0.2s",
-        }}
+        aria-hidden
+        className="pointer-events-none fixed left-0 top-0 z-[99999] hidden h-1.5 w-1.5 rounded-full bg-[#f2f2ee] md:block"
+        style={{ transition: "width 0.2s, height 0.2s" }}
       />
-      <motion.div
+      <div
         ref={ringRef}
-        className="fixed top-0 left-0 z-[99999] hidden h-9 w-9 rounded-full border border-cyan/50 opacity-35 pointer-events-none md:block"
-        style={{
-          x: ringX,
-          y: ringY,
-          translateX: "-50%",
-          translateY: "-50%",
-          transition: "width 0.3s, height 0.3s, border-color 0.3s",
-        }}
+        aria-hidden
+        className="pointer-events-none fixed left-0 top-0 z-[99999] hidden h-9 w-9 rounded-full border border-[#f2f2ee] opacity-35 md:block"
+        style={{ transition: "width 0.3s, height 0.3s, opacity 0.3s" }}
       />
     </>
   );

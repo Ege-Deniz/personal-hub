@@ -6,8 +6,7 @@
 // demo interactive at full pointer strength — this is the answer to
 // "where are the framer components": running, right here, open source.
 
-import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import AsciiFlowTrail from "@/components/fx/AsciiFlowTrail";
 import DotGridField from "@/components/fx/DotGridField";
 import FluidImage from "@/components/fx/FluidImage";
@@ -18,6 +17,8 @@ import { ShineText, TextReveal } from "@/components/fx/TextFX";
 const SOURCE =
   "https://github.com/Ege-Deniz/personal-hub/tree/feat/awwwards-live-rebuild/src/components/fx";
 
+// One-time fade-in on scroll into view — IntersectionObserver, not
+// framer-motion (retired from the redesign per the winner-stack law).
 function Cell({
   name,
   spec,
@@ -33,13 +34,35 @@ function Cell({
   children: React.ReactNode;
   delay?: number;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "-60px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+    <div
+      ref={ref}
       className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[rgba(14,14,17,0.72)] ${className ?? ""}`}
+      style={{
+        opacity: shown ? 1 : 0,
+        transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
+      }}
     >
       <div className="relative h-full min-h-[230px] flex flex-col">
         <div className="relative flex-1">{children}</div>
@@ -59,7 +82,7 @@ function Cell({
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
