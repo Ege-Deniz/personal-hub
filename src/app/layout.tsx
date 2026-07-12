@@ -54,10 +54,10 @@ export const metadata: Metadata = {
     siteName: "rowy.engineer",
     images: [
       {
-        url: "/brain-operator-preview.png",
+        url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "rowy.engineer — Ege Deniz",
+        alt: "rowy.engineer — Ege Deniz — Instruments, not demos. Proof attached.",
       },
     ],
   },
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ege Deniz — Instruments, not demos",
     description: DESCRIPTION,
-    images: ["/brain-operator-preview.png"],
+    images: ["/og.png"],
   },
   robots: { index: true, follow: true },
   icons: { icon: "/favicon.svg" },
