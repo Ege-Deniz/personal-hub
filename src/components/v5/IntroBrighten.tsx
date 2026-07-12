@@ -40,7 +40,7 @@ export default function IntroBrighten() {
   }, []);
 
   return (
-    <section className="relative z-10 mx-auto max-w-[1200px] px-[4.5%] py-[16vh]">
+    <section className="relative z-10 mx-auto max-w-[1400px] px-[4.5%] py-[14vh]">
       <p
         ref={ref}
         aria-label={TEXT}

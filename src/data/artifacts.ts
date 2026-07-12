@@ -62,21 +62,8 @@ export const ARTIFACTS: Artifact[] = [
     media: "/brain-operator-preview.png",
   },
   {
-    id: "siba",
-    index: "003",
-    title: "SIBA",
-    lane: "spatial web",
-    year: "2025",
-    shipped: "2025-12-01",
-    summary:
-      "A WebGL experience site — three.js scenes, custom shaders, motion built as one continuous piece rather than a page stack.",
-    receipts: ["three.js + GLSL", "shipped on its own domain"],
-    links: [{ label: "siba.rowy.engineer", href: "https://siba.rowy.engineer" }],
-    media: null,
-  },
-  {
     id: "zen-archery",
-    index: "004",
+    index: "003",
     title: "Zen Archery for Builders",
     lane: "agent discipline",
     year: "2026",
@@ -90,6 +77,19 @@ export const ARTIFACTS: Artifact[] = [
         href: "https://github.com/Ege-Deniz/zen-archery-for-builders",
       },
     ],
+    media: null,
+  },
+  {
+    id: "siba",
+    index: "004",
+    title: "SIBA",
+    lane: "spatial web",
+    year: "2025",
+    shipped: "2025-12-01",
+    summary:
+      "A WebGL experience site — three.js scenes, custom shaders, motion built as one continuous piece rather than a page stack.",
+    receipts: ["three.js + GLSL", "shipped on its own domain"],
+    links: [{ label: "siba.rowy.engineer", href: "https://siba.rowy.engineer" }],
     media: null,
   },
   {

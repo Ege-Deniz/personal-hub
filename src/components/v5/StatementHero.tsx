@@ -48,7 +48,7 @@ export default function StatementHero({ booted }: { booted: boolean }) {
         <div className="flex items-center gap-3">
           <a href="#archive" className="hidden sm:inline font-mono text-[10px] uppercase tracking-[2px] text-white/45 hover:text-white transition-colors px-2 py-2">Work</a>
           <a href="#lab" className="hidden sm:inline font-mono text-[10px] uppercase tracking-[2px] text-white/45 hover:text-white transition-colors px-2 py-2">Lab</a>
-          <a href="#signal" className="hidden sm:inline font-mono text-[10px] uppercase tracking-[2px] text-white/45 hover:text-white transition-colors px-2 py-2">Signal</a>
+          <a href="#signal" className="hidden sm:inline font-mono text-[10px] uppercase tracking-[2px] text-white/45 hover:text-white transition-colors px-2 py-2">Contact</a>
           <a
             href="mailto:ege@rowy.engineer"
             className="font-mono text-[10px] font-bold uppercase tracking-[2px] bg-white text-black rounded-md px-4 py-2.5 hover:bg-white/85 transition-colors"

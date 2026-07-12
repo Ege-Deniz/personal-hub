@@ -31,8 +31,14 @@ export default function FlagshipAct() {
       >
         The brain is the interface.
       </p>
-      <p className="mt-6 max-w-[52ch] text-[14px] leading-[1.75] text-white/50">
-        {bo.summary}
+      <p className="mt-6 max-w-[56ch] font-body text-[14px] leading-[1.8] text-white/55">
+        Most AI tools are a chat box bolted onto a model. Brain Operator is the
+        opposite: it turns an Obsidian vault into a debuggable agent runtime.
+        You watch a local Claude Code session think in the open — every file it
+        reads, every tool it calls, every answer traced back to the note it came
+        from. Applies are scoped and reviewable; nothing runs you can&apos;t
+        follow. Built on my own second brain, hardened by a multi-reviewer
+        security pass, shipped in public.
       </p>
 
       {/* full-bleed capture — liquid on pointer, plain on touch */}

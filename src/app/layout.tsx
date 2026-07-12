@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Mono, Instrument_Serif } from "next/font/google";
+import { Inter, Space_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -25,13 +25,6 @@ const spaceMono = Space_Mono({
   variable: "--font-space-mono",
   display: "swap",
 });
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Ege Deniz — Instruments, not demos",
@@ -47,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${clash.variable} ${inter.variable} ${spaceMono.variable} ${instrumentSerif.variable}`}
+      className={`${clash.variable} ${inter.variable} ${spaceMono.variable}`}
     >
       <body>{children}</body>
     </html>

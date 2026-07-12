@@ -30,13 +30,13 @@ export default function CustomCursor() {
         if (dotRef.current) {
           dotRef.current.style.width = "14px";
           dotRef.current.style.height = "14px";
-          dotRef.current.style.background = "#d4a853";
+          dotRef.current.style.background = "#f2f2ee";
           dotRef.current.style.boxShadow = "0 0 14px rgba(212,168,83,0.35)";
         }
         if (ringRef.current) {
           ringRef.current.style.width = "56px";
           ringRef.current.style.height = "56px";
-          ringRef.current.style.borderColor = "#d4a853";
+          ringRef.current.style.borderColor = "#f2f2ee";
           ringRef.current.style.opacity = "0.5";
         }
       }

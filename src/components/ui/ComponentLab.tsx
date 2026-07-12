@@ -39,11 +39,11 @@ function Cell({
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative overflow-hidden rounded-2xl border border-cyan/[0.1] bg-[rgba(14,14,17,0.72)] ${className ?? ""}`}
+      className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[rgba(14,14,17,0.72)] ${className ?? ""}`}
     >
       <div className="relative h-full min-h-[230px] flex flex-col">
         <div className="relative flex-1">{children}</div>
-        <div className="relative z-10 flex items-end justify-between gap-3 border-t border-cyan/[0.07] bg-[rgba(11,11,14,0.78)] px-4 py-3">
+        <div className="relative z-10 flex items-end justify-between gap-3 border-t border-white/[0.07] bg-[rgba(11,11,14,0.78)] px-4 py-3">
           <div>
             <div className="font-display text-[0.92rem] font-bold text-white/90">
               {name}
@@ -97,7 +97,7 @@ export default function ComponentLab() {
   return (
     <section
       id="lab"
-      className="relative z-10 mx-auto w-full max-w-7xl scroll-mt-24 px-4 md:px-8 py-24"
+      className="relative z-10 mx-auto w-full max-w-[1400px] scroll-mt-24 px-[4.5%] py-[14vh]"
     >
       {/* calm scrim — the demos perform inside their cells, not the backdrop */}
       <div
@@ -110,19 +110,21 @@ export default function ComponentLab() {
           WebkitBackdropFilter: "blur(6px)",
         }}
       />
-      <div className="relative mb-3 font-mono text-[0.65rem] tracking-[4px] uppercase text-cyan/60 flex items-center gap-3">
-        <span className="w-7 h-px bg-cyan/60" />
-        {"// The Lab"}
+      {/* section header — same grammar as the archive/flagship acts */}
+      <div className="relative mb-10 flex items-baseline justify-between border-b border-white/10 pb-4">
+        <h2
+          className="font-mono text-[10px] uppercase tracking-[3px] text-white/40"
+          aria-label="The Lab — the instruments, running live."
+        >
+          The Lab — the instruments, running live
+        </h2>
+        <span className="font-mono text-[10px] tracking-[2px] text-white/25">
+          touch them
+        </span>
       </div>
-      <h2
-        className="relative font-display text-[clamp(2rem,5vw,3.6rem)] font-bold tracking-[-0.01em] text-white"
-        aria-label="The instruments, running live."
-      >
-        <TextReveal>The instruments, running live.</TextReveal>
-      </h2>
-      <p className="relative mt-2 max-w-[54ch] text-[0.85rem] leading-[1.7] text-white/35">
+      <p className="relative max-w-[54ch] text-[0.85rem] leading-[1.7] text-white/40">
         Every effect on this site is a component built for it — no libraries,
-        no templates. Touch them. Then read the source.
+        no templates. Then read the source.
       </p>
 
       <div ref={gridRef} className="relative mt-10 grid grid-cols-1 gap-4 md:grid-cols-3 md:auto-rows-[260px]">
@@ -239,7 +241,7 @@ export default function ComponentLab() {
             href={SOURCE}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-md border border-cyan/15 px-4 py-2 font-mono text-[0.6rem] uppercase tracking-[1.5px] text-white/45 transition-all hover:border-cyan/50 hover:text-cyan hover:bg-cyan/[0.05]"
+            className="inline-flex items-center gap-2 rounded-md border border-white/15 px-4 py-2 font-mono text-[0.6rem] uppercase tracking-[1.5px] text-white/45 transition-all hover:border-white/50 hover:text-white hover:bg-white/[0.05]"
           >
             read the source ↗
           </a>

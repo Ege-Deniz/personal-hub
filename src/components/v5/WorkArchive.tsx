@@ -114,7 +114,7 @@ export default function WorkArchive() {
             >
               <div className="overflow-hidden">
                 <div className="flex flex-col gap-5 pb-9 pl-[52px] md:pl-[80px] md:flex-row md:items-end md:justify-between">
-                  <p className="max-w-[52ch] text-[13.5px] leading-[1.75] text-white/50">
+                  <p className="max-w-[52ch] font-body text-[13.5px] leading-[1.75] text-white/50">
                     {a.summary}
                   </p>
                   <div className="flex flex-col items-start gap-3 md:items-end">

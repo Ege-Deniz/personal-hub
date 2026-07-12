@@ -36,8 +36,8 @@ void main() {
   vec2 offset = normalize(toMouse + 1e-5) * ring * 0.035 + uVel * exp(-d * 8.0) * 0.6;
   vec2 suv = (uv - 0.5) * uTexScale + 0.5 + offset;
   vec3 col = texture2D(uTex, suv).rgb;
-  // faint cyan energy sheen on the disturbance
-  col += vec3(0.0, 0.9, 1.0) * abs(ring) * 0.18;
+  // faint paper energy sheen on the disturbance (monochrome law)
+  col += vec3(0.95) * abs(ring) * 0.14;
   gl_FragColor = vec4(col, 1.0);
 }`;
 
