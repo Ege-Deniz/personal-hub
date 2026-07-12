@@ -55,10 +55,14 @@ export default function FlagshipAct() {
           base image sits underneath so the flagship visual is never blank if
           the WebGL layer is slow, unsupported, or still compiling. */}
       <div className="relative mt-12 aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/10 bg-[#0e0e11]">
+        {/* crossOrigin matches FluidImage's texture loader so both share one
+            cache entry — without it the same 1 MB asset is fetched twice
+            (verified via perf scan). */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/brain-operator-preview.png"
           alt="Brain Operator — agent devtools over an Obsidian vault"
+          crossOrigin="anonymous"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <FluidImage
