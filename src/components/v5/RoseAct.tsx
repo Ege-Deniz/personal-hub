@@ -45,7 +45,10 @@ export default function RoseAct() {
         className="pointer-events-none absolute left-0 top-[95vh] bottom-0 w-px"
       />
       <div className="sticky top-0 flex h-screen flex-col justify-center">
-        <p className="max-w-[34ch] font-mono text-[11px] uppercase leading-[2.4] tracking-[3px] text-white/45">
+        <p
+          className="max-w-[34ch] font-mono text-[11px] uppercase leading-[2.4] tracking-[3px] text-white/70"
+          style={{ textShadow: "0 2px 24px rgba(0,0,0,0.95), 0 0 8px rgba(0,0,0,0.8)" }}
+        >
           the same 5,360 particles,
           <br />
           asked to be a rose —
@@ -63,10 +66,11 @@ export default function RoseAct() {
           </span>
         </p>
         <div
-          className="mt-8 font-mono text-[9px] uppercase tracking-[2px] text-white/25"
+          className="mt-8 font-mono text-[9px] uppercase tracking-[2px] text-white/40"
           style={{
             opacity: resolved ? 1 : 0,
             transition: "opacity 0.9s ease 0.15s",
+            textShadow: "0 2px 20px rgba(0,0,0,0.95)",
           }}
         >
           morph target: rose · hand-keyed · 6-keyframe camera rig

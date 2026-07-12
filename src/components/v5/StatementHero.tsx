@@ -62,11 +62,11 @@ export default function StatementHero({ booted }: { booted: boolean }) {
       <h1
         ref={h1Ref}
         aria-label="Instruments, not demos. Proof attached."
-        className="font-display font-bold uppercase leading-[0.94] tracking-[-0.03em] text-white"
+        className="text-shadow-hero font-display font-bold uppercase leading-[0.94] tracking-[-0.03em] text-white"
         style={{ fontSize: "clamp(34px, 9.6vw, 150px)" }}
       >
         <span className="block overflow-hidden"><span data-line className="block">Instruments,</span></span>
-        <span className="block overflow-hidden"><span data-line className="block text-white/40">not demos.</span></span>
+        <span className="block overflow-hidden"><span data-line className="block text-white/50">not demos.</span></span>
         <span className="block overflow-hidden"><span data-line className="block">Proof attached.</span></span>
       </h1>
 
