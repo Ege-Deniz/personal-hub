@@ -10,46 +10,40 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function RoseAct() {
-  const ref = useRef<HTMLElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
   const [resolved, setResolved] = useState(false);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setResolved(true);
       return;
     }
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      // same shape SpatialBackground uses for uSystemStage; the bloom peaks
-      // partway through, so resolve the caption a beat after the midpoint.
-      const p = (vh - rect.top) / (rect.height + vh);
-      setResolved(p > 0.5);
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      cancelAnimationFrame(raf);
-    };
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    // Tall sentinel spanning bloom-depth → section end. It intersects the
+    // whole time you're in the payoff zone, so a single-frame jump past it
+    // still resolves (unlike a 1px sentinel that IO can skip). Fires reliably
+    // regardless of rAF/scroll-event throttling.
+    const io = new IntersectionObserver(
+      ([entry]) => setResolved(entry.isIntersecting),
+      { threshold: 0 },
+    );
+    io.observe(sentinel);
+    return () => io.disconnect();
   }, []);
 
   return (
     <section
-      ref={ref}
       id="system"
       aria-label="The field forms a rose"
       className="relative z-10 min-h-[180vh] px-[4.5%]"
     >
+      {/* bloom-depth → end sentinel: intersecting = the rose has formed */}
+      <div
+        ref={sentinelRef}
+        aria-hidden
+        className="pointer-events-none absolute left-0 top-[95vh] bottom-0 w-px"
+      />
       <div className="sticky top-0 flex h-screen flex-col justify-center">
         <p className="max-w-[34ch] font-mono text-[11px] uppercase leading-[2.4] tracking-[3px] text-white/45">
           the same 5,360 particles,
