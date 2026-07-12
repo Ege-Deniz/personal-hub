@@ -17,7 +17,7 @@ export default function FooterMasthead() {
           <a href="https://github.com/Ege-Deniz" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/15 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[2px] text-white/60 hover:text-white hover:border-white/50 transition-colors">GitHub ↗</a>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-[9px] uppercase tracking-[2px] text-white/30">ask an agent about me —</span>
+          <span className="font-mono text-[9px] uppercase tracking-[2px] text-white/55">ask an agent about me —</span>
           <a href={"https://claude.ai/new?q=" + ASK} target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[9.5px] uppercase tracking-[1.5px] text-white/60 hover:text-white hover:border-white/50 transition-colors">Claude</a>
           <a href={"https://www.perplexity.ai/search?q=" + ASK} target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[9.5px] uppercase tracking-[1.5px] text-white/60 hover:text-white hover:border-white/50 transition-colors">Perplexity</a>
           <a href="/llms.txt" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[9.5px] uppercase tracking-[1.5px] text-white/60 hover:text-white hover:border-white/50 transition-colors">llms.txt</a>
@@ -30,7 +30,7 @@ export default function FooterMasthead() {
       >
         Ege&nbsp;Deniz
       </h2>
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 font-mono text-[9px] uppercase tracking-[2px] text-white/25">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 font-mono text-[9px] uppercase tracking-[2px] text-white/55">
         <span>© 2026 · built by hand, measured in receipts</span>
         <span>34°41′N 33°02′E — signal locked</span>
       </div>

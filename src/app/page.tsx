@@ -45,7 +45,7 @@ export default function HomePage() {
         }}
       />
 
-      <div className="relative z-10">
+      <main className="relative z-10">
         <StatementHero booted={booted} />
         <IntroBrighten />
         <WorkArchive />
@@ -53,7 +53,7 @@ export default function HomePage() {
         <ComponentLab />
         <RoseAct />
         <FooterMasthead />
-      </div>
+      </main>
     </LenisProvider>
   );
 }

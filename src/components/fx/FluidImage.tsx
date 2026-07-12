@@ -172,13 +172,17 @@ export default function FluidImage({
     };
   }, [src]);
 
+  // When alt is empty the layer is purely decorative (a labeled <img> sits
+  // underneath it) — expose it as such rather than an unlabeled role="img".
+  const decorative = !alt;
   return (
     <div
       ref={hostRef}
       className={className}
       style={{ position: "relative", overflow: "hidden" }}
-      role="img"
-      aria-label={alt}
+      role={decorative ? undefined : "img"}
+      aria-label={decorative ? undefined : alt}
+      aria-hidden={decorative ? true : undefined}
     >
       {fallback && (
         // eslint-disable-next-line @next/next/no-img-element

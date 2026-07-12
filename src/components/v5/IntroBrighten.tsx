@@ -19,13 +19,13 @@ export default function IntroBrighten() {
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      el.querySelectorAll("span").forEach((s) => (s.style.color = "rgba(242,242,238,0.92)"));
+      el.querySelectorAll<HTMLSpanElement>("span[aria-hidden]").forEach((s) => (s.style.color = "rgba(242,242,238,0.92)"));
       return;
     }
-    const words = el.querySelectorAll("span");
+    const words = el.querySelectorAll("span[aria-hidden]");
     const tween = gsap.fromTo(
       words,
-      { color: "rgba(242,242,238,0.16)" },
+      { color: "rgba(242,242,238,0.5)" },
       {
         color: "rgba(242,242,238,0.92)",
         stagger: 0.02,
@@ -43,13 +43,13 @@ export default function IntroBrighten() {
     <section className="relative z-10 mx-auto max-w-[1400px] px-[4.5%] py-[14vh]">
       <p
         ref={ref}
-        aria-label={TEXT}
         className="font-display font-medium leading-[1.22] tracking-[-0.015em]"
         style={{
           fontSize: "clamp(26px, 3.9vw, 52px)",
           textShadow: "0 2px 24px rgba(0,0,0,0.85)",
         }}
       >
+        <span className="sr-only">{TEXT}</span>
         {TEXT.split(" ").map((w, i) => (
           <span key={i} aria-hidden>
             {w}{" "}

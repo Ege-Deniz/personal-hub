@@ -56,7 +56,8 @@ export function TextReveal({
   const { ref, inView } = useInView<HTMLSpanElement>();
   const words = children.split(" ");
   return (
-    <span ref={ref} className={className} style={style} aria-label={children}>
+    <span ref={ref} className={className} style={style}>
+      <span className="sr-only">{children}</span>
       {words.map((w, i) => (
         <span
           key={i}
@@ -158,7 +159,8 @@ export function WordHighlight({
   const words = children.split(" ");
   const lit = Math.round(progress * words.length);
   return (
-    <p ref={hostRef} className={className} style={style} aria-label={children}>
+    <p ref={hostRef} className={className} style={style}>
+      <span className="sr-only">{children}</span>
       {words.map((w, i) => (
         <span
           key={i}
