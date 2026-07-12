@@ -71,6 +71,41 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.svg" },
 };
 
+// Structured data — verifiable facts only (name, site, confirmed GitHub, and
+// skill areas each evidenced by a shipped project). Makes the footer's
+// "ask an agent about me" real at the data layer: agents and search engines
+// get a machine-readable Person + WebSite instead of guessing from prose.
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://rowy.engineer/#ege",
+      name: "Ege Deniz",
+      url: "https://rowy.engineer",
+      jobTitle: "AI-native developer",
+      description: DESCRIPTION,
+      sameAs: ["https://github.com/Ege-Deniz"],
+      knowsAbout: [
+        "AI agent tooling",
+        "machine learning",
+        "backpropagation",
+        "WebGL",
+        "three.js",
+        "spatial web",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://rowy.engineer/#site",
+      url: "https://rowy.engineer",
+      name: "rowy.engineer",
+      description: DESCRIPTION,
+      author: { "@id": "https://rowy.engineer/#ege" },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -81,7 +116,13 @@ export default function RootLayout({
       lang="en"
       className={`${clash.variable} ${inter.variable} ${spaceMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
