@@ -51,11 +51,19 @@ export default function FlagshipAct() {
         security pass, shipped in public.
       </p>
 
-      {/* full-bleed capture — liquid on pointer, plain on touch */}
+      {/* full-bleed capture — liquid on pointer, plain on touch. A static
+          base image sits underneath so the flagship visual is never blank if
+          the WebGL layer is slow, unsupported, or still compiling. */}
       <div className="relative mt-12 aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/10 bg-[#0e0e11]">
-        <FluidImage
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/brain-operator-preview.png"
           alt="Brain Operator — agent devtools over an Obsidian vault"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <FluidImage
+          src="/brain-operator-preview.png"
+          alt=""
           className="absolute inset-0"
         />
       </div>
