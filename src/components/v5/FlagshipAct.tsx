@@ -16,7 +16,17 @@ export default function FlagshipAct() {
       id="flagship"
       className="relative z-10 mx-auto max-w-[1400px] px-[4.5%] py-[14vh]"
     >
-      <div className="mb-10 flex items-baseline justify-between border-b border-white/10 pb-4">
+      {/* left-weighted legibility scrim — same grammar as the archive, so the
+          heading + prose read over the field while it blooms in the margin */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 -inset-x-[4.5%]"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(11,11,14,0.94) 0%, rgba(11,11,14,0.86) 52%, rgba(11,11,14,0.6) 78%, rgba(11,11,14,0.3) 94%, transparent 100%)",
+        }}
+      />
+      <div className="relative mb-10 flex items-baseline justify-between border-b border-white/10 pb-4">
         <h2 className="font-mono text-[10px] uppercase tracking-[3px] text-white/40">
           Flagship — {bo.lane}
         </h2>
@@ -26,12 +36,12 @@ export default function FlagshipAct() {
       </div>
 
       <p
-        className="max-w-[16ch] font-display font-bold uppercase leading-[0.96] tracking-[-0.02em] text-white"
+        className="relative max-w-[16ch] font-display font-bold uppercase leading-[0.96] tracking-[-0.02em] text-white"
         style={{ fontSize: "clamp(34px, 6.2vw, 92px)" }}
       >
         The brain is the interface.
       </p>
-      <p className="mt-6 max-w-[56ch] font-body text-[14px] leading-[1.8] text-white/55">
+      <p className="relative mt-6 max-w-[56ch] font-body text-[14px] leading-[1.8] text-white/60">
         Most AI tools are a chat box bolted onto a model. Brain Operator is the
         opposite: it turns an Obsidian vault into a debuggable agent runtime.
         You watch a local Claude Code session think in the open — every file it
@@ -50,7 +60,7 @@ export default function FlagshipAct() {
         />
       </div>
 
-      <div className="mt-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+      <div className="relative mt-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap gap-2">
           {bo.receipts.map((r) => (
             <span

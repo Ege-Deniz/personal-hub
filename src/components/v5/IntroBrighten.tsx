@@ -45,7 +45,10 @@ export default function IntroBrighten() {
         ref={ref}
         aria-label={TEXT}
         className="font-display font-medium leading-[1.22] tracking-[-0.015em]"
-        style={{ fontSize: "clamp(26px, 3.9vw, 52px)" }}
+        style={{
+          fontSize: "clamp(26px, 3.9vw, 52px)",
+          textShadow: "0 2px 24px rgba(0,0,0,0.85)",
+        }}
       >
         {TEXT.split(" ").map((w, i) => (
           <span key={i} aria-hidden>
