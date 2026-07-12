@@ -26,10 +26,49 @@ const spaceMono = Space_Mono({
   display: "swap",
 });
 
+const DESCRIPTION =
+  "Ege Deniz — AI-native developer. Agent devtools, ML from first principles (backpropagation in C), and a hand-tuned particle field. Every claim verifiable in a repo, a thesis, or a live domain.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://rowy.engineer"),
   title: "Ege Deniz — Instruments, not demos",
-  description:
-    "AI-native builder shipping agent workflows, Claude skills, and cinematic spatial web experiences. Custom R3F engines and landing pages for AI developer tools.",
+  description: DESCRIPTION,
+  authors: [{ name: "Ege Deniz", url: "https://github.com/Ege-Deniz" }],
+  creator: "Ege Deniz",
+  keywords: [
+    "AI-native developer",
+    "agent tooling",
+    "machine learning",
+    "spatial web",
+    "three.js",
+    "WebGL",
+    "Ege Deniz",
+    "rowy.engineer",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "https://rowy.engineer",
+    title: "Ege Deniz — Instruments, not demos",
+    description: DESCRIPTION,
+    siteName: "rowy.engineer",
+    images: [
+      {
+        url: "/brain-operator-preview.png",
+        width: 1200,
+        height: 630,
+        alt: "rowy.engineer — Ege Deniz",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ege Deniz — Instruments, not demos",
+    description: DESCRIPTION,
+    images: ["/brain-operator-preview.png"],
+  },
+  robots: { index: true, follow: true },
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({
