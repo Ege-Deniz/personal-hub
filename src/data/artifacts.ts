@@ -38,7 +38,9 @@ export const ARTIFACTS: Artifact[] = [
     links: [
       { label: "deck + live demo", href: "https://backprop-public.vercel.app" },
     ],
-    media: null,
+    // interim still of the live deck (title + hand-drawn 35-10-6 network);
+    // swappable for a demo clip when Ege records one
+    media: "/media/backprop.png",
   },
   {
     id: "brain-operator",
