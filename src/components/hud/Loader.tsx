@@ -69,7 +69,7 @@ export default function Loader({ onComplete }: LoaderProps) {
               style={{
                 width: `${progress}%`,
                 background:
-                  "linear-gradient(90deg, var(--cyan), rgba(0,229,255,0.4))",
+                  "linear-gradient(90deg, var(--cyan), rgba(242,242,238,0.4))",
               }}
             />
           </div>

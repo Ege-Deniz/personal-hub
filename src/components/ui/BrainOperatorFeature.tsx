@@ -24,7 +24,7 @@ export default function BrainOperatorFeature() {
           className="pointer-events-none absolute inset-0 opacity-80"
           style={{
             background:
-              "radial-gradient(circle at 82% 24%, rgba(212,168,83,0.16), transparent 34%), radial-gradient(circle at 12% 92%, rgba(0,229,255,0.08), transparent 28%)",
+              "radial-gradient(circle at 82% 24%, rgba(212,168,83,0.16), transparent 34%), radial-gradient(circle at 12% 92%, rgba(242,242,238,0.08), transparent 28%)",
           }}
         />
 

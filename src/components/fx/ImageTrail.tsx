@@ -37,7 +37,7 @@ export default function ImageTrail({
         "overflow:hidden",
         "pointer-events:none",
         "opacity:0",
-        "border:1px solid rgba(0,229,255,0.18)",
+        "border:1px solid rgba(242,242,238,0.18)",
         "box-shadow:0 18px 50px rgba(0,0,0,0.55)",
         "will-change:transform,opacity",
         "background:#0b0b0e",

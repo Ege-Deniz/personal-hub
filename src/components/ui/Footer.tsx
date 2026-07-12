@@ -25,7 +25,7 @@ export default function Footer() {
         aria-hidden
         className="select-none text-center font-display text-[clamp(3.4rem,11vw,9.5rem)] font-bold uppercase leading-none tracking-[-0.02em]"
         style={{
-          WebkitTextStroke: "1.5px rgba(0,229,255,0.14)",
+          WebkitTextStroke: "1.5px rgba(242,242,238,0.14)",
           color: "transparent",
         }}
       >

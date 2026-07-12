@@ -102,7 +102,7 @@ export function ShineText({
         ...style,
         display: "inline-block",
         backgroundImage:
-          "linear-gradient(115deg, var(--text) 38%, #ffffff 46%, rgba(0,229,255,0.95) 50%, #ffffff 54%, var(--text) 62%)",
+          "linear-gradient(115deg, var(--text) 38%, #ffffff 46%, rgba(242,242,238,0.95) 50%, #ffffff 54%, var(--text) 62%)",
         backgroundSize: "260% 100%",
         backgroundPosition: inView ? "0% 0%" : "130% 0%",
         WebkitBackgroundClip: "text",

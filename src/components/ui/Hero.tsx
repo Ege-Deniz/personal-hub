@@ -46,7 +46,7 @@ function AnimatedLetters({
           style={
             strokeOnly
               ? {
-                  WebkitTextStroke: "2px rgba(0,229,255,0.18)",
+                  WebkitTextStroke: "2px rgba(242,242,238,0.18)",
                   color: "transparent",
                 }
               : undefined
@@ -171,7 +171,7 @@ export default function Hero() {
             <InferenceText text="System.Init()" />
           </div>
           <div className="font-mono text-[0.5rem] tracking-[2px] uppercase text-white/25 flex items-center gap-2">
-            <span className="w-[5px] h-[5px] rounded-full bg-cyan shadow-[0_0_8px_rgba(0,229,255,0.4)] animate-pulse-dot" />
+            <span className="w-[5px] h-[5px] rounded-full bg-cyan shadow-[0_0_8px_rgba(242,242,238,0.4)] animate-pulse-dot" />
             Field resident · GPGPU morph live
           </div>
         </motion.div>
@@ -200,7 +200,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: d(3.55), duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="w-[68px] h-[68px] rounded-full overflow-hidden shadow-[0_0_20px_rgba(0,229,255,0.12)] border border-cyan/15 flex-shrink-0">
+          <div className="w-[68px] h-[68px] rounded-full overflow-hidden shadow-[0_0_20px_rgba(242,242,238,0.12)] border border-cyan/15 flex-shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/headset-character.png"
@@ -231,7 +231,7 @@ export default function Hero() {
           <MagneticCTA strength={0.4}>
             <a
               href="#hub"
-              className="w-[42px] h-[42px] rounded-full flex items-center justify-center border border-cyan/15 bg-cyan/[0.02] hover:border-cyan hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] transition-all animate-bounce"
+              className="w-[42px] h-[42px] rounded-full flex items-center justify-center border border-cyan/15 bg-cyan/[0.02] hover:border-cyan hover:shadow-[0_0_20px_rgba(242,242,238,0.4)] transition-all animate-bounce"
               aria-label="Scroll to the work ledger"
             >
               <ChevronDown className="w-4 h-4 text-cyan" />

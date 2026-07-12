@@ -55,7 +55,7 @@ export default function CustomCursor() {
         if (ringRef.current) {
           ringRef.current.style.width = "36px";
           ringRef.current.style.height = "36px";
-          ringRef.current.style.borderColor = "rgba(0,229,255,0.5)";
+          ringRef.current.style.borderColor = "rgba(242,242,238,0.5)";
           ringRef.current.style.opacity = "0.35";
         }
       }
@@ -77,7 +77,7 @@ export default function CustomCursor() {
     <>
       <motion.div
         ref={dotRef}
-        className="fixed top-0 left-0 z-[99999] hidden h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_10px_rgba(0,229,255,0.4)] pointer-events-none md:block"
+        className="fixed top-0 left-0 z-[99999] hidden h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_10px_rgba(242,242,238,0.4)] pointer-events-none md:block"
         style={{
           x: dotX,
           y: dotY,

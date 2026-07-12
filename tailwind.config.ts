@@ -6,11 +6,11 @@ const config: Config = {
     extend: {
       colors: {
         abyss: "#0b0b0e",
-        "abyss-light": "#0a1628",
+        "abyss-light": "#12121a",
         cyan: {
           DEFAULT: "#f2f2ee",
-          dim: "rgba(0,229,255,0.15)",
-          glow: "rgba(0,229,255,0.4)",
+          dim: "rgba(242,242,238,0.15)",
+          glow: "rgba(242,242,238,0.4)",
         },
         gold: {
           DEFAULT: "#d4a853",

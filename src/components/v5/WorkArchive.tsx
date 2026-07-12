@@ -5,17 +5,62 @@
 // receipts + link rail in place (valentin-mor expand grammar, no routes).
 // Reads src/data/artifacts.ts — every chip is verifiable.
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ARTIFACTS } from "@/data/artifacts";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function WorkArchive() {
   const [open, setOpen] = useState<string | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrimRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = gsap.context(() => {
+      // one-time row entrance — mask up per row, staggered by index
+      gsap.from("[data-row]", {
+        yPercent: 40,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power4.out",
+        stagger: 0.08,
+        scrollTrigger: { trigger: section, start: "top 72%" },
+      });
+      // the field recedes because you arrived — scrim opacity scrubs with
+      // scroll progress through the act (the page dims the instrument).
+      gsap.fromTo(
+        scrimRef.current,
+        { opacity: 0.55 },
+        {
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            end: "top 20%",
+            scrub: 0.5,
+          },
+        },
+      );
+    }, section);
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="archive" className="relative z-10 mx-auto max-w-[1400px] px-[4.5%] py-[12vh]">
-      {/* legibility valve — left-weighted ink wash so receipts stay readable
-          over the field's bright core; the field remains visible at the edges */}
+    <section
+      ref={sectionRef}
+      id="archive"
+      className="relative z-10 mx-auto max-w-[1400px] px-[4.5%] py-[12vh]"
+    >
+      {/* legibility valve — left-weighted ink wash, scrubbed by scroll so the
+          field visibly recedes as you enter the act (not a static paint) */}
       <div
+        ref={scrimRef}
         aria-hidden
         className="pointer-events-none absolute inset-y-0 -inset-x-[4.5%]"
         style={{
@@ -35,7 +80,7 @@ export default function WorkArchive() {
       {ARTIFACTS.map((a) => {
         const isOpen = open === a.id;
         return (
-          <article key={a.id} className="relative border-b border-white/10">
+          <article key={a.id} data-row className="relative border-b border-white/10">
             <button
               onClick={() => setOpen(isOpen ? null : a.id)}
               aria-expanded={isOpen}

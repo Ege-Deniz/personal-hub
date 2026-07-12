@@ -110,7 +110,7 @@ export default function DotGridField({ opacity = 0.5 }: { opacity?: number }) {
         const r = DOT + glow * 1.3;
         ctx.beginPath();
         ctx.arc(px, py, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 229, 255, ${(0.16 + glow * 0.7) * opacity})`;
+        ctx.fillStyle = `rgba(242, 242, 238, ${(0.16 + glow * 0.7) * opacity})`;
         ctx.fill();
       }
     };

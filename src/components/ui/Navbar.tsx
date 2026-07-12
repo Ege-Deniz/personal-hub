@@ -92,7 +92,7 @@ export default function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               title={s.label}
-              className="w-[1.9rem] h-[1.9rem] rounded-full flex items-center justify-center text-white/40 bg-[rgba(6,12,24,0.5)] border border-cyan/[0.06] backdrop-blur-md hover:text-cyan hover:scale-110 hover:border-cyan/25 hover:shadow-[0_0_14px_rgba(0,229,255,0.08)] transition-all"
+              className="w-[1.9rem] h-[1.9rem] rounded-full flex items-center justify-center text-white/40 bg-[rgba(6,12,24,0.5)] border border-cyan/[0.06] backdrop-blur-md hover:text-cyan hover:scale-110 hover:border-cyan/25 hover:shadow-[0_0_14px_rgba(242,242,238,0.08)] transition-all"
             >
               <Icon className="w-[0.9rem] h-[0.9rem]" />
             </a>

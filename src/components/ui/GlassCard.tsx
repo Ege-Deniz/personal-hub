@@ -60,7 +60,7 @@ export default function GlassCard({
         className="absolute top-0 left-0 right-0 h-px z-10 pointer-events-none"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent)",
+            "linear-gradient(90deg, transparent, rgba(242,242,238,0.3), transparent)",
         }}
         initial={{ opacity: 0, top: 0 }}
         whileHover={{

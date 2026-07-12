@@ -126,7 +126,7 @@ export default function AsciiFlowTrail({ opacity = 0.5 }: { opacity?: number }) 
           const a = Math.min(1, e) * opacity;
           // hot core reads gold, wake reads cyan — the gateway two-tone
           ctx.fillStyle =
-            e > 0.75 ? `rgba(212, 168, 83, ${a})` : `rgba(0, 229, 255, ${a})`;
+            e > 0.75 ? `rgba(212, 168, 83, ${a})` : `rgba(242, 242, 238, ${a})`;
           ctx.fillText(
             GLYPHS[chars[idx]],
             gx * CELL + CELL / 2,
