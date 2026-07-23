@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>rowy.engineer — soon</title>
+<meta name="description" content="Charting course: Aegean → Maastricht. A world is under construction." />
+<meta property="og:title" content="rowy.engineer" />
+<meta property="og:description" content="Charting course: Aegean → Maastricht. Soon." />
+<style>
+  @font-face {
+    font-family: "Pilowlava";
+    src: url("./assets/Pilowlava-Regular.woff2") format("woff2");
+    font-display: swap;
+  }
+  :root {
+    --void: #07090D;
+    --silver: #D9E3EC;
+    --dim: #6b7684;
+    --cyan: #7EE8FA;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--void); color: var(--silver);
+    font-family: ui-monospace, "JetBrains Mono", SFMono-Regular, monospace;
+    overflow: hidden;
+  }
+
+  #grain { position: fixed; inset: 0; z-index: 6; pointer-events: none; opacity: .07; }
+  #vignette {
+    position: fixed; inset: 0; z-index: 5; pointer-events: none;
+    background: radial-gradient(ellipse 130% 95% at 50% 42%, transparent 50%, rgba(0,0,0,.62) 100%);
+  }
+
+  .label {
+    position: fixed; z-index: 4;
+    font-size: 12px; font-weight: 500; letter-spacing: .16em; color: var(--dim);
+  }
+  #tl { left: clamp(20px, 4vw, 48px); top: clamp(20px, 4vw, 44px); color: var(--silver); }
+  #tr { right: clamp(20px, 4vw, 48px); top: clamp(20px, 4vw, 44px); }
+  #bc {
+    left: 50%; bottom: clamp(24px, 5vh, 56px); transform: translateX(-50%);
+    text-align: center; white-space: nowrap;
+  }
+
+  main {
+    position: fixed; inset: 0; z-index: 3;
+    display: grid; place-items: center;
+  }
+  .stack { text-align: center; }
+  h1 {
+    margin: 0; font-family: "Pilowlava", serif; font-weight: 400;
+    font-size: clamp(88px, 21vw, 290px); line-height: .9;
+    color: var(--silver); letter-spacing: .01em;
+    position: relative; z-index: 2;
+  }
+  #sub {
+    margin-top: clamp(18px, 3vh, 30px);
+    font-size: clamp(10px, 1.4vw, 13px); letter-spacing: .3em; color: var(--dim);
+  }
+
+  /* breathing glow behind the word — the one cyan element */
+  #glow {
+    position: fixed; z-index: 1; left: 50%; top: 50%;
+    width: min(90vw, 900px); aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(126,232,250,.16) 0%, rgba(126,232,250,0) 62%);
+    opacity: .5;
+  }
+
+  /* the voyage: a meridian with a signal travelling north */
+  #meridian {
+    position: fixed; z-index: 2;
+    right: clamp(26px, 6vw, 84px); top: 50%; transform: translateY(-50%);
+    height: min(46vh, 460px); width: 1px;
+    background: linear-gradient(to top, rgba(217,227,236,0), rgba(217,227,236,.22) 18%, rgba(217,227,236,.22) 82%, rgba(217,227,236,0));
+  }
+  #meridian .cap {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 10px; letter-spacing: .14em; color: var(--dim); white-space: nowrap;
+  }
+  #meridian .cap.north { top: -26px; }
+  #meridian .cap.south { bottom: -26px; }
+  #signal {
+    position: absolute; left: 50%; bottom: 12%;
+    width: 5px; height: 5px; border-radius: 50%;
+    transform: translateX(-50%);
+    background: var(--cyan);
+    box-shadow: 0 0 12px 2px rgba(126,232,250,.55);
+  }
+
+  @media (max-width: 480px) {
+    #meridian .cap { left: auto; right: -2px; transform: none; text-align: right; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    #glow { animation: breathe 9s ease-in-out infinite alternate; }
+    @keyframes breathe { from { opacity: .35; } to { opacity: .75; } }
+    #signal { animation: voyage 26s ease-in-out infinite; }
+    @keyframes voyage {
+      0%   { bottom: 10%; opacity: 0; }
+      12%  { opacity: 1; }
+      86%  { opacity: 1; }
+      96%  { bottom: 88%; opacity: 0; }
+      100% { bottom: 88%; opacity: 0; }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #signal { bottom: 46%; }
+  }
+</style>
+</head>
+<body>
+  <span class="label" id="tl">EGE DENIZ</span>
+  <span class="label" id="tr">MMXXVI</span>
+
+  <main>
+    <div class="stack">
+      <h1>Soon</h1>
+      <div id="sub">CHARTING COURSE · AEGEAN → MAASTRICHT</div>
+    </div>
+  </main>
+
+  <div id="glow" aria-hidden="true"></div>
+  <div id="meridian" aria-hidden="true">
+    <span class="cap north">50°51'N</span>
+    <span class="cap south">34°41'N</span>
+    <span id="signal"></span>
+  </div>
+
+  <span class="label" id="bc">rowy.engineer</span>
+
+  <canvas id="grain" aria-hidden="true"></canvas>
+  <div id="vignette" aria-hidden="true"></div>
+
+<script>
+(() => {
+  // fine film grain; static frame when reduced-motion is set
+  const cv = document.getElementById('grain');
+  const ctx = cv.getContext('2d');
+  const noise = document.createElement('canvas');
+  noise.width = 480; noise.height = 300;
+  const nctx = noise.getContext('2d');
+  const id = nctx.createImageData(noise.width, noise.height);
+  for (let i = 0; i < id.data.length; i += 4) {
+    const v = 128 + (Math.random() - 0.5) * 255;
+    id.data[i] = id.data[i+1] = id.data[i+2] = v; id.data[i+3] = 255;
+  }
+  nctx.putImageData(id, 0, 0);
+
+  function size() { cv.width = innerWidth; cv.height = innerHeight; }
+  addEventListener('resize', () => { size(); draw(); });
+  size();
+
+  function draw() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.drawImage(noise,
+      -((Math.random() * 120) | 0), -((Math.random() * 80) | 0),
+      cv.width + 160, cv.height + 120);
+  }
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { draw(); return; }
+  let frame = 0;
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (frame++ % 2 === 0) draw();
+  })();
+})();
+</script>
+</body>
+</html>
