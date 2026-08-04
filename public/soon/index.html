@@ -5,12 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>rowy.engineer — rebuilding</title>
 <meta name="description" content="rowy.engineer is being rebuilt. Something bigger is going up." />
+<link rel="canonical" href="https://rowy.engineer/" />
+<link rel="icon" href="/favicon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://rowy.engineer/" />
 <meta property="og:title" content="rowy.engineer" />
 <meta property="og:description" content="Site under reconstruction. Something bigger is going up." />
+<meta property="og:image" content="https://rowy.engineer/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="rowy.engineer" />
+<meta name="twitter:description" content="Site under reconstruction. Something bigger is going up." />
+<meta name="twitter:image" content="https://rowy.engineer/og.png" />
 <style>
   @font-face {
     font-family: "Pilowlava";
-    src: url("./assets/Pilowlava-Regular.woff2") format("woff2");
+    /* absolute — this page is served at both / and /soon */
+    src: url("/soon/assets/Pilowlava-Regular.woff2") format("woff2");
     font-display: swap;
   }
   :root {
@@ -60,24 +70,41 @@
     font-size: clamp(10px, 1.4vw, 13px); letter-spacing: .3em; color: var(--dim);
   }
 
-  /* breathing glow behind the word — the one cyan element */
+  /* the field — same brain the live site runs, ported to 2D canvas */
+  #field { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* breathing glow behind the word */
   #glow {
     position: fixed; z-index: 1; left: 50%; top: 50%;
     width: min(90vw, 900px); aspect-ratio: 1;
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(126,232,250,.16) 0%, rgba(126,232,250,0) 62%);
+    background: radial-gradient(circle, rgba(126,232,250,.12) 0%, rgba(126,232,250,0) 62%);
     opacity: .5;
+  }
+
+  /* keeps the word off the field without dimming the field's edges */
+  #scrim {
+    position: fixed; z-index: 2; left: 50%; top: 50%;
+    width: min(130vw, 1180px); height: min(74vh, 560px);
+    transform: translate(-50%, -50%); pointer-events: none;
+    background: radial-gradient(ellipse at center,
+      rgba(7,9,13,.6) 0%, rgba(7,9,13,.34) 42%, rgba(7,9,13,0) 74%);
   }
 
   @media (prefers-reduced-motion: no-preference) {
     #glow { animation: breathe 9s ease-in-out infinite alternate; }
-    @keyframes breathe { from { opacity: .35; } to { opacity: .75; } }
+    @keyframes breathe { from { opacity: .35; } to { opacity: .7; } }
   }
 </style>
 </head>
 <body>
+  <canvas id="field" aria-hidden="true"></canvas>
+
   <span class="label" id="tl">EGE DENIZ</span>
   <span class="label" id="tr">MMXXVI</span>
+
+  <div id="glow" aria-hidden="true"></div>
+  <div id="scrim" aria-hidden="true"></div>
 
   <main>
     <div class="stack">
@@ -86,16 +113,198 @@
     </div>
   </main>
 
-  <div id="glow" aria-hidden="true"></div>
-
   <span class="label" id="bc">rowy.engineer</span>
 
   <canvas id="grain" aria-hidden="true"></canvas>
   <div id="vignette" aria-hidden="true"></div>
 
 <script>
+/* ── the field ─────────────────────────────────────────────────────────────
+   Same construction as SpatialBackground.tsx: fibonacci-lattice shell with
+   fbm cortex folds, ~28% volumetric interior, ambient halo beyond it, and
+   the four-colour palette at its original weights. Canvas 2D so this page
+   stays a single dependency-free file. */
 (() => {
-  // fine film grain; static frame when reduced-motion is set
+  const cv = document.getElementById('field');
+  const ctx = cv.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const PALETTE = ['#00F2FE', '#0055FF', '#7000FF', '#FFD700'];
+  const D = 3.0;   // camera distance
+  const R = 1.0;   // brain radius
+
+  // — cheap value-noise fbm, evaluated once at build time —
+  const hash3 = (x, y, z) => {
+    const s = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453;
+    return s - Math.floor(s);
+  };
+  const noise3 = (x, y, z) => {
+    const ix = Math.floor(x), iy = Math.floor(y), iz = Math.floor(z);
+    const fx = x - ix, fy = y - iy, fz = z - iz;
+    const ux = fx * fx * (3 - 2 * fx), uy = fy * fy * (3 - 2 * fy), uz = fz * fz * (3 - 2 * fz);
+    const mix = (a, b, t) => a + (b - a) * t;
+    const c = (dx, dy, dz) => hash3(ix + dx, iy + dy, iz + dz);
+    return mix(
+      mix(mix(c(0,0,0), c(1,0,0), ux), mix(c(0,1,0), c(1,1,0), ux), uy),
+      mix(mix(c(0,0,1), c(1,0,1), ux), mix(c(0,1,1), c(1,1,1), ux), uy),
+      uz);
+  };
+  const fbm = (x, y, z) =>
+    (noise3(x, y, z) - 0.5) * 1.0 + (noise3(x * 2.1, y * 2.1, z * 2.1) - 0.5) * 0.5;
+
+  // — build —
+  const compact = innerWidth < 760 || (navigator.deviceMemory || 8) <= 4;
+  const CORE = compact ? 1600 : 3400;
+  const AMBIENT = compact ? 140 : 300;
+  const N = CORE + AMBIENT;
+
+  const px = new Float32Array(N), py = new Float32Array(N), pz = new Float32Array(N);
+  const seed = new Float32Array(N), alpha = new Float32Array(N);
+  const col = new Uint8Array(N), amb = new Uint8Array(N);
+
+  for (let i = 0; i < N; i++) {
+    const s = hash3(i * 0.731, 2.17, i * 0.113);
+    seed[i] = s;
+
+    if (i >= CORE) {
+      // ambient halo — sparse, wide, dim
+      amb[i] = 1;
+      const a = i * GOLDEN_ANGLE;
+      const rad = 1.35 + Math.pow(hash3(i * 0.19, 5.1, 0.7), 0.5) * 1.25;
+      px[i] = Math.cos(a) * rad;
+      py[i] = (hash3(i * 0.37, 1.9, 3.3) - 0.5) * 2.4;
+      pz[i] = Math.sin(a) * rad * 0.8;
+      alpha[i] = 0.24 + s * 0.26;
+    } else {
+      const idx = i + 0.5;
+      const fy = 1 - (2 * idx) / CORE;
+      const fr = Math.sqrt(Math.max(0, 1 - fy * fy));
+      const th = GOLDEN_ANGLE * idx;
+      const dx = Math.cos(th) * fr, dz = Math.sin(th) * fr, dy = fy;
+
+      const interior = hash3(idx * 0.173, idx * 0.219, 7.3) < 0.28;
+      let rs;
+      if (interior) {
+        rs = 0.22 + Math.sqrt(hash3(idx * 0.331, 1.13, idx * 0.197)) * 0.68;
+      } else {
+        rs = 1 + fbm(dx * 1.9, dy * 1.9, dz * 1.9) * 0.11
+               + fbm(dx * 4.3, dy * 4.3, dz * 4.3) * 0.035;
+      }
+      px[i] = dx * R * rs; py[i] = dy * R * rs; pz[i] = dz * R * rs;
+      alpha[i] = interior ? 0.3 + s * 0.22 : 0.58 + s * 0.42;
+    }
+
+    col[i] = s < 0.42 ? 0 : s < 0.72 ? 1 : s < 0.9 ? 2 : 3;
+  }
+
+  // — pre-rendered glow sprites, one per palette colour —
+  const SPRITE = 32;
+  const sprites = PALETTE.map(hex => {
+    const c = document.createElement('canvas');
+    c.width = c.height = SPRITE;
+    const g = c.getContext('2d');
+    const grad = g.createRadialGradient(SPRITE/2, SPRITE/2, 0, SPRITE/2, SPRITE/2, SPRITE/2);
+    grad.addColorStop(0,   hex);
+    grad.addColorStop(.28, hex + 'cc');
+    grad.addColorStop(1,   hex + '00');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, SPRITE, SPRITE);
+    return c;
+  });
+
+  let W = 0, H = 0, cx = 0, cy = 0, scale = 0, dpr = 1;
+  function size() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx = W / 2; cy = H / 2;
+    scale = Math.min(H, W * 0.92) * 1.46;
+  }
+  size();
+  // always repaint on resize — the loop may be parked (hidden tab)
+  addEventListener('resize', () => { size(); draw(clock); });
+
+  // pointer parallax
+  let tiltX = 0, tiltY = 0, curX = 0, curY = 0;
+  if (!reduce) {
+    addEventListener('pointermove', e => {
+      tiltY = (e.clientX / W - 0.5) * 0.42;
+      tiltX = (e.clientY / H - 0.5) * 0.3;
+    }, { passive: true });
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+
+    curX += (tiltX - curX) * 0.045;
+    curY += (tiltY - curY) * 0.045;
+
+    const rotY = t * 0.048 + curY;
+    const rotX = Math.sin(t * 0.11) * 0.07 + curX;
+    const cY = Math.cos(rotY), sY = Math.sin(rotY);
+    const cX = Math.cos(rotX), sX = Math.sin(rotX);
+    const pulse = 1 + Math.sin(t * 0.62) * 0.032;
+
+    for (let i = 0; i < N; i++) {
+      const k = amb[i] ? 1 : pulse;
+      const x = px[i] * k, y = py[i] * k, z = pz[i] * k;
+
+      const x1 =  x * cY + z * sY;
+      const z1 = -x * sY + z * cY;
+      const y2 =  y * cX - z1 * sX;
+      const z2 =  y * sX + z1 * cX;
+
+      const zc = D - z2;
+      if (zc < 0.35) continue;
+      const m = scale / zc;
+
+      const sx = cx + x1 * m;
+      const sy = cy + y2 * m;
+      if (sx < -40 || sx > W + 40 || sy < -40 || sy > H + 40) continue;
+
+      const depth = Math.max(0, Math.min(1, (z2 + R) / (2 * R)));
+      const shimmer = 0.76 + 0.24 * Math.sin(t * 1.05 + seed[i] * 6.283);
+      const a = alpha[i] * (0.28 + 0.72 * Math.pow(depth, 1.6)) * shimmer;
+      if (a < 0.012) continue;
+
+      const s = (amb[i] ? 2.4 : 3.0 + 4.0 * depth) * (D / zc) * 0.85;
+      ctx.globalAlpha = a;
+      ctx.drawImage(sprites[col[i]], sx - s, sy - s, s * 2, s * 2);
+    }
+
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  // generation guard: a throttled frame pending from a previous run must not
+  // resume alongside the new loop, or the clock double-steps
+  let gen = 0, last = performance.now(), clock = 6.2;
+  function start() {
+    const mine = ++gen;
+    last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      if (mine !== gen || document.hidden) return;
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now; clock += dt;
+      draw(clock);
+      requestAnimationFrame(loop);
+    });
+  }
+  draw(clock);           // first frame is never left to the loop
+  if (reduce) return;    // static pose, no rAF
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) gen++; else start();
+  });
+  start();
+})();
+
+/* ── film grain ─────────────────────────────────────────────────────────── */
+(() => {
   const cv = document.getElementById('grain');
   const ctx = cv.getContext('2d');
   const noise = document.createElement('canvas');
