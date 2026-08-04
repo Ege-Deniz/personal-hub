@@ -10,12 +10,19 @@
 <meta property="og:url" content="https://rowy.engineer/" />
 <meta property="og:title" content="rowy.engineer" />
 <meta property="og:description" content="Site under reconstruction. Something bigger is going up." />
+<!-- fetch the display face at parse time, not after the CSS is parsed.
+     crossorigin is required even same-origin: font fetches are CORS-anonymous,
+     and without it the preload is discarded and the font fetched twice. -->
+<link rel="preload" href="/soon/assets/Pilowlava-Regular.woff2" as="font" type="font/woff2" crossorigin />
 <style>
   @font-face {
     font-family: "Pilowlava";
     /* absolute — this page is served at both / and /soon */
     src: url("/soon/assets/Pilowlava-Regular.woff2") format("woff2");
-    font-display: swap;
+    /* block, not swap: serif is nothing like Pilowlava, so swapping is a
+       visible snap. With the preload above the font wins the race and the
+       block period never shows. */
+    font-display: block;
   }
   :root {
     --void: #07090D;
